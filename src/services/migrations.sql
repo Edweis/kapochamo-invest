@@ -5,3 +5,10 @@ CREATE TABLE news (
   content VARCHAR,
   url VARCHAR
 );
+
+CREATE TABLE symbol (
+  symbol VARCHAR NOT NULL PRIMARY KEY,
+  status VARCHAR NOT NULL,
+  base_asset VARCHAR NOT NULL,
+  quote_asset VARCHAR NOT NULL
+);

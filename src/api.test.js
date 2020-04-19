@@ -16,7 +16,7 @@ describe('should test on public endpoints', () => {
   it('/exchangeInfo', async () => {
     const result = await binancePublic.get('/exchangeInfo').catch(handleError);
     expect(result.status).toEqual(200);
-    expect(result.data).toBeTruthy();
+    expect(result.data.symbols).not.toBeTruthy();
   });
   it('/avgPrice', async () => {
     const params = { symbol: SYMBOL };
