@@ -1,0 +1,9 @@
+# Dependency directories
+node_modules/
+data/
+emulator/
+# Webpack directory
+.webpack
+
+# Build directory
+.build
