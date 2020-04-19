@@ -1,0 +1,6 @@
+CREATE TABLE news (
+  id SERIAL NOT NULL PRIMARY KEY,
+  title VARCHAR ,
+  time TIMESTAMP ,
+  content VARCHAR 
+);

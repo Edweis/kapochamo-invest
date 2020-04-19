@@ -38,7 +38,7 @@ describe('scrapAllPages', () => {
   it('should scrap all pages', async () => {
     const maxRun = 2;
     const links = await scrapAllPages(browser, maxRun);
-    expect(links.length).toEqual(2);
+    expect(links.length).toEqual(2 * 30);
   });
   afterAll(async () => browser.close());
 });
