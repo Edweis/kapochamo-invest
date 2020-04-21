@@ -8,10 +8,12 @@ import {
   getAssetsFromText,
   getAssetFromInfo,
   populateTickFromAsset,
+  getTicksAroundNews,
+  getAllSymbolFromAsset,
 } from './populateTicks';
 import puppeteer from 'puppeteer';
 
-jest.setTimeout(3000);
+jest.setTimeout(30000);
 
 const headless = true;
 let browser: puppeteer.Browser;
@@ -44,24 +46,24 @@ describe('ticks', () => {
   };
   const matchingAssets = ['LINK', 'USDT'];
   let assets: string[] = [];
-  it('should populate ticks', async () => {
+  it.skip('should populate ticks', async () => {
     assets = await getAllAssets();
     expect(assets.length).toBeGreaterThan(200);
   });
-  it('should get the news', async () => {
+  it.skip('should get the news', async () => {
     const news = await getNews();
     expect(news.length).toBeGreaterThan(30);
   });
-  it('should find asset from string', () => {
+  it.skip('should find asset from string', () => {
     const matchAsset = getAssetsFromText(title, assets);
     expect(matchAsset).toEqual(matchingAssets);
   });
-  it('should find asset from info', () => {
+  it.skip('should find asset from info', () => {
     const matchAsset = getAssetFromInfo(INFO, assets);
     expect(matchAsset).toEqual(matchingAssets);
   });
-  it('should request for ticks on an asset', async () => {
-    const ticks = await populateTickFromAsset(date, matchingAssets[0]);
+  it.skip('should request for ticks on an asset', async () => {
+    const ticks = await populateTickFromAsset(date, matchingAssets[0] + 'USDT');
     expect(ticks.length).toEqual(1000);
     const lastTickUnix = ticks[999][0] / 1000;
     const firstTickUnix = ticks[0][0] / 1000;
@@ -70,5 +72,12 @@ describe('ticks', () => {
     const rationInPast =
       (nowUnix - firstTickUnix) / (lastTickUnix - firstTickUnix);
     expect(Math.round(rationInPast * 100)).toEqual(25);
+  });
+  it('get symbol from assets', async () => {
+    const symbols = await getAllSymbolFromAsset(matchingAssets);
+    expect(symbols.length).toEqual(129);
+  });
+  it('should write ticks in file', async () => {
+    await getTicksAroundNews(INFO);
   });
 });

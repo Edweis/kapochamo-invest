@@ -3,6 +3,9 @@ import { BinanceInfo } from '../types';
 import _ from 'lodash';
 import moment from 'moment';
 import { binancePublic } from '../api';
+import fs from 'fs';
+type Asset = string;
+type AssetSymbol = string;
 
 const MATCH_SPEC_CHAR = /[^\w\s]/gi;
 const MATCH_NON_UPPER = /[^A-Z]/g;
@@ -16,6 +19,19 @@ export const getAllAssets = async () => {
     ) as sub ORDER BY 1`
   );
   return response.rows.map(row => row.asset) as string[];
+};
+
+export const getAllSymbolFromAsset = async (
+  assets: Asset[]
+): Promise<AssetSymbol[]> => {
+  const response = await pg.query(
+    `SELECT symbol FROM symbol
+    WHERE base_asset = ANY ($1) or
+    quote_asset = ANY ($1) ORDER BY 1`,
+    [assets]
+  );
+  console.debug('done 1');
+  return response.rows.map(row => row.symbol) as string[];
 };
 
 export const getNews = async (): Promise<BinanceInfo[]> => {
@@ -43,27 +59,47 @@ export const getAssetsFromText = (text: string, assets: string[]) => {
   return assets.filter(asset => tokens.includes(asset));
 };
 
-export const getAssetFromInfo = (info: BinanceInfo, assets: string[]) => {
+export const getAssetFromInfo = (
+  info: BinanceInfo,
+  assets: string[]
+): Asset[] => {
   const tokenText = getAssetsFromText(info.text || '', assets);
   const tokenTitle = getAssetsFromText(info.title || '', assets);
   return _.uniq([...tokenText, ...tokenTitle]);
 };
 
-export const populateTickFromAsset = async (time: Date, asset: string) => {
+export const populateTickFromAsset = async (
+  time: Date,
+  symbol: AssetSymbol
+) => {
   const INTERVAL = '1m';
   const NUMBER_TICKS = 1000;
   const NUMBER_PAST_TICKS = 250;
-  const BASE_SYMBOL = 'USDT';
   const startTime =
     moment(time)
       .subtract(NUMBER_PAST_TICKS, 'minutes')
       .unix() * 1000;
   const params = {
-    symbol: asset + BASE_SYMBOL,
+    symbol,
     limit: NUMBER_TICKS,
     interval: INTERVAL,
     startTime,
   };
   const result = await binancePublic.get('/klines', { params });
   return result.data;
+};
+
+export const getTicksAroundNews = async (info: BinanceInfo) => {
+  if (info.time == null) throw Error("Can't evaluate a null date");
+  const time = info.time;
+  const allAssets = await getAllAssets();
+  const assets = getAssetFromInfo(info, allAssets);
+  const symbols = await getAllSymbolFromAsset(assets);
+  await Promise.all(
+    symbols.map(async symbol => {
+      const ticks = await populateTickFromAsset(new Date(time), symbol);
+      await fs.promises.writeFile('./data/' + symbol, ticks.join('\n'));
+      console.log('Written in ./data/' + symbol);
+    })
+  );
 };
