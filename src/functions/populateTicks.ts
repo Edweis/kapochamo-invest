@@ -86,6 +86,7 @@ export const populateTickFromAsset = async (
     startTime,
   };
   const result = await binancePublic.get('/klines', { params });
+  console.debug(params, result.data[0]);
   return result.data;
 };
 
@@ -98,7 +99,22 @@ export const getTicksAroundNews = async (info: BinanceInfo) => {
   await Promise.all(
     symbols.map(async symbol => {
       const ticks = await populateTickFromAsset(new Date(time), symbol);
-      await fs.promises.writeFile('./data/' + symbol, ticks.join('\n'));
+      const headers = [
+        'open time',
+        'open',
+        'high',
+        'low',
+        'close',
+        'volume',
+        'close time',
+        'quote asset volume',
+        'number of trades',
+        'taker buy base asset volume',
+        'taker buy quote asset volume',
+        'ignore',
+      ].join(',');
+      const data = ticks.join('\n');
+      await fs.promises.writeFile('./data/' + symbol, headers + '\n' + data);
       console.log('Written in ./data/' + symbol);
     })
   );

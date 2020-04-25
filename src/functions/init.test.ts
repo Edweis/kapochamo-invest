@@ -50,9 +50,11 @@ describe('ticks', () => {
     assets = await getAllAssets();
     expect(assets.length).toBeGreaterThan(200);
   });
-  it.skip('should get the news', async () => {
+  let myNews: BinanceInfo;
+  it('should get the news', async () => {
     const news = await getNews();
     expect(news.length).toBeGreaterThan(30);
+    myNews = news[3];
   });
   it.skip('should find asset from string', () => {
     const matchAsset = getAssetsFromText(title, assets);
@@ -78,6 +80,8 @@ describe('ticks', () => {
     expect(symbols.length).toEqual(129);
   });
   it('should write ticks in file', async () => {
-    await getTicksAroundNews(INFO);
+    console.debug(myNews);
+    await getTicksAroundNews(myNews);
+    TODOOOOO FIND THE CORRESPONDANCE WHERE THE PRICE GOES UP AT NEWS TIME (UTS STUFF)
   });
 });
