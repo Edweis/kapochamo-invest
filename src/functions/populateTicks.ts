@@ -81,7 +81,7 @@ export const getAssetFromInfo = (
 
 export const getTickAround = async (time: Date, symbol: AssetSymbol) => {
   const INTERVAL = '1m';
-  const NUMBER_TICKS = 1000;
+  const NUMBER_TICKS = 100;
   const now = moment(time).unix() * 1000;
   const params = { symbol, limit: NUMBER_TICKS, interval: INTERVAL };
   const paramBefore = { ...params, endTime: now };

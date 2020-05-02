@@ -26,10 +26,10 @@ const TEST_NEWS_TITLE =
 
 jest.setTimeout(3000000);
 
-const headless = true;
+const headless = false;
 let browser: puppeteer.Browser;
 
-describe.skip('news', () => {
+describe('news', () => {
   beforeAll(async () => {
     browser = await puppeteer.launch({ headless });
   });
@@ -82,7 +82,7 @@ describe('ticks', () => {
   });
   it('should request for ticks on an asset', async () => {
     const ticks = await getTickAround(testNews.time, 'BNBUSDT');
-    expect(ticks.length).toEqual(2000);
+    expect(ticks.length).toEqual(200);
     const startMinuteUnix = moment(testNews.time)
       .startOf('m')
       .unix();

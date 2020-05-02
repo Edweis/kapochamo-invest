@@ -7,7 +7,7 @@ export type BinanceInfo = {
 
 export type BinanceInfoRaw = {
   title: string | null;
-  content: string | null;
+  text: string | null;
   time: string | null;
   url: string;
 };

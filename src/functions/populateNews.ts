@@ -1,12 +1,12 @@
 import pg from '../services/postgres';
 import { scrapPageInfo } from '../news/binance/scraping';
 import puppeteer from 'puppeteer';
-import { BinanceInfo } from '../types';
+import { BinanceInfo, BinanceInfoRaw } from '../types';
 import pLimit from 'p-limit';
 const PARALLEL_RUN = 5;
 const limit = pLimit(PARALLEL_RUN);
 
-const insertNews = async (info: BinanceInfo) => {
+const insertNews = async (info: BinanceInfoRaw) => {
   await pg.query(
     'INSERT INTO news(title, time, content, url) VALUES($1, $2, $3, $4) RETURNING *',
     [info.title, info.time, info.text, info.url]
@@ -18,7 +18,9 @@ export const postLinks = async (url: string) =>
   pg.query('INSERT INTO links(url) VALUES ($1)', [url]);
 export const getAllLinks = async () =>
   pg
-    .query<{ url: string }>('SELECT * FROM links')
+    .query<{ url: string }>(
+      'SELECT * FROM links ORDER BY substring(url, 47, 12) DESC' // most recent first
+    )
     .then(result => result.rows.map(({ url }) => url));
 export const checkNewsExists = async (url: string) => {
   const result = await pg.query<{ count: number }>(
