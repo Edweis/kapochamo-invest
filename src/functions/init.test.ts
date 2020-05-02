@@ -14,7 +14,7 @@ import {
   getOneNews,
   getAssetsFromText,
   getAssetFromInfo,
-  populateTickFromAsset,
+  getTickAround,
   getTicksAroundNews,
   getAllSymbolFromAsset,
 } from './populateTicks';
@@ -67,7 +67,7 @@ describe('ticks', () => {
   beforeAll(async () => {
     testNews = await getOneNews(TEST_NEWS_TITLE);
   });
-  it('testNews should correspond to reallity', async () => {
+  it('testNews should correspond to reality', async () => {
     expect(testNews.title).toEqual(TEST_NEWS_TITLE);
     expect(testNews.time.toISOString()).toEqual('2020-04-13T09:53:13.000Z');
     expect(testNews.content).toMatch(/The Cartesi token sale/);
@@ -81,10 +81,12 @@ describe('ticks', () => {
     expect(matchAsset).toEqual(MATCHING_ASSETS);
   });
   it('should request for ticks on an asset', async () => {
-    const ticks = await populateTickFromAsset(testNews.time, 'BNBUSDT');
+    const ticks = await getTickAround(testNews.time, 'BNBUSDT');
     expect(ticks.length).toEqual(2000);
-    const unix = moment(testNews.time).unix();
-    expect(ticks[1000][0]).toEqual(unix * 1000);
+    const startMinuteUnix = moment(testNews.time)
+      .startOf('m')
+      .unix();
+    expect(ticks[999][0]).toEqual(startMinuteUnix * 1000);
   });
   it('get symbol from assets', async () => {
     const symbols = await getAllSymbolFromAsset(MATCHING_ASSETS);
@@ -92,6 +94,5 @@ describe('ticks', () => {
   });
   it('should write ticks in file', async () => {
     await getTicksAroundNews(testNews);
-    // TODOOOOO FIND THE CORRESPONDANCE WHERE THE PRICE GOES UP AT NEWS TIME (UTS STUFF)
   });
 });

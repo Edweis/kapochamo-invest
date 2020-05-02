@@ -79,23 +79,24 @@ export const getAssetFromInfo = (
   return _.uniq([...tokenText, ...tokenTitle]);
 };
 
-export const populateTickFromAsset = async (
-  time: Date,
-  symbol: AssetSymbol
-) => {
+export const getTickAround = async (time: Date, symbol: AssetSymbol) => {
   const INTERVAL = '1m';
   const NUMBER_TICKS = 1000;
-  const unix = moment(time).unix() * 1000;
-  const params = {
-    symbol,
-    limit: NUMBER_TICKS,
-    interval: INTERVAL,
-  };
-  const paramBefore = { ...params, startTime: unix };
-  const paramAfter = { ...params, endTime: unix };
-  const before = await binancePublic.get('/klines', { params: paramBefore });
-  const after = await binancePublic.get('/klines', { params: paramAfter });
-  return before.data.concat(after.data);
+  const now = moment(time).unix() * 1000;
+  const params = { symbol, limit: NUMBER_TICKS, interval: INTERVAL };
+  const paramBefore = { ...params, endTime: now };
+  const paramAfter = { ...params, startTime: now };
+  const ticksBefore = await binancePublic.get('/klines', {
+    params: paramBefore,
+  });
+  const ticksAfter = await binancePublic.get('/klines', { params: paramAfter });
+  const allTicks = ticksBefore.data.concat(ticksAfter.data);
+
+  // Sometime the API goes beyonf the required date, we filter out theses
+  const later = now + NUMBER_TICKS * 60 * 1000;
+  const earlier = now - NUMBER_TICKS * 60 * 1000;
+
+  return allTicks.filter((tick: any) => earlier <= tick[0] && tick[0] <= later);
 };
 
 export const getTicksAroundNews = async (info: BinanceInfo) => {
@@ -106,9 +107,9 @@ export const getTicksAroundNews = async (info: BinanceInfo) => {
   const symbols = await getAllSymbolFromAsset(assets);
   await Promise.all(
     symbols
-      .filter(symbol => !symbol.endsWith('BNB'))
+      .filter(symbol => symbol.endsWith('USDT'))
       .map(async symbol => {
-        const ticks = await populateTickFromAsset(new Date(time), symbol);
+        const ticks = await getTickAround(new Date(time), symbol);
         const headers = [
           'open time',
           'open',
