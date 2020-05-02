@@ -11,7 +11,6 @@ export const scrapLatestNews = async () => {
 };
 
 const domain = 'https://binance.zendesk.com';
-const initialLink = '/hc/en-us/sections/115000106672-New-Crypto-Listings';
 const READY_PATH = 'main[role=main]';
 const HEAD_FULL_AGENT =
   'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.0 Safari/537.36';
@@ -42,6 +41,7 @@ export const scrapOnePageLinks = async (
 
 export const scrapAllPages = async (
   browser: puppeteer.Browser,
+  initialLink: string,
   pageMax: number | null = null
 ) => {
   const allLinks: string[] = [];
@@ -66,6 +66,7 @@ export const scrapPageInfo = async (
 ): Promise<BinanceInfo> => {
   const page = await browser.newPage();
   await page.setUserAgent(HEAD_FULL_AGENT);
+  console.debug('about to scrap ' + url);
   await page.goto(url);
   await page.waitFor(READY_PATH);
   const infos = await page.evaluate(() => {
@@ -86,8 +87,8 @@ export const scrapPageInfo = async (
     const text =
       document.querySelector(contentPath)?.textContent?.trim() || null;
 
-    return { title, time, text, url };
+    return { title, time, text };
   });
   await page.close();
-  return infos;
+  return { ...infos, url };
 };

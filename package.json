@@ -1,7 +1,6 @@
 {
   "name": "kapochamo-invest",
   "version": "1.0.1",
-  "type": "module",
   "main": "src/handler.js",
   "license": "MIT",
   "scripts": {
@@ -56,7 +55,7 @@
     "moment-timezone": "^0.5.28",
     "p-limit": "^2.3.0",
     "pg": "^8.0.2",
-    "puppeteer": "^3.0.0"
+    "puppeteer": "^2.1.1"
   },
   "husky": {
     "hooks": {

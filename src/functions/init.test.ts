@@ -1,19 +1,30 @@
-import { scrapAllPagesInfo } from './populateNews';
+import {
+  scrapAllPagesInfo,
+  postLinks,
+  removeAllLinks,
+  getAllLinks,
+} from './populateNews';
 import { populateSymbols } from './populateSymbols';
 import { BinanceInfo } from '../types';
+import { NEWS_LINKS } from '../news/binance/constants';
 import moment from 'moment';
 import {
   getAllAssets,
   getNews,
+  getOneNews,
   getAssetsFromText,
   getAssetFromInfo,
   populateTickFromAsset,
   getTicksAroundNews,
   getAllSymbolFromAsset,
 } from './populateTicks';
+import { scrapAllPages } from '../news/binance/scraping';
 import puppeteer from 'puppeteer';
 
-jest.setTimeout(30000);
+const TEST_NEWS_TITLE =
+  'Introducing the Cartesi (CTSI) Token Sale on Binance Launchpad';
+
+jest.setTimeout(3000000);
 
 const headless = true;
 let browser: puppeteer.Browser;
@@ -22,8 +33,23 @@ describe.skip('news', () => {
   beforeAll(async () => {
     browser = await puppeteer.launch({ headless });
   });
-  it('should run', async () => {
-    await scrapAllPagesInfo(browser);
+  // it.skip('should remove all links ', async () => {
+  //   await removeAllLinks();
+  // });
+  it.skip('should post announcements links', async () => {
+    const newsAnnouncements = await scrapAllPages(
+      browser,
+      NEWS_LINKS.ANNOUNCEMENTS
+    );
+    await Promise.all(newsAnnouncements.map(postLinks));
+  });
+  it.skip('should post latest links', async () => {
+    const latestAnnouncements = await scrapAllPages(browser, NEWS_LINKS.LATEST);
+    await Promise.all(latestAnnouncements.map(postLinks));
+  });
+  it('should get news from links', async () => {
+    const links = await getAllLinks();
+    await scrapAllPagesInfo(browser, links);
   });
   afterAll(async () => browser.close());
 });
@@ -35,53 +61,37 @@ describe.skip('symbols', () => {
 });
 
 describe('ticks', () => {
-  const title =
-    'Binance Futures Will Launch LINK/USDT Perpetual Contract With Up to 75x Leverage';
-  const date = new Date('2020-01-16 10:05:13');
-  const INFO: BinanceInfo = {
-    title,
-    text: title,
-    time: date.toISOString(),
-    url: 'xxx',
-  };
-  const matchingAssets = ['LINK', 'USDT'];
   let assets: string[] = [];
-  it.skip('should populate ticks', async () => {
+  let testNews: BinanceInfo;
+  const MATCHING_ASSETS = ['BNB', 'CTSI'];
+  beforeAll(async () => {
+    testNews = await getOneNews(TEST_NEWS_TITLE);
+  });
+  it('testNews should correspond to reallity', async () => {
+    expect(testNews.title).toEqual(TEST_NEWS_TITLE);
+    expect(testNews.time.toISOString()).toEqual('2020-04-13T09:53:13.000Z');
+    expect(testNews.content).toMatch(/The Cartesi token sale/);
+  });
+  it('should populate ticks', async () => {
     assets = await getAllAssets();
     expect(assets.length).toBeGreaterThan(200);
   });
-  let myNews: BinanceInfo;
-  it('should get the news', async () => {
-    const news = await getNews();
-    expect(news.length).toBeGreaterThan(30);
-    myNews = news[3];
+  it('should find asset from info', () => {
+    const matchAsset = getAssetFromInfo(testNews, assets);
+    expect(matchAsset).toEqual(MATCHING_ASSETS);
   });
-  it.skip('should find asset from string', () => {
-    const matchAsset = getAssetsFromText(title, assets);
-    expect(matchAsset).toEqual(matchingAssets);
-  });
-  it.skip('should find asset from info', () => {
-    const matchAsset = getAssetFromInfo(INFO, assets);
-    expect(matchAsset).toEqual(matchingAssets);
-  });
-  it.skip('should request for ticks on an asset', async () => {
-    const ticks = await populateTickFromAsset(date, matchingAssets[0] + 'USDT');
-    expect(ticks.length).toEqual(1000);
-    const lastTickUnix = ticks[999][0] / 1000;
-    const firstTickUnix = ticks[0][0] / 1000;
-    const nowUnix = moment(date).unix();
-    expect(lastTickUnix - firstTickUnix).toEqual(999 * 60);
-    const rationInPast =
-      (nowUnix - firstTickUnix) / (lastTickUnix - firstTickUnix);
-    expect(Math.round(rationInPast * 100)).toEqual(25);
+  it('should request for ticks on an asset', async () => {
+    const ticks = await populateTickFromAsset(testNews.time, 'BNBUSDT');
+    expect(ticks.length).toEqual(2000);
+    const unix = moment(testNews.time).unix();
+    expect(ticks[1000][0]).toEqual(unix * 1000);
   });
   it('get symbol from assets', async () => {
-    const symbols = await getAllSymbolFromAsset(matchingAssets);
-    expect(symbols.length).toEqual(129);
+    const symbols = await getAllSymbolFromAsset(MATCHING_ASSETS);
+    expect(symbols.length).toEqual(155);
   });
   it('should write ticks in file', async () => {
-    console.debug(myNews);
-    await getTicksAroundNews(myNews);
-    TODOOOOO FIND THE CORRESPONDANCE WHERE THE PRICE GOES UP AT NEWS TIME (UTS STUFF)
+    await getTicksAroundNews(testNews);
+    // TODOOOOO FIND THE CORRESPONDANCE WHERE THE PRICE GOES UP AT NEWS TIME (UTS STUFF)
   });
 });

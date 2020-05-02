@@ -6,4 +6,5 @@ const pool = new Pool({
   password: 'docker',
   port: 5432,
 });
+
 export default pool;

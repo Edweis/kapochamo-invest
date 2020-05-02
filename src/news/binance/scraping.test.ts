@@ -5,7 +5,7 @@ import {
   scrapPageInfo,
 } from './scraping';
 import puppeteer from 'puppeteer';
-
+import { NEWS_LINKS } from './constants';
 const headless = true;
 
 jest.setTimeout(30000);
@@ -37,7 +37,7 @@ describe('scrapAllPages', () => {
   });
   it('should scrap all pages', async () => {
     const maxRun = 2;
-    const links = await scrapAllPages(browser, maxRun);
+    const links = await scrapAllPages(browser, NEWS_LINKS.LATEST, maxRun);
     expect(links.length).toEqual(2 * 30);
   });
   afterAll(async () => browser.close());
