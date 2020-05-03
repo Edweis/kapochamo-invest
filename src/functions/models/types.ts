@@ -15,3 +15,4 @@ export type Tick = {
   takerBuyQuoteAssetVolume: number;
   ignore: number;
 };
+export type Strategy = (ticks: Tick[]) => Tick | null;

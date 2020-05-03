@@ -29,7 +29,8 @@ export const getAssetFromInfo = (
   info: BinanceInfo,
   assets: string[]
 ): Asset[] => {
-  const tokenText = getAssetsFromText(info.content || '', assets);
+  // const tokenText = getAssetsFromText(info.content || '', assets);
   const tokenTitle = getAssetsFromText(info.title || '', assets);
-  return _.uniq([...tokenText, ...tokenTitle]);
+  // return _.uniq([...tokenText, ...tokenTitle]);
+  return tokenTitle;
 };

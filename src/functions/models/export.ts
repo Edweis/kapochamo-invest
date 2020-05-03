@@ -9,6 +9,7 @@ export const clearData = async () => {
   );
 };
 export const exportTicks = async (symbol: string, ticks: Tick[]) => {
+  if (ticks.length === 0) return; //Nothing to import
   const headers = _.keys(ticks[0]) as Array<keyof Tick>;
   const data = ticks
     .map(tick => headers.map(key => tick[key]).join(','))

@@ -1,12 +1,9 @@
-import { getAllAssets, getOneNews, getAllSymbolFromAsset } from './queries';
+import { getAllAssets, getOneNews, getRelevantSymbolFromAsset } from './queries';
 import { getAssetFromInfo } from './extract';
 import { getTickAround } from './getNewsContext';
 import { BinanceInfo } from '../../types';
-import { getTicksAroundNews } from './populateTicks';
 import moment from 'moment';
-
-const TEST_NEWS_TITLE =
-  'Introducing the Cartesi (CTSI) Token Sale on Binance Launchpad';
+import { TEST_NEWS_TITLE } from '../../test-constants';
 
 describe('ticks', () => {
   let assets: string[] = [];
@@ -37,7 +34,7 @@ describe('ticks', () => {
     expect(ticks[99].openTime).toEqual(startMinuteUnix * 1000);
   });
   it('get symbol from assets', async () => {
-    const symbols = await getAllSymbolFromAsset(MATCHING_ASSETS);
+    const symbols = await getRelevantSymbolFromAsset(MATCHING_ASSETS);
     expect(symbols.length).toEqual(155);
   });
 });

@@ -3,7 +3,7 @@ import { scrapPageInfo } from '../news/binance/scraping';
 import puppeteer from 'puppeteer';
 import { BinanceInfo, BinanceInfoRaw } from '../types';
 import pLimit from 'p-limit';
-const PARALLEL_RUN = 5;
+const PARALLEL_RUN = 1;
 const limit = pLimit(PARALLEL_RUN);
 
 const insertNews = async (info: BinanceInfoRaw) => {
@@ -41,12 +41,12 @@ export const scrapAllPagesInfo = async (
         const hasBeenFetched = await checkNewsExists(link);
         console.debug('working on ' + link);
         if (hasBeenFetched) {
-          console.debug('Abort. Already have ' + link);
+          console.debug('Abort. Already have.');
           return;
         }
         const info = await scrapPageInfo(browser, link);
         await insertNews(info);
-        await sleep(200);
+        await sleep(20000);
       })
     )
   );

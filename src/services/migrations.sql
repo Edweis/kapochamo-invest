@@ -1,9 +1,14 @@
+
+CREATE TABLE links (
+  url VARCHAR NOT NULL PRIMARY KEY
+);
+
 CREATE TABLE news (
-  id SERIAL NOT NULL PRIMARY KEY,
-  title VARCHAR ,
-  time TIMESTAMPTZ ,
+  url VARCHAR NOT NULL PRIMARY KEY,
+  title VARCHAR,
+  time TIMESTAMPTZ,
   content VARCHAR,
-  url VARCHAR
+  FOREIGN KEY (url) REFERENCES links(url)
 );
 
 CREATE TABLE symbol (
@@ -13,6 +18,11 @@ CREATE TABLE symbol (
   quote_asset VARCHAR NOT NULL
 );
 
-CREATE TABLE links (
-  url VARCHAR NOT NULL PRIMARY KEY
-);
+CREATE TABLE performance (
+  url VARCHAR NOT NULL,
+  strategy VARCHAR NOT NULL,
+  symbol VARCHAR NOT NULL REFERENCES symbol(symbol),
+  performance FLOAT,
+  FOREIGN KEY (url) REFERENCES links(url),
+  PRIMARY KEY (url, strategy, symbol)
+)
