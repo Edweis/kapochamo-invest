@@ -71,22 +71,12 @@
   },
   "jest": {
     "verbose": true,
-    "roots": [
-      "<rootDir>/src"
-    ],
+    "roots": [ "<rootDir>/src" ],
     "testRegex": "(.*\\.test\\.(tsx?|jsx?))$",
-    "transform": {
-      "^.+\\.[t|j]sx?$": "babel-jest"
-    },
-    "moduleFileExtensions": [
-      "ts",
-      "tsx",
-      "js",
-      "jsx",
-      "json",
-      "node"
-    ],
-    "testEnvironment": "node"
+    "transform": { "^.+\\.[t|j]sx?$": "babel-jest" },
+    "moduleFileExtensions": [ "ts", "tsx", "js", "jsx", "json", "node" ],
+    "testEnvironment": "node",
+    "setupFilesAfterEnv": ["<rootDir>/src/teardown.ts"]
   },
   "babel": {
     "presets": [

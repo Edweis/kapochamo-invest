@@ -12,6 +12,7 @@ export const scrapLatestNews = async () => {
 
 const domain = 'https://binance.zendesk.com';
 const READY_PATH = 'main[role=main]';
+const SECURITY_CHECK_PATH = 'h1.err__page-heading';
 const HEAD_FULL_AGENT =
   'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.0 Safari/537.36';
 
@@ -68,7 +69,12 @@ export const scrapPageInfo = async (
   await page.setUserAgent(HEAD_FULL_AGENT);
   console.debug('about to scrap ' + url);
   await page.goto(url);
-  await page.waitFor(READY_PATH);
+  await Promise.race([
+    page.waitFor(READY_PATH),
+    page.waitFor(SECURITY_CHECK_PATH).then(() => {
+      throw Error('Security Error');
+    }),
+  ]);
   const infos = await page.evaluate(() => {
     const headerPath = 'article.article header.article-header';
     const timePath = headerPath + ' div.article-author li.meta-data time';

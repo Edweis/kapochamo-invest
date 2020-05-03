@@ -1,36 +1,33 @@
 import { binancePublic } from './api';
 
 const SYMBOL = 'ETHBTC';
-const handleError = error => console.error(error.response.data);
 describe('should test on public endpoints', () => {
   it('should ping', async () => {
-    const result = await binancePublic.get('/ping').catch(handleError);
+    const result = await binancePublic.get('/ping');
     expect(result.status).toEqual(200);
     expect(result.data).toEqual({});
   });
   it('/time', async () => {
-    const result = await binancePublic.get('/time').catch(handleError);
+    const result = await binancePublic.get('/time');
     expect(result.status).toEqual(200);
     expect(result.data.serverTime).toBeTruthy();
   });
   it('/exchangeInfo', async () => {
-    const result = await binancePublic.get('/exchangeInfo').catch(handleError);
+    const result = await binancePublic.get('/exchangeInfo');
     expect(result.status).toEqual(200);
-    expect(result.data.symbols).not.toBeTruthy();
+    expect(result.data.symbols).toBeTruthy();
   });
   it('/avgPrice', async () => {
     const params = { symbol: SYMBOL };
-    const result = await binancePublic
-      .get('/avgPrice', { params })
-      .catch(handleError);
+    const result = await binancePublic.get('/avgPrice', { params });
+
     expect(result.status).toEqual(200);
     expect(result.data.mins).toEqual(5);
   });
   it('/depth', async () => {
     const params = { symbol: SYMBOL, limit: 100 };
-    const result = await binancePublic
-      .get('/depth', { params })
-      .catch(handleError);
+    const result = await binancePublic.get('/depth', { params });
+
     expect(result.status).toEqual(200);
     expect(result.data.bids.length).toEqual(100);
   });
@@ -55,9 +52,8 @@ describe('should test on public endpoints', () => {
       '0.43693429', // Taker buy quote asset volume
       '0', // Ignore.
     ];
-    const result = await binancePublic
-      .get('/klines', { params })
-      .catch(handleError);
+    const result = await binancePublic.get('/klines', { params });
+
     expect(result.status).toEqual(200);
     expect(result.data).toEqual([expected]);
   });
