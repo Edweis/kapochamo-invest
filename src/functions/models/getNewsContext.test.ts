@@ -1,4 +1,8 @@
-import { getAllAssets, getOneNews, getRelevantSymbolFromAsset } from './queries';
+import {
+  getAllAssets,
+  getOneNews,
+  getRelevantSymbolFromAsset,
+} from './queries';
 import { getAssetFromInfo } from './extract';
 import { getTickAround } from './getNewsContext';
 import { BinanceInfo } from '../../types';

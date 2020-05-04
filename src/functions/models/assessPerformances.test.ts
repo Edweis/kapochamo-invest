@@ -1,8 +1,10 @@
-import { getNews, clearPerformances } from './queries';
+import { getNews } from './queries';
+import { clearPerformances } from './export';
 import { getPerformanceForNews } from './performance';
 import { BinanceInfo } from '../../types';
 import { Strategy } from './types';
 import { highestStrategy, wait15Minutes, follower } from './strategy';
+import { allCurrency } from './extractors';
 import _ from 'lodash';
 let allNews: BinanceInfo[];
 
@@ -29,7 +31,7 @@ describe('getPerformanceForNews', () => {
       strategies.map(async strategy =>
         Promise.all(
           newsToTest.map(async news =>
-            getPerformanceForNews(news, strategy, config)
+            getPerformanceForNews(news, strategy, allCurrency, config)
           )
         )
       )

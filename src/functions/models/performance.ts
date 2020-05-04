@@ -1,15 +1,10 @@
 import { BinanceInfo } from '../../types';
-import { getAssetFromInfo } from './extract';
-import { clearData, exportTicks } from './export';
+import { clearData, exportTicks, savePerformance } from './export';
 import { getTickAround } from './getNewsContext';
 import moment from 'moment';
-import { Tick, Strategy } from './types';
-import {
-  savePerformance,
-  getAllAssets,
-  getRelevantSymbolFromAsset,
-} from './queries';
+import { Tick, Strategy, Extractor } from './types';
 
+const SHOULD_DISPLAY_PERFORMANCE = false;
 const toUnix = (date: Date) => moment(date).unix() * 1000;
 export const computePerformance = (
   strategy: Strategy,
@@ -33,7 +28,8 @@ export const computePerformance = (
   const sellFor = sellTick.close;
   const sellAt = moment(sellTick.openTime).toDate();
   const valueNow = futurTicks[0].close;
-  if (false) console.debug(strategy.name, { valueNow, sellFor, sellAt, now });
+  if (SHOULD_DISPLAY_PERFORMANCE)
+    console.debug(strategy.name, { valueNow, sellFor, sellAt, now });
 
   // return yield
   return (100 * (sellFor - valueNow)) / sellFor;
@@ -42,15 +38,13 @@ export const computePerformance = (
 export const getPerformanceForNews = async (
   info: BinanceInfo,
   strategy: Strategy,
+  extractor: Extractor,
   shouldExport = { file: false, database: false }
 ) => {
   if (info.time == null) throw Error("Can't evaluate a null date");
   const time = info.time;
-  const allAssets = await getAllAssets();
-  const assets = getAssetFromInfo(info, allAssets);
-  const symbols: string[] = await getRelevantSymbolFromAsset(assets);
+  const symbols = await extractor(info);
   if (symbols.length > 10) {
-    console.debug(info.error);
     throw Error('To many symbols (' + symbols.length + ') for ' + info.title);
   }
   if (!symbols.includes('BNBUSDT')) symbols.push('BNBUSDT');

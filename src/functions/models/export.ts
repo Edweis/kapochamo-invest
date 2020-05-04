@@ -1,6 +1,8 @@
 import _ from 'lodash';
 import fs from 'fs';
 import { Tick } from './types';
+import { BinanceInfo } from '../../types';
+import pg from '../../services/postgres';
 
 export const clearData = async () => {
   const files = await fs.promises.readdir('./data/');
@@ -19,4 +21,21 @@ export const exportTicks = async (symbol: string, ticks: Tick[]) => {
     headers.join(',') + '\n' + data
   );
   console.log('Written in ./data/' + symbol);
+};
+
+export const clearPerformances = async () => {
+  await pg.query('DELETE FROM performance');
+};
+export const savePerformance = async (
+  info: BinanceInfo,
+  strategy: string,
+  symbol: string,
+  performance: number | null
+) => {
+  await pg.query<BinanceInfo>(
+    `INSERT INTO performance (url, strategy, symbol, performance)
+    VALUES ($1, $2, $3, $4)`,
+    [info.url, strategy, symbol, performance]
+  );
+  console.debug('exported: ', strategy, symbol, performance);
 };

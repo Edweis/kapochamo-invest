@@ -41,19 +41,3 @@ export const getOneNews = async (title: string) => {
   if (reponse.rows.length === 0) throw Error('Title "' + title + '" not found');
   return reponse.rows[0];
 };
-
-export const clearPerformances = async () => {
-  await pg.query('DELETE FROM performance');
-};
-export const savePerformance = async (
-  info: BinanceInfo,
-  strategy: string,
-  symbol: string,
-  performance: number | null
-) => {
-  await pg.query<BinanceInfo>(
-    `INSERT INTO performance (url, strategy, symbol, performance)
-    VALUES ($1, $2, $3, $4)`,
-    [info.url, strategy, symbol, performance]
-  );
-};

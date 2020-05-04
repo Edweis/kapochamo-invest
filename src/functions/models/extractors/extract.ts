@@ -1,6 +1,6 @@
-import { BinanceInfo } from '../../types';
-import { Asset } from './types';
-import _ from 'lodash';
+import { BinanceInfo } from '../../../types';
+import { Asset } from '../types';
+
 const MATCH_SPEC_CHAR = /[^\w\s]/gi;
 const MATCH_NON_UPPER = /[^A-Z]/g;
 const MATCH_DUPLICATED_SPACE = / +(?= )/g;

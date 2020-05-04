@@ -1,3 +1,4 @@
+import { BinanceInfo } from '../../types';
 export type Asset = string;
 export type AssetSymbol = string;
 export type ApiTick = number[];
@@ -16,3 +17,4 @@ export type Tick = {
   ignore: number;
 };
 export type Strategy = (ticks: Tick[]) => Tick | null;
+export type Extractor = (news: BinanceInfo) => Promise<AssetSymbol[]>;
