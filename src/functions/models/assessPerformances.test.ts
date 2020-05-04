@@ -4,7 +4,7 @@ import { getPerformanceForNews } from './performance';
 import { BinanceInfo } from '../../types';
 import { Strategy } from './types';
 import { highestStrategy, wait15Minutes, follower } from './strategy';
-import { allCurrency } from './extractors';
+import { onlyBnb } from './extractors';
 import _ from 'lodash';
 let allNews: BinanceInfo[];
 
@@ -17,6 +17,7 @@ describe('getPerformanceForNews', () => {
   it('should performe as expected for highestStrategy', async () => {
     const newsToTest = _.take(allNews, 50);
     const config = { file: false, database: true };
+    const extractors = [onlyBnb];
     const strategies: Strategy[] = [
       highestStrategy,
       wait15Minutes,
@@ -30,8 +31,12 @@ describe('getPerformanceForNews', () => {
     await Promise.all(
       strategies.map(async strategy =>
         Promise.all(
-          newsToTest.map(async news =>
-            getPerformanceForNews(news, strategy, allCurrency, config)
+          extractors.map(extractor =>
+            Promise.all(
+              newsToTest.map(async news =>
+                getPerformanceForNews(news, strategy, extractor, config)
+              )
+            )
           )
         )
       )

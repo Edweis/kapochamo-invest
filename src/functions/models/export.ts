@@ -30,12 +30,13 @@ export const savePerformance = async (
   info: BinanceInfo,
   strategy: string,
   symbol: string,
-  performance: number | null
+  performance: number | null,
+  extractor: string
 ) => {
   await pg.query<BinanceInfo>(
-    `INSERT INTO performance (url, strategy, symbol, performance)
-    VALUES ($1, $2, $3, $4)`,
+    `INSERT INTO performance (url, strategy, symbol, performance, extractor)
+    VALUES ($1, $2, $3, $4, $5)`,
     [info.url, strategy, symbol, performance]
   );
-  console.debug('exported: ', strategy, symbol, performance);
+  console.debug('exported: ', strategy, symbol, performance, extractor);
 };

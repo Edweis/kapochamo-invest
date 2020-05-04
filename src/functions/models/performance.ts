@@ -47,7 +47,6 @@ export const getPerformanceForNews = async (
   if (symbols.length > 10) {
     throw Error('To many symbols (' + symbols.length + ') for ' + info.title);
   }
-  if (!symbols.includes('BNBUSDT')) symbols.push('BNBUSDT');
   if (shouldExport.file) await clearData();
   const performances: { [symbol: string]: number | null } = {};
   await Promise.all(
@@ -57,7 +56,13 @@ export const getPerformanceForNews = async (
       if (shouldExport.file) await exportTicks(symbol, ticks);
       const performance = computePerformance(strategy, ticks, datetime);
       if (shouldExport.database)
-        await savePerformance(info, strategy.name, symbol, performance);
+        await savePerformance(
+          info,
+          strategy.name,
+          symbol,
+          performance,
+          extractor.name
+        );
       performances[symbol] = performance;
     })
   );

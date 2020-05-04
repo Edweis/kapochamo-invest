@@ -23,6 +23,7 @@ CREATE TABLE performance (
   strategy VARCHAR NOT NULL,
   symbol VARCHAR NOT NULL REFERENCES symbol(symbol),
   performance FLOAT,
+  extractor VARCHAR,
   FOREIGN KEY (url) REFERENCES links(url),
   PRIMARY KEY (url, strategy, symbol)
 )

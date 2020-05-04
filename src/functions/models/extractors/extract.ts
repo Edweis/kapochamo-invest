@@ -1,6 +1,6 @@
 import { BinanceInfo } from '../../../types';
 import { Asset } from '../types';
-
+import _ from 'lodash';
 const MATCH_SPEC_CHAR = /[^\w\s]/gi;
 const MATCH_NON_UPPER = /[^A-Z]/g;
 const MATCH_DUPLICATED_SPACE = / +(?= )/g;
@@ -29,8 +29,7 @@ export const getAssetFromInfo = (
   info: BinanceInfo,
   assets: string[]
 ): Asset[] => {
-  // const tokenText = getAssetsFromText(info.content || '', assets);
+  const tokenText = getAssetsFromText(info.content || '', assets);
   const tokenTitle = getAssetsFromText(info.title || '', assets);
-  // return _.uniq([...tokenText, ...tokenTitle]);
-  return tokenTitle;
+  return _.uniq([...tokenText, ...tokenTitle]);
 };

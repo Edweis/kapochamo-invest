@@ -8,3 +8,8 @@ export const allCurrency: Extractor = async info => {
   const symbols = await getRelevantSymbolFromAsset(assets);
   return symbols;
 };
+
+export const onlyBnb: Extractor = async news => {
+  if (news.title == null) return [];
+  return ['BNBUSDT'];
+};
