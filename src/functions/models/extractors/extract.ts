@@ -31,5 +31,6 @@ export const getAssetFromInfo = (
 ): Asset[] => {
   const tokenText = getAssetsFromText(info.content || '', assets);
   const tokenTitle = getAssetsFromText(info.title || '', assets);
-  return _.uniq([...tokenText, ...tokenTitle]);
+  const uniqAssets = _.uniq([...tokenText, ...tokenTitle]);
+  return uniqAssets.sort();
 };

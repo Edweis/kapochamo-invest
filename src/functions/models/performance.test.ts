@@ -1,6 +1,6 @@
 import { getOneNews } from './queries';
 import { getPerformanceForNews } from './performance';
-import { TEST_NEWS_TITLE } from '../../test-constants';
+import { TEST_OPTIMIST_NEWS_TITLE } from '../../test-constants';
 import { BinanceInfo } from '../../types';
 import { highestStrategy, wait15Minutes, follower } from './strategy';
 
@@ -9,7 +9,7 @@ let testNews: BinanceInfo;
 describe('getPerformanceForNews', () => {
   const highestPerf = 6.473632581267119;
   beforeAll(async () => {
-    testNews = await getOneNews(TEST_NEWS_TITLE);
+    testNews = await getOneNews(TEST_OPTIMIST_NEWS_TITLE);
   });
   it('should performe as expected for highestStrategy', async () => {
     const performances = await getPerformanceForNews(testNews, highestStrategy);
