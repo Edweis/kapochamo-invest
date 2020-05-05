@@ -25,18 +25,19 @@ export const exportTicks = async (symbol: string, ticks: Tick[]) => {
 
 export const clearPerformances = async () => {
   await pg.query('DELETE FROM performance');
+  console.debug('All performances were removed.');
 };
 export const savePerformance = async (
   info: BinanceInfo,
   strategy: string,
   symbol: string,
-  performance: number | null,
-  extractor: string
+  extractor: string,
+  performance: number | null
 ) => {
   await pg.query<BinanceInfo>(
     `INSERT INTO performance (url, strategy, symbol, performance, extractor)
     VALUES ($1, $2, $3, $4, $5)`,
-    [info.url, strategy, symbol, performance]
+    [info.url, strategy, symbol, performance, extractor]
   );
   console.debug('exported: ', strategy, symbol, performance, extractor);
 };

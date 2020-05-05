@@ -1,7 +1,7 @@
 import {
   getAllAssets,
   getOneNews,
-  getRelevantSymbolFromAsset,
+  getSymbols,
 } from './queries';
 import { getAssetFromInfo } from './extract';
 import { getTickAround } from './getNewsContext';
@@ -38,7 +38,7 @@ describe('ticks', () => {
     expect(ticks[99].openTime).toEqual(startMinuteUnix * 1000);
   });
   it('get symbol from assets', async () => {
-    const symbols = await getRelevantSymbolFromAsset(MATCHING_ASSETS);
+    const symbols = await getSymbols(MATCHING_ASSETS);
     expect(symbols.length).toEqual(155);
   });
 });

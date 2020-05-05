@@ -13,15 +13,16 @@ export const getAllAssets = async () => {
   return response.rows.map(row => row.asset) as string[];
 };
 
-export const getRelevantSymbolFromAsset = async (
-  assets: Asset[]
+export const getSymbols = async (
+  baseAssets: Asset[],
+  quoteAssets: Asset[]
 ): Promise<AssetSymbol[]> => {
-  const relevantBase = ['USDT, BNB'];
   const response = await pg.query(
     `SELECT symbol FROM symbol
     WHERE base_asset = ANY ($1) AND
-    quote_asset = ANY ($2) ORDER BY 1`,
-    [relevantBase, assets]
+    quote_asset = ANY ($2)
+    ORDER BY 1`,
+    [baseAssets, quoteAssets]
   );
   return response.rows.map(row => row.symbol) as string[];
 };

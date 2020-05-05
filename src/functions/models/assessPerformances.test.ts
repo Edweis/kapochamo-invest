@@ -4,7 +4,7 @@ import { getPerformanceForNews } from './performance';
 import { BinanceInfo } from '../../types';
 import { Strategy } from './types';
 import { highestStrategy, wait15Minutes, follower } from './strategy';
-import { onlyBnb } from './extractors';
+import { onlyBnb, relatedAgainstUsdt, relatedAgainstBnb } from './extractors';
 import _ from 'lodash';
 let allNews: BinanceInfo[];
 
@@ -15,9 +15,10 @@ describe('getPerformanceForNews', () => {
   });
 
   it('should performe as expected for highestStrategy', async () => {
+    jest.setTimeout(30000);
     const newsToTest = _.take(allNews, 50);
     const config = { file: false, database: true };
-    const extractors = [onlyBnb];
+    const extractors = [onlyBnb, relatedAgainstUsdt, relatedAgainstBnb];
     const strategies: Strategy[] = [
       highestStrategy,
       wait15Minutes,
@@ -43,3 +44,15 @@ describe('getPerformanceForNews', () => {
     );
   });
 });
+TODOOOOOO check https://www.binance.com/en/trade/HIVE_BTC, follower 5% should make 40% at opening
+// Get stats with :
+// SELECT
+//   extractor, strategy,
+//   (1+avg(performance)/100)^count(performance)-1 as TRI,
+//   stddev_samp(performance),
+//   count(performance) as nb_trades,
+//   count(DISTINCT url) as nb_news,
+//   count(symbol) as nb_symols
+// FROM performance
+// GROUP BY strategy, extractor
+// ORDER BY 3 DESC

@@ -1,5 +1,5 @@
 import axios from 'axios';
-
+import { axiosCacheGet } from './services/cache';
 const BASE_URL = 'https://api.binance.com/api/v3';
 
 export const binancePrivate = axios.create({
@@ -12,3 +12,4 @@ export const binancePrivate = axios.create({
 export const binancePublic = axios.create({
   baseURL: BASE_URL,
 });
+export const binancePublicGet = axiosCacheGet(binancePublic);

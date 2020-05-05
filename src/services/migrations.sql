@@ -25,5 +25,5 @@ CREATE TABLE performance (
   performance FLOAT,
   extractor VARCHAR,
   FOREIGN KEY (url) REFERENCES links(url),
-  PRIMARY KEY (url, strategy, symbol)
+  PRIMARY KEY (url, strategy, symbol, extractor)
 )

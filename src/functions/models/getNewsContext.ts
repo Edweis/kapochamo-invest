@@ -1,5 +1,5 @@
 import moment from 'moment';
-import { binancePublic } from '../../api';
+import { binancePublicGet } from '../../api';
 
 import { AssetSymbol, ApiTick, Tick } from './types';
 const formatTickFromApi = (apiTick: ApiTick): Tick => ({
@@ -24,10 +24,10 @@ export const getTickAround = async (time: Date, symbol: AssetSymbol) => {
   const params = { symbol, limit: NUMBER_TICKS, interval: INTERVAL };
   const paramBefore = { ...params, endTime: now };
   const paramAfter = { ...params, startTime: now };
-  const ticksBefore = await binancePublic.get<ApiTick[]>('/klines', {
+  const ticksBefore = await binancePublicGet<ApiTick[]>('/klines', {
     params: paramBefore,
   });
-  const ticksAfter = await binancePublic.get<ApiTick[]>('/klines', {
+  const ticksAfter = await binancePublicGet<ApiTick[]>('/klines', {
     params: paramAfter,
   });
   const allTicks = ticksBefore.data.concat(ticksAfter.data);
@@ -36,7 +36,8 @@ export const getTickAround = async (time: Date, symbol: AssetSymbol) => {
   const later = now + NUMBER_TICKS * 60 * 1000;
   const earlier = now - NUMBER_TICKS * 60 * 1000;
 
-  return allTicks
+  const filteredTicks = allTicks
     .map(formatTickFromApi)
     .filter(tick => earlier <= tick.openTime && tick.openTime <= later);
+  return filteredTicks;
 };
