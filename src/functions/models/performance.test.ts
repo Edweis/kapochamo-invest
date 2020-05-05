@@ -7,7 +7,7 @@ import { highestStrategy, wait15Minutes, follower } from './strategy';
 let testNews: BinanceInfo;
 
 describe('getPerformanceForNews', () => {
-  const highestPerf = 6.435070865609039;
+  const highestPerf = 6.473632581267119;
   beforeAll(async () => {
     testNews = await getOneNews(TEST_NEWS_TITLE);
   });
@@ -17,11 +17,11 @@ describe('getPerformanceForNews', () => {
   });
   it('should performe as expected for wait15Minutes', async () => {
     const performances = await getPerformanceForNews(testNews, wait15Minutes);
-    expect(performances.BNBUSDT).toEqual(3.1478031905208788);
+    expect(performances.BNBUSDT).toEqual(3.1877197159624058);
   });
   it('should performe as expected for follower 0.001%', async () => {
     const performances = await getPerformanceForNews(testNews, follower(0.001));
-    expect(performances.BNBUSDT).toEqual(3.016724518775646);
+    expect(performances.BNBUSDT).toEqual(3.0566950667928907);
   });
   it('should performe as expected for follower 0.01%', async () => {
     const performances = await getPerformanceForNews(testNews, follower(0.01));

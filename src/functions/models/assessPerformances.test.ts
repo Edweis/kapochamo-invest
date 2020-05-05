@@ -11,11 +11,26 @@ let allNews: BinanceInfo[];
 describe('getPerformanceForNews', () => {
   beforeAll(async () => {
     allNews = await getNews();
-    await clearPerformances();
   });
 
-  it('should performe as expected for highestStrategy', async () => {
+  // it('should run on poerf', async () => {
+  //   const news = allNews.find(news => news.url.includes('360042363352'));
+  //   if (news == null) throw Error('News not found');
+  //   const perf = await getPerformanceForNews(
+  //     news,
+  //     follower(0.005),
+  //     relatedAgainstBnb,
+  //     {
+  //       file: true,
+  //       database: false,
+  //     }
+  //   );
+  //   expect(perf).toEqual('sdfg');
+  // });
+
+  it.skip('should performe as expected for highestStrategy', async () => {
     jest.setTimeout(30000);
+    await clearPerformances();
     const newsToTest = _.take(allNews, 50);
     const config = { file: false, database: true };
     const extractors = [onlyBnb, relatedAgainstUsdt, relatedAgainstBnb];
@@ -44,7 +59,7 @@ describe('getPerformanceForNews', () => {
     );
   });
 });
-TODOOOOOO check https://www.binance.com/en/trade/HIVE_BTC, follower 5% should make 40% at opening
+// TODOOOOOO check https://www.binance.com/en/trade/HIVE_BTC, follower 5% should make 40% at opening
 // Get stats with :
 // SELECT
 //   extractor, strategy,

@@ -1,6 +1,7 @@
 import { BinanceInfo } from '../../types';
 import { clearData, exportTicks, savePerformance } from './export';
 import { getTickAround } from './getNewsContext';
+import { onlyBnb } from './extractors';
 import moment from 'moment';
 import { Tick, Strategy, Extractor } from './types';
 
@@ -27,7 +28,7 @@ export const computePerformance = (
   // display stats
   const sellFor = sellTick.close;
   const sellAt = moment(sellTick.openTime).toDate();
-  const valueNow = futurTicks[0].close;
+  const valueNow = futurTicks[0].open;
   if (SHOULD_DISPLAY_PERFORMANCE)
     console.debug(strategy.name, { valueNow, sellFor, sellAt, now });
 
@@ -38,7 +39,7 @@ export const computePerformance = (
 export const getPerformanceForNews = async (
   info: BinanceInfo,
   strategy: Strategy,
-  extractor: Extractor,
+  extractor: Extractor = onlyBnb,
   shouldExport = { file: false, database: false }
 ) => {
   if (info.time == null) throw Error("Can't evaluate a null date");

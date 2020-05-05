@@ -1,15 +1,11 @@
-import {
-  getAllAssets,
-  getOneNews,
-  getSymbols,
-} from './queries';
-import { getAssetFromInfo } from './extract';
+import { getAllAssets, getOneNews, getSymbols } from './queries';
+import { getAssetFromInfo } from './extractors/extract';
 import { getTickAround } from './getNewsContext';
 import { BinanceInfo } from '../../types';
 import moment from 'moment';
 import { TEST_NEWS_TITLE } from '../../test-constants';
 
-describe('ticks', () => {
+describe('Optimist news', () => {
   let assets: string[] = [];
   let testNews: BinanceInfo;
   const MATCHING_ASSETS = ['BNB', 'CTSI'];
@@ -35,10 +31,11 @@ describe('ticks', () => {
     const startMinuteUnix = moment(testNews.time)
       .startOf('m')
       .unix();
+    ticks.find(tick => tick.openTime === startMinuteUnix * 1000);
     expect(ticks[99].openTime).toEqual(startMinuteUnix * 1000);
   });
   it('get symbol from assets', async () => {
-    const symbols = await getSymbols(MATCHING_ASSETS);
-    expect(symbols.length).toEqual(155);
+    const symbols = await getSymbols(MATCHING_ASSETS, MATCHING_ASSETS);
+    expect(symbols).toEqual(['CTSIBNB']);
   });
 });

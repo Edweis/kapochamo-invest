@@ -14,7 +14,7 @@ jest.setTimeout(300000);
 const headless = false;
 let browser: puppeteer.Browser;
 
-describe('news', () => {
+describe.skip('news', () => {
   beforeAll(async () => {
     browser = await puppeteer.launch({ headless });
   });

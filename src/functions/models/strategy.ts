@@ -32,6 +32,10 @@ export const follower = (sellAfterLossOf: Percentage): Strategy => {
   checkPercentage(sellAfterLossOf);
   const functionName = 'follower' + sellAfterLossOf * 100;
   const strategyFunc: Strategy = ticks => {
+    console.debug(
+      'Following',
+      ticks.map(tick => tick.open)
+    );
     const peakValues = getPeakTicks(ticks);
     const tickToSell = ticks.find((tick, index) => {
       const peak = peakValues[index];
