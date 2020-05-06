@@ -25,7 +25,7 @@ export const exportTicks = async (symbol: string, ticks: Tick[]) => {
 
 export const clearPerformances = async () => {
   await pg.query('DELETE FROM performance');
-  console.debug('All performances were removed.');
+  console.warn('All performances were removed.');
 };
 export const savePerformance = async (
   info: BinanceInfo,

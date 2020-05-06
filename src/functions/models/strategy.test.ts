@@ -1,4 +1,4 @@
-import { getPeakTicks, follower } from './strategy';
+import { getPeakTicks, follower, charly } from './strategy';
 import { Tick } from './types';
 
 const toTick = (num: number): Tick => ({
@@ -51,5 +51,27 @@ describe('follower', () => {
     expect(follower(0.001).name).toEqual('follower0_1');
     expect(follower(0.05).name).toEqual('follower5');
     expect(follower(0.5).name).toEqual('follower50');
+  });
+});
+
+describe('charly', () => {
+  it('should return latest for raising serie', () => {
+    const ticks = tickify([1, 2, 3, 4, 5]);
+    expect(charly(0.5, 0)(ticks)).toEqual(toTick(5));
+    expect(charly(0.1, 0)(ticks)).toEqual(toTick(5));
+    expect(charly(0.01, 0)(ticks)).toEqual(toTick(5));
+  });
+  it('should sell after 5% loss', () => {
+    const ticks = tickify([100, 99, 95, 84, 76]);
+    expect(charly(0.1, 0)(ticks)).toEqual(toTick(95));
+  });
+  it('should sell after a hill 100% -> sell at -10%', () => {
+    const ticks = tickify([50, 60, 100, 95, 92, 90, 100]);
+    expect(charly(0.1, 0)(ticks)).toEqual(toTick(90));
+  });
+  it('should have the right name', () => {
+    expect(charly(0.001, 0).name).toEqual('charly0_1');
+    expect(charly(0.05, 0).name).toEqual('charly5');
+    expect(charly(0.5, 0).name).toEqual('charly50');
   });
 });

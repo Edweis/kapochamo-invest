@@ -28,7 +28,7 @@ describe('getPerformanceForNews', () => {
   //   expect(perf).toEqual('sdfg');
   // });
 
-  it.skip('should performe as expected for highestStrategy', async () => {
+  it('should performe as expected for highestStrategy', async () => {
     jest.setTimeout(30000);
     await clearPerformances();
     const newsToTest = _.take(allNews, 50);
