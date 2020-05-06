@@ -49,7 +49,13 @@ export const charly = (
 ): Strategy => {
   checkPercentage(sellAfterRelativeLossOf);
   checkPercentage(pureLossApetite);
-  const functionName = 'charly' + sellAfterRelativeLossOf * 100;
+  const functionName =
+    'charly_S' +
+    sellAfterRelativeLossOf * 100 +
+    'W' +
+    waitFor +
+    'L' +
+    pureLossApetite * 100;
   const strategyFunc: Strategy = ticks => {
     const peakValues = getPeakTicks(ticks);
     const boughtFor = ticks[0].open;

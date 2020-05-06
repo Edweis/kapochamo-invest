@@ -70,8 +70,8 @@ describe('charly', () => {
     expect(charly(0.1, 0)(ticks)).toEqual(toTick(90));
   });
   it('should have the right name', () => {
-    expect(charly(0.001, 0).name).toEqual('charly0_1');
-    expect(charly(0.05, 0).name).toEqual('charly5');
-    expect(charly(0.5, 0).name).toEqual('charly50');
+    expect(charly(0.001, 1, 0.3).name).toEqual('charly_S0_1W1L30');
+    expect(charly(0.05, 2, 0.2).name).toEqual('charly_S5W2L20');
+    expect(charly(0.5, 3, 0.1).name).toEqual('charly_S50W3L10');
   });
 });
