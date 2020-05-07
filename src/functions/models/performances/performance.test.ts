@@ -1,13 +1,13 @@
-import { getOneNews } from './queries';
+import { getOneNews } from '../queries';
 import { getPerformanceForNews } from './performance';
-import { TEST_OPTIMIST_NEWS_TITLE } from '../../test-constants';
-import { BinanceInfo } from '../../types';
-import { highestStrategy, wait15Minutes, follower } from './strategy';
+import { TEST_OPTIMIST_NEWS_TITLE } from '../../../test-constants';
+import { BinanceInfo } from '../../../types';
+import { highestStrategy, wait15Minutes, follower } from '../strategy';
 
 let testNews: BinanceInfo;
 
 describe('getPerformanceForNews', () => {
-  const highestPerf = 6.473632581267119;
+  const highestPerf = 6.273632581267119;
   beforeAll(async () => {
     testNews = await getOneNews(TEST_OPTIMIST_NEWS_TITLE);
   });
@@ -17,11 +17,11 @@ describe('getPerformanceForNews', () => {
   });
   it('should performe as expected for wait15Minutes', async () => {
     const performances = await getPerformanceForNews(testNews, wait15Minutes);
-    expect(performances.BNBUSDT).toEqual(3.1877197159624058);
+    expect(performances.BNBUSDT).toEqual(2.987719715962406);
   });
   it('should performe as expected for follower 0.001%', async () => {
     const performances = await getPerformanceForNews(testNews, follower(0.001));
-    expect(performances.BNBUSDT).toEqual(3.0566950667928907);
+    expect(performances.BNBUSDT).toEqual(2.8566950667928907);
   });
   it('should performe as expected for follower 0.01%', async () => {
     const performances = await getPerformanceForNews(testNews, follower(0.01));
