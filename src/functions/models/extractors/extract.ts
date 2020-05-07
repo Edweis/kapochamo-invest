@@ -5,6 +5,19 @@ const MATCH_SPEC_CHAR = /[^\w\s]/gi;
 const MATCH_NON_UPPER = /[^A-Z]/g;
 const MATCH_DUPLICATED_SPACE = / +(?= )/g;
 
+export const getWords = (text: string, matchUpper = false): string[] => {
+  if (text === '') return [];
+  const formatedText = matchUpper
+    ? text.replace(MATCH_NON_UPPER, ' ')
+    : text.toLowerCase();
+  return formatedText
+    .replace(MATCH_SPEC_CHAR, ' ')
+    .replace(MATCH_DUPLICATED_SPACE, '')
+    .trim()
+    .split(' ')
+    .filter(token => token !== '');
+};
+
 export const getAssetsFromText = (text: string, assets: string[]) => {
   const assetMaxLength = assets
     .map(asset => asset.length)
@@ -13,15 +26,9 @@ export const getAssetsFromText = (text: string, assets: string[]) => {
     .map(asset => asset.length)
     .reduce((acc, value) => (acc < value ? acc : value), Infinity);
 
-  const tokens = text
-    .replace(MATCH_SPEC_CHAR, ' ')
-    .replace(MATCH_NON_UPPER, ' ')
-    .replace(MATCH_DUPLICATED_SPACE, '')
-    .trim()
-    .split(' ')
-    .filter(
-      word => word.length <= assetMaxLength && word.length >= assetMinLength
-    );
+  const tokens = getWords(text, true).filter(
+    word => word.length <= assetMaxLength && word.length >= assetMinLength
+  );
   return assets.filter(asset => tokens.includes(asset));
 };
 
