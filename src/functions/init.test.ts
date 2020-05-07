@@ -21,14 +21,14 @@ describe.skip('news', () => {
   // it.skip('should remove all links ', async () => {
   //   await removeAllLinks();
   // });
-  it.skip('should post announcements links', async () => {
+  it('should post announcements links', async () => {
     const newsAnnouncements = await scrapAllPages(
       browser,
       NEWS_LINKS.ANNOUNCEMENTS
     );
     await Promise.all(newsAnnouncements.map(postLinks));
   });
-  it.skip('should post latest links', async () => {
+  it('should post latest links', async () => {
     const latestAnnouncements = await scrapAllPages(browser, NEWS_LINKS.LATEST);
     await Promise.all(latestAnnouncements.map(postLinks));
   });

@@ -5,7 +5,7 @@ import { BinanceInfo, BinanceInfoRaw } from '../types';
 import pLimit from 'p-limit';
 const PARALLEL_RUN = 1;
 const limit = pLimit(PARALLEL_RUN);
-
+import { sleep } from '../helpers';
 const insertNews = async (info: BinanceInfoRaw) => {
   await pg.query(
     'INSERT INTO news(title, time, content, url) VALUES($1, $2, $3, $4) RETURNING *',
@@ -29,7 +29,6 @@ export const checkNewsExists = async (url: string) => {
   );
   return result.rows[0].count > 0;
 };
-const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
 export const scrapAllPagesInfo = async (
   browser: puppeteer.Browser,

@@ -4,6 +4,16 @@ type AxiosResponseCached<T> = Promise<AxiosResponse<T> & CacheInfo>;
 type AxiosCache = { [url: string]: Promise<AxiosResponse<any>> };
 import qs from 'querystring';
 
+import Bottleneck from 'bottleneck';
+
+const limiter = new Bottleneck({
+  reservoir: 1100,
+  reservoirRefreshAmount: 1100,
+  reservoirRefreshInterval: 60 * 1000,
+  maxConcurrent: 100,
+  minTime: 10,
+});
+
 export const formatUrl = (url: string, config?: AxiosRequestConfig) => {
   if (config == null) return url;
   const queryString = qs.stringify(config.params);
@@ -16,10 +26,10 @@ export const axiosCacheGet = (axiosInstance: AxiosInstance) => async <T>(
 ): AxiosResponseCached<T> => {
   const formatedUrl = formatUrl(url, config);
   if (cache[formatedUrl] == null) {
-    const promise = axiosInstance.get<T>(url, config);
+    const promise = limiter.schedule(() => axiosInstance.get<T>(url, config));
     cache[formatedUrl] = promise;
     return promise.then(result => ({ ...result, fromCache: false }));
   }
   const promise = cache[formatedUrl] as AxiosResponseCached<T>;
-  return promise.then(result => ({ ...result, fromCache: true })).then();
+  return promise.then(result => ({ ...result, fromCache: true }));
 };

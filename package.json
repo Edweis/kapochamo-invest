@@ -48,6 +48,7 @@
   },
   "dependencies": {
     "axios": "^0.19.2",
+    "bottleneck": "^2.19.5",
     "cheerio": "^1.0.0-rc.3",
     "http-status-codes": "^1.4.0",
     "jest-environment-puppeteer": "^4.4.0",
@@ -71,12 +72,25 @@
   },
   "jest": {
     "verbose": true,
-    "roots": [ "<rootDir>/src" ],
+    "roots": [
+      "<rootDir>/src"
+    ],
     "testRegex": "(.*\\.test\\.(tsx?|jsx?))$",
-    "transform": { "^.+\\.[t|j]sx?$": "babel-jest" },
-    "moduleFileExtensions": [ "ts", "tsx", "js", "jsx", "json", "node" ],
+    "transform": {
+      "^.+\\.[t|j]sx?$": "babel-jest"
+    },
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js",
+      "jsx",
+      "json",
+      "node"
+    ],
     "testEnvironment": "node",
-    "setupFilesAfterEnv": ["<rootDir>/src/teardown.ts"]
+    "setupFilesAfterEnv": [
+      "<rootDir>/src/teardown.ts"
+    ]
   },
   "babel": {
     "presets": [

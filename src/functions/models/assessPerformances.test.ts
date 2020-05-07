@@ -13,25 +13,10 @@ describe('getPerformanceForNews', () => {
     allNews = await getNews();
   });
 
-  // it('should run on poerf', async () => {
-  //   const news = allNews.find(news => news.url.includes('360042363352'));
-  //   if (news == null) throw Error('News not found');
-  //   const perf = await getPerformanceForNews(
-  //     news,
-  //     follower(0.005),
-  //     relatedAgainstBnb,
-  //     {
-  //       file: true,
-  //       database: false,
-  //     }
-  //   );
-  //   expect(perf).toEqual('sdfg');
-  // });
-
   it('should performe as expected for highestStrategy', async () => {
-    jest.setTimeout(30000);
+    jest.setTimeout(300000);
     await clearPerformances();
-    const newsToTest = _.take(allNews, 50);
+    const newsToTest = _.take(allNews, 50000);
     const config = { file: false, database: true };
     const extractors = [onlyBnb, relatedAgainstUsdt, relatedAgainstBnb];
     const strategies: Strategy[] = [
@@ -61,7 +46,7 @@ describe('getPerformanceForNews', () => {
     );
   });
 });
-// TODOOOOOO check https://www.binance.com/en/trade/HIVE_BTC, follower 5% should make 40% at opening
+// TODOOOOOO check with `charly` strategy which news to take according to its wording
 // Get stats with :
 // SELECT
 //   extractor, strategy,

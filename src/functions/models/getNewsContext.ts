@@ -1,5 +1,6 @@
 import moment from 'moment';
 import { binancePublicGet } from '../../api';
+import { sleep } from '../helpers';
 
 import { AssetSymbol, ApiTick, Tick } from './types';
 const formatTickFromApi = (apiTick: ApiTick): Tick => ({
@@ -17,6 +18,21 @@ const formatTickFromApi = (apiTick: ApiTick): Tick => ({
   ignore: apiTick[11],
 });
 
+type ParamsKLines = {
+  symbol: string;
+  limit?: number;
+  interval: string;
+  endTime?: number;
+  startTime?: number;
+};
+
+const getKlines = async (params: ParamsKLines) => {
+  const response = await binancePublicGet<ApiTick[]>('/klines', {
+    params,
+  });
+  return response;
+};
+
 export const getTickAround = async (time: Date, symbol: AssetSymbol) => {
   const INTERVAL = '1m';
   const NUMBER_TICKS = 100;
@@ -24,12 +40,8 @@ export const getTickAround = async (time: Date, symbol: AssetSymbol) => {
   const params = { symbol, limit: NUMBER_TICKS, interval: INTERVAL };
   const paramBefore = { ...params, endTime: now };
   const paramAfter = { ...params, startTime: now };
-  const ticksBefore = await binancePublicGet<ApiTick[]>('/klines', {
-    params: paramBefore,
-  });
-  const ticksAfter = await binancePublicGet<ApiTick[]>('/klines', {
-    params: paramAfter,
-  });
+  const ticksBefore = await getKlines(paramBefore);
+  const ticksAfter = await getKlines(paramAfter);
 
   // Sometime the API goes beyonf the required date, we filter out theses
   const later = now + NUMBER_TICKS * 60 * 1000;
