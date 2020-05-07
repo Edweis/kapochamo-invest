@@ -8,7 +8,7 @@ import { onlyBnb, relatedAgainstUsdt, relatedAgainstBnb } from './extractors';
 import _ from 'lodash';
 let allNews: BinanceInfo[];
 
-describe('getPerformanceForNews', () => {
+describe.skip('getPerformanceForNews', () => {
   beforeAll(async () => {
     allNews = await getNews();
   });
