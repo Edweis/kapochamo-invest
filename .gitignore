@@ -1,7 +1,11 @@
+# Jupyther notebook
+# They are converted into .py on pre-commit by husky
+*.ipynb
 # Dependency directories
 node_modules/
 data/
 emulator/
+
 # Webpack directory
 .webpack
 
