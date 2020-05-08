@@ -1,4 +1,4 @@
-echo 'Pretty notebooks';
+echo '✨  Pretty notebooks';
 
 for file in ./src/charts/*.ipynb; do
     [ -f "$file" ] || break
