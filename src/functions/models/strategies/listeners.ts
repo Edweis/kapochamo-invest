@@ -8,10 +8,10 @@ export const followerLst: StrategyListener<[Percentage]> = (
   sellAfterLossOf
 ) => {
   checkPercentage(sellAfterLossOf);
-  let highest = initialTick.open;
+  let highest = initialTick.close;
   const strategy: StrategyInstance = tick => {
-    highest = Math.max(highest, tick.open);
-    return tick.open <= highest * (1 - sellAfterLossOf);
+    highest = Math.max(highest, tick.close);
+    return tick.close <= highest * (1 - sellAfterLossOf);
   };
   const functionName = `follower${sellAfterLossOf * 100}`;
   return rename(strategy, functionName);
@@ -24,14 +24,14 @@ export const relativeFollower: StrategyListener<[Percentage, Percentage]> = (
 ) => {
   checkPercentage(sellAfterRelativeLossOf);
   checkPercentage(pureLossApetite);
-  let highest = initialTick.open;
-  const boughtFor = initialTick.open;
+  let highest = initialTick.close;
+  const boughtFor = initialTick.close;
   const strategy: StrategyInstance = tick => {
-    highest = Math.max(highest, tick.open);
-    const gain = Math.max((tick.open - boughtFor) / boughtFor, 0);
+    highest = Math.max(highest, tick.close);
+    const gain = Math.max((tick.close - boughtFor) / boughtFor, 0);
     const triggerCoef =
       gain === 0 ? 1 - pureLossApetite : 1 - gain * sellAfterRelativeLossOf;
-    return tick.open <= highest * triggerCoef;
+    return tick.close <= highest * triggerCoef;
   };
 
   const functionName = `relativeFollower_L${pureLossApetite *

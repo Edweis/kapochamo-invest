@@ -27,12 +27,12 @@ describe('getPerformanceForNews', () => {
   it('should performe as expected for follower 0.01%', async () => {
     const strategy = convertSync(followerLst, [0.001]);
     const performances = await getPerformanceForNews(testNews, strategy);
-    expect(performances.BNBUSDT).toEqual(2.1465754972875244);
+    expect(performances.BNBUSDT).toEqual(1.764316105973785);
   });
   it('should performe as expected for follower 0.1%', async () => {
     const strategy = convertSync(followerLst, [0.01]);
     const performances = await getPerformanceForNews(testNews, strategy);
-    expect(performances.BNBUSDT).toEqual(4.29920212214784);
+    expect(performances.BNBUSDT).toEqual(4.097561853600448);
   });
   it('should performe as expected for follower 10%', async () => {
     const strategy = convertSync(followerLst, [0.1]);

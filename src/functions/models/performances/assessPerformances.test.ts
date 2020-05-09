@@ -24,7 +24,7 @@ describe.skip('getPerformanceForNews', () => {
   it('should perform as expected for highestSync', async () => {
     jest.setTimeout(300000);
     await clearPerformances();
-    const newsToTest = _.take(allNews, 50000);
+    const newsToTest = _.take(allNews, 200);
     const config = { file: false, database: true };
     const extractors = [onlyBnb, relatedAgainstUsdt, relatedAgainstBnb];
     const strategies: Strategy[] = [

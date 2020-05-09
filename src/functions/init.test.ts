@@ -32,7 +32,7 @@ describe.skip('news', () => {
     const latestAnnouncements = await scrapAllPages(browser, NEWS_LINKS.LATEST);
     await Promise.all(latestAnnouncements.map(postLinks));
   });
-  it('should get news from links', async () => {
+  it.skip('should get news from links', async () => {
     const links = await getAllLinks();
     await scrapAllPagesInfo(browser, links);
   });

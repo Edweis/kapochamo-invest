@@ -5,7 +5,7 @@ import { scrapPageInfo } from '../news/binance/scraping';
 import { BinanceInfoRaw } from '../types';
 import { sleep } from '../helpers';
 
-const PARALLEL_RUN = 1;
+const PARALLEL_RUN = 5;
 const limit = pLimit(PARALLEL_RUN);
 
 const insertNews = async (info: BinanceInfoRaw) => {
@@ -47,7 +47,7 @@ export const scrapAllPagesInfo = async (
         }
         const info = await scrapPageInfo(browser, link);
         await insertNews(info);
-        await sleep(20000);
+        await sleep(2000);
       })
     )
   );
