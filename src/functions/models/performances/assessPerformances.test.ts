@@ -3,7 +3,12 @@ import { clearPerformances } from '../export';
 import { getPerformanceForNews } from './performance';
 import { BinanceInfo } from '../../../types';
 import { Strategy } from '../types';
-import { highestStrategy, wait15Minutes, follower, charly } from '../strategy';
+import {
+  highestStrategy,
+  wait15Minutes,
+  follower,
+  charly,
+} from '../strategies';
 import { onlyBnb, relatedAgainstUsdt, relatedAgainstBnb } from '../extractors';
 import _ from 'lodash';
 let allNews: BinanceInfo[];

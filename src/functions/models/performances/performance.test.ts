@@ -2,7 +2,7 @@ import { getOneNews } from '../queries';
 import { getPerformanceForNews } from './performance';
 import { TEST_OPTIMIST_NEWS_TITLE } from '../../../test-constants';
 import { BinanceInfo } from '../../../types';
-import { highestStrategy, wait15Minutes, follower } from '../strategy';
+import { highestStrategy, wait15Minutes, follower } from '../strategies';
 
 let testNews: BinanceInfo;
 

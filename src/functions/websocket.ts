@@ -12,7 +12,7 @@ ws.on('close', () => console.log('disconnected'));
 
 ws.on('message', (message: string) => {
   const data = JSON.parse(message);
-  console.log((Number(data.E) - now) / 60000);
+  console.log(data);
 });
 
 ws.on('error', console.error);

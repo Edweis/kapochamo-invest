@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { Strategy, Tick } from './types';
+import { Strategy, Tick } from '../types';
 type Percentage = number;
 
 export const highestStrategy: Strategy = ticks =>

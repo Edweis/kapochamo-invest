@@ -1,5 +1,5 @@
-import { getPeakTicks, follower, charly } from './strategy';
-import { Tick } from './types';
+import { getPeakTicks, follower, charly } from './static';
+import { Tick } from '../types';
 
 const toTick = (num: number): Tick => ({
   openTime: num,
