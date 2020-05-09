@@ -18,7 +18,8 @@ export type Tick = {
 };
 export type Strategy = (ticks: Tick[]) => Tick | null;
 export type Extractor = (news: BinanceInfo) => Promise<AssetSymbol[]>;
-export type StrategyListener<T> = (
+export type StrategyInstance = (tick: Tick) => boolean;
+export type StrategyListener<T extends any[]> = (
   initialTick: Tick,
-  arg1: T
-) => (tick: Tick) => boolean;
+  ...args: T
+) => StrategyInstance;

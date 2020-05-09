@@ -1,5 +1,5 @@
-import { getPeakTicks, charly } from './static';
-import { followerLst } from './listeners';
+import { charly } from './static';
+import { followerLst, waitLst, relativeFollower } from './listeners';
 import { Tick } from '../types';
 import _ from 'lodash';
 
@@ -22,20 +22,8 @@ const tickify = (nums: number[]): Tick[] => nums.map(toTick);
 const testListener = (strategy: (tick: Tick) => boolean, events: Tick[]) =>
   events.find(strategy) || _.last(events);
 
-describe.skip('getPeakTicks', () => {
-  it('should work for raising serie', () => {
-    const ticks = tickify([1, 2, 3]);
-    expect(getPeakTicks(ticks)).toEqual([1, 2, 3]);
-  });
-  it('should work for falling serie', () => {
-    const ticks = tickify([3, 2, 1]);
-    expect(getPeakTicks(ticks)).toEqual([3, 3, 3]);
-  });
-  it('should work for varying serie', () => {
-    const ticks = tickify([1, 2, 1, 3, 0, 1, 2, 4]);
-    expect(getPeakTicks(ticks)).toEqual([1, 2, 2, 3, 3, 3, 3, 4]);
-  });
-});
+const timeTicks = (ticks: Tick[]) =>
+  ticks.map((tick, index) => ({ ...tick, openTime: index * 60 * 1000 }));
 
 describe('follower', () => {
   it('should return latest for raising serie', () => {
@@ -68,24 +56,47 @@ describe('follower', () => {
   });
 });
 
-describe.skip('charly', () => {
+describe('waitLst', () => {
+  it('should wait well', () => {
+    const initialTick = toTick(-1);
+    const ticks = timeTicks(tickify([0, 1, 2, 3, 4]));
+    const wait0 = waitLst(initialTick, 0);
+    const wait3 = waitLst(initialTick, 3);
+    expect(testListener(wait0, ticks)?.volume).toEqual(0);
+    expect(testListener(wait3, ticks)?.volume).toEqual(3);
+  });
+});
+
+describe('relativeFollower', () => {
   it('should return latest for raising serie', () => {
-    const ticks = tickify([1, 2, 3, 4, 5]);
-    expect(charly(0.5, 0)(ticks)).toEqual(toTick(5));
-    expect(charly(0.1, 0)(ticks)).toEqual(toTick(5));
-    expect(charly(0.01, 0)(ticks)).toEqual(toTick(5));
+    const initialTick = toTick(1);
+    const ticks = tickify([2, 3, 4, 5]);
+    const follower50 = relativeFollower(initialTick, 0.5, 0.2);
+    const follower10 = relativeFollower(initialTick, 0.1, 0.2);
+    const follower1 = relativeFollower(initialTick, 0.01, 0.2);
+    expect(testListener(follower1, ticks)).toEqual(toTick(5));
+    expect(testListener(follower10, ticks)).toEqual(toTick(5));
+    expect(testListener(follower50, ticks)).toEqual(toTick(5));
   });
   it('should sell after 5% loss', () => {
-    const ticks = tickify([100, 99, 95, 84, 76]);
-    expect(charly(0.1, 0)(ticks)).toEqual(toTick(95));
+    const ticks = tickify([99, 95, 84, 76]);
+    const initialTick = toTick(100);
+    const follower10 = relativeFollower(initialTick, 0.1, 0.05);
+    expect(testListener(follower10, ticks)).toEqual(toTick(95));
   });
   it('should sell after a hill 100% -> sell at -10%', () => {
-    const ticks = tickify([50, 60, 100, 95, 92, 90, 100]);
-    expect(charly(0.1, 0)(ticks)).toEqual(toTick(90));
+    const ticks = tickify([60, 100, 95, 92, 90, 100]);
+    const initialTick = toTick(50);
+    const follower10 = relativeFollower(initialTick, 0.1, 0.05);
+    expect(testListener(follower10, ticks)).toEqual(toTick(90));
   });
   it('should have the right name', () => {
-    expect(charly(0.001, 1, 0.3).name).toEqual('charly_S0_1W1L30');
-    expect(charly(0.05, 2, 0.2).name).toEqual('charly_S5W2L20');
-    expect(charly(0.5, 3, 0.1).name).toEqual('charly_S50W3L10');
+    const initialTick = toTick(100);
+    const follower50 = relativeFollower(initialTick, 0.5, 0.2);
+    const follower10 = relativeFollower(initialTick, 0.1, 0.1);
+    const follower1 = relativeFollower(initialTick, 0.001, 0.08);
+    expect(follower50.name).toEqual('relativeFollower_L20_S50');
+    expect(follower10.name).toEqual('relativeFollower_L10_S10');
+    expect(follower1.name).toEqual('relativeFollower_L8_S0_1');
   });
 });
