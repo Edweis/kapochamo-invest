@@ -1,6 +1,7 @@
 import _ from 'lodash';
 import { Strategy, Tick } from '../types';
 type Percentage = number;
+import { rename, checkPercentage } from './helpers';
 
 export const highestStrategy: Strategy = ticks =>
   _.maxBy(ticks, 'close') || ticks[0];
@@ -8,24 +9,11 @@ export const highestStrategy: Strategy = ticks =>
 export const wait15Minutes: Strategy = ticks => ticks[15] || null;
 
 export const getPeakTicks = (ticks: Tick[]): number[] => {
-  let highestTick = ticks[0].low;
+  let highestTick = ticks[0].open;
   return ticks.map(tick => {
-    if (tick.low > highestTick) highestTick = tick.low;
+    if (tick.open > highestTick) highestTick = tick.open;
     return highestTick;
   });
-};
-
-const checkPercentage = (num: number) => {
-  if (num > 1 || num < 0) throw Error(num + ' should be a percentage');
-};
-const rename = <T extends Function>(fn: T, name: string): T => {
-  const formatedName = name.replace('.', '_');
-  return new Function(
-    'fn',
-    'return (function ' +
-      formatedName +
-      '(){\n  return fn.apply(this, arguments)\n});'
-  )(fn);
 };
 
 export const follower = (sellAfterLossOf: Percentage): Strategy => {

@@ -19,12 +19,16 @@ describe('getPerformanceForNews', () => {
     const performances = await getPerformanceForNews(testNews, wait15Minutes);
     expect(performances.BNBUSDT).toEqual(2.987719715962406);
   });
-  it('should performe as expected for follower 0.001%', async () => {
-    const performances = await getPerformanceForNews(testNews, follower(0.001));
-    expect(performances.BNBUSDT).toEqual(2.8566950667928907);
-  });
   it('should performe as expected for follower 0.01%', async () => {
+    const performances = await getPerformanceForNews(testNews, follower(0.001));
+    expect(performances.BNBUSDT).toEqual(2.1465754972875244);
+  });
+  it('should performe as expected for follower 0.1%', async () => {
     const performances = await getPerformanceForNews(testNews, follower(0.01));
+    expect(performances.BNBUSDT).toEqual(4.29920212214784);
+  });
+  it('should performe as expected for follower 10%', async () => {
+    const performances = await getPerformanceForNews(testNews, follower(0.1));
     expect(performances.BNBUSDT).toEqual(highestPerf); // happento be a steady rise
   });
 });
