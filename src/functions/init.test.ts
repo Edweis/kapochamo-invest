@@ -11,7 +11,7 @@ import puppeteer from 'puppeteer';
 
 jest.setTimeout(300000);
 
-const headless = false;
+const headless = true;
 let browser: puppeteer.Browser;
 
 describe.skip('news', () => {
