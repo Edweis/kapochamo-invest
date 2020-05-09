@@ -73,6 +73,9 @@ export const charly: StrategyListener<[number, Percentage, Percentage]> = (
   return rename(strategy, functionName);
 };
 
+export const highestSync: Strategy = ticks =>
+  _.maxBy(ticks, 'close') || ticks[0];
+
 // All of these function are meant to be called by a web socket
 // This function convert the event base function for websocket into strategy that accept an array of tick as input
 export const convertSync = <K extends any[]>(
@@ -80,10 +83,15 @@ export const convertSync = <K extends any[]>(
   args: K
 ): Strategy => {
   let strategyInstance: StrategyInstance | null = null;
-  return ticks => {
+  // eslint-disable-next-line
+  // @ts-ignore Ugly but I just want the name of the function to pass to the wrapper !
+  const { name } = strategy({}, ...args);
+  const strategySync: Strategy = ticks => {
     if (strategyInstance == null) {
       strategyInstance = strategy(ticks[0], ...args);
     }
     return ticks.find(strategyInstance) || _.last(ticks) || ticks[0];
   };
+
+  return rename(strategySync, name);
 };

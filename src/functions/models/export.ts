@@ -34,10 +34,14 @@ export const savePerformance = async (
   extractor: string,
   performance: number | null
 ) => {
-  await pg.query<BinanceInfo>(
-    `INSERT INTO performance (url, strategy, symbol, performance, extractor)
+  await pg
+    .query<BinanceInfo>(
+      `INSERT INTO performance (url, strategy, symbol, performance, extractor)
     VALUES ($1, $2, $3, $4, $5)`,
-    [info.url, strategy, symbol, performance, extractor]
-  );
+      [info.url, strategy, symbol, performance, extractor]
+    )
+    .catch(err => {
+      console.error({ strategy, symbol, performance, extractor }, err);
+    });
   console.debug('exported: ', strategy, symbol, performance, extractor);
 };

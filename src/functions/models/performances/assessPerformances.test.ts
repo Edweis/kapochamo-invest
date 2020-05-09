@@ -5,11 +5,13 @@ import { getPerformanceForNews } from './performance';
 import { BinanceInfo } from '../../../types';
 import { Strategy } from '../types';
 import {
-  highestStrategy,
-  wait15Minutes,
-  follower,
+  followerLst,
+  relativeFollower,
+  waitLst,
   charly,
-} from '../strategies';
+  convertSync,
+  highestSync,
+} from '../strategies/listeners';
 import { onlyBnb, relatedAgainstUsdt, relatedAgainstBnb } from '../extractors';
 
 let allNews: BinanceInfo[];
@@ -19,23 +21,25 @@ describe.skip('getPerformanceForNews', () => {
     allNews = await getNews();
   });
 
-  it('should performe as expected for highestStrategy', async () => {
+  it('should perform as expected for highestSync', async () => {
     jest.setTimeout(300000);
     await clearPerformances();
     const newsToTest = _.take(allNews, 50000);
     const config = { file: false, database: true };
     const extractors = [onlyBnb, relatedAgainstUsdt, relatedAgainstBnb];
     const strategies: Strategy[] = [
-      highestStrategy,
-      wait15Minutes,
-      follower(0.001),
-      follower(0.005),
-      follower(0.01),
-      follower(0.02),
-      follower(0.05),
-      follower(0.1),
-      charly(0.1, 5),
-      charly(0.3, 5),
+      highestSync,
+      convertSync(waitLst, [15]),
+      convertSync(followerLst, [0.001]),
+      convertSync(followerLst, [0.005]),
+      convertSync(followerLst, [0.01]),
+      convertSync(followerLst, [0.02]),
+      convertSync(followerLst, [0.05]),
+      convertSync(followerLst, [0.1]),
+      convertSync(relativeFollower, [0.01, 0.05]),
+      convertSync(relativeFollower, [0.05, 0.05]),
+      convertSync(charly, [15, 0.1, 0.05]),
+      convertSync(charly, [15, 0.3, 0.05]),
     ];
     await Promise.all(
       strategies.map(async strategy =>
@@ -52,7 +56,6 @@ describe.skip('getPerformanceForNews', () => {
     );
   });
 });
-// TODOOOOOO check with `charly` strategy which news to take according to its wording
 // Get stats with :
 // SELECT
 //   extractor, strategy,

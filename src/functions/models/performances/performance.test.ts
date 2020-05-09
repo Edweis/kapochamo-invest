@@ -2,13 +2,11 @@ import { getOneNews } from '../queries';
 import { getPerformanceForNews } from './performance';
 import { TEST_OPTIMIST_NEWS_TITLE } from '../../../test-constants';
 import { BinanceInfo } from '../../../types';
-import { highestStrategy } from '../strategies';
 import {
   followerLst,
-  // relativeFollower,
   waitLst,
-  // charly,
   convertSync,
+  highestSync,
 } from '../strategies/listeners';
 
 let testNews: BinanceInfo;
@@ -17,8 +15,8 @@ describe('getPerformanceForNews', () => {
   beforeAll(async () => {
     testNews = await getOneNews(TEST_OPTIMIST_NEWS_TITLE);
   });
-  it('should performe as expected for highestStrategy', async () => {
-    const performances = await getPerformanceForNews(testNews, highestStrategy);
+  it('should performe as expected for highestSync', async () => {
+    const performances = await getPerformanceForNews(testNews, highestSync);
     expect(performances.BNBUSDT).toEqual(highestPerf);
   });
   it('should performe as expected for wait15Minutes', async () => {
