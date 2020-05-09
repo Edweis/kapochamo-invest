@@ -1,6 +1,7 @@
 import { getAssetFromInfo } from './extract';
 import { Extractor } from '../types';
 import { getAllAssets, getSymbols } from '../queries';
+
 const assetPromise = getAllAssets();
 
 export const allCurrency: Extractor = async info => {

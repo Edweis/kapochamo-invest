@@ -69,17 +69,31 @@ words_exploded_df = word_df \
 words_exploded_df.head(10)
 
 array = words_exploded_df.reset_index()
-strategyFilter = array['strategy'] == 'highestStrategy'
-extractorFilter =  array['extractor'] != 'rsselatedAgainstUsdt'
+strategyFilter = array['strategy'].str.startswith('charly_')
+extractorFilter =  array['extractor'] == 'relatedAgainstUsdt'
 countFilter = array['count'] > 5
 filtered_array = array[
     strategyFilter & 
     extractorFilter &
     countFilter
-].sort_values(['computed_perf'], ascending=False)
-filtered_array.head(100)
+]\
+.groupby(['words', 'extractor', 'strategy', 'symbol'])\
+.agg(
+        count=('count', 'sum'), 
+        computed_perf=('computed_perf', 'mean')
+    )\
+.sort_values(['computed_perf'], ascending=False)
+filtered_array.head(1)
 
-filtered_array.plot(x='words', y='computed_perf')
+#filtered_array.plot(x='words', y='computed_perf')
 
+hot_words = ['listing', 'list', 'trading']
+wordFilter = perf_df['title'].apply(format_title).apply(lambda words: any(word in hot_words for word in words))
 
+strategyFilter = perf_df['strategy'] == 'charly_S30W5L5'
+extractorFilter =  perf_df['extractor'] == 'relatedAgainstUsdt'
+
+perf_ser = perf_df[strategyFilter & extractorFilter& wordFilter]['performance']
+print(perf_ser.describe())
+perf_ser.apply(lambda p: 1+p/100).prod()
 
