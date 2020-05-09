@@ -1,3 +1,4 @@
+import puppeteer from 'puppeteer';
 import {
   scrapAllPagesInfo,
   postLinks,
@@ -7,7 +8,6 @@ import {
 import { populateSymbols } from './populateSymbols';
 import { NEWS_LINKS } from '../news/binance/constants';
 import { scrapAllPages } from '../news/binance/scraping';
-import puppeteer from 'puppeteer';
 
 jest.setTimeout(300000);
 

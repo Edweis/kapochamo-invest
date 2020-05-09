@@ -2,6 +2,7 @@ import axios from 'axios';
 import moment from 'moment-timezone';
 import cheerio from 'cheerio';
 import { Post } from './types';
+
 const url = 'https://cointelegraph.com/api/v1/content/json/_tp';
 
 type Params = {
@@ -12,6 +13,7 @@ type Params = {
 };
 type Response = {
   posts: {
+    // eslint-disable-next-line
     per_page: number;
     top: Post[];
     recent: Post[];

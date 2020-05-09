@@ -1,11 +1,12 @@
+import puppeteer from 'puppeteer';
 import {
   scrapLatestNews,
   scrapOnePageLinks,
   scrapAllPages,
   scrapPageInfo,
 } from './scraping';
-import puppeteer from 'puppeteer';
 import { NEWS_LINKS } from './constants';
+
 const headless = true;
 
 jest.setTimeout(30000);

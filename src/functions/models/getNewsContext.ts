@@ -1,8 +1,8 @@
 import moment from 'moment';
 import { binancePublicGet } from '../../api';
-import { sleep } from '../helpers';
 
 import { AssetSymbol, ApiTick, Tick } from './types';
+
 const formatTickFromApi = (apiTick: ApiTick): Tick => ({
   openTime: apiTick[0],
   open: apiTick[1],

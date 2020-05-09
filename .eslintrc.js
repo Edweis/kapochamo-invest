@@ -5,7 +5,9 @@ module.exports = {
     'prettier',
     'plugin:prettier/recommended',
     'plugin:@typescript-eslint/recommended',
-    'prettier/@typescript-eslint'
+    'prettier/@typescript-eslint',
+    'airbnb-base',
+    'eslint-config-prettier'
   ],
   parserOptions: {
     ecmaVersion: 6,
@@ -17,6 +19,7 @@ module.exports = {
     'import/extensions': 'off',
     'import/prefer-default-export':'off',
     'no-throw-literal': 'off',
+    'no-shadow': 'off',
     '@typescript-eslint/explicit-function-return-type': 'off'
    },
   settings: {

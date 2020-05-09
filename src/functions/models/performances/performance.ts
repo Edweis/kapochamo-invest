@@ -12,10 +12,10 @@ export const getPerformanceForNews = async (
   shouldExport = { file: false, database: false }
 ) => {
   if (info.time == null) throw Error("Can't evaluate a null date");
-  const time = info.time;
+  const { time } = info;
   const symbols = await extractor(info);
   if (symbols.length > 20) {
-    throw Error('To many symbols (' + symbols.length + ') for ' + info.title);
+    throw Error(`To many symbols (${symbols.length}) for ${info.title}`);
   }
   if (shouldExport.file) await clearData();
   const performances: { [symbol: string]: number | null } = {};

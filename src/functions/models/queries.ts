@@ -39,6 +39,6 @@ export const getOneNews = async (title: string) => {
     `SELECT title, time, content FROM news WHERE title=$1`,
     [title]
   );
-  if (reponse.rows.length === 0) throw Error('Title "' + title + '" not found');
+  if (reponse.rows.length === 0) throw Error(`Title "${title}" not found`);
   return reponse.rows[0];
 };

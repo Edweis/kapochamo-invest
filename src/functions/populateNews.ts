@@ -1,11 +1,13 @@
+import puppeteer from 'puppeteer';
+import pLimit from 'p-limit';
 import pg from '../services/postgres';
 import { scrapPageInfo } from '../news/binance/scraping';
-import puppeteer from 'puppeteer';
-import { BinanceInfo, BinanceInfoRaw } from '../types';
-import pLimit from 'p-limit';
+import { BinanceInfoRaw } from '../types';
+import { sleep } from '../helpers';
+
 const PARALLEL_RUN = 1;
 const limit = pLimit(PARALLEL_RUN);
-import { sleep } from '../helpers';
+
 const insertNews = async (info: BinanceInfoRaw) => {
   await pg.query(
     'INSERT INTO news(title, time, content, url) VALUES($1, $2, $3, $4) RETURNING *',
@@ -38,7 +40,7 @@ export const scrapAllPagesInfo = async (
     links.map(async link =>
       limit(async () => {
         const hasBeenFetched = await checkNewsExists(link);
-        console.debug('working on ' + link);
+        console.debug(`working on ${link}`);
         if (hasBeenFetched) {
           console.debug('Abort. Already have.');
           return;

@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import { getNews } from '../queries';
 import { clearPerformances } from '../export';
 import { getPerformanceForNews } from './performance';
@@ -10,7 +11,7 @@ import {
   charly,
 } from '../strategies';
 import { onlyBnb, relatedAgainstUsdt, relatedAgainstBnb } from '../extractors';
-import _ from 'lodash';
+
 let allNews: BinanceInfo[];
 
 describe.skip('getPerformanceForNews', () => {

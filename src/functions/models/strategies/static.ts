@@ -1,7 +1,8 @@
 import _ from 'lodash';
 import { Strategy, Tick } from '../types';
-type Percentage = number;
 import { rename, checkPercentage } from './helpers';
+
+type Percentage = number;
 
 export const highestStrategy: Strategy = ticks =>
   _.maxBy(ticks, 'close') || ticks[0];
@@ -18,7 +19,7 @@ export const getPeakTicks = (ticks: Tick[]): number[] => {
 
 export const follower = (sellAfterLossOf: Percentage): Strategy => {
   checkPercentage(sellAfterLossOf);
-  const functionName = 'follower' + sellAfterLossOf * 100;
+  const functionName = `follower${sellAfterLossOf * 100}`;
   const strategyFunc: Strategy = ticks => {
     const peakValues = getPeakTicks(ticks);
     const tickToSell = ticks.find((tick, index) => {
@@ -37,13 +38,8 @@ export const charly = (
 ): Strategy => {
   checkPercentage(sellAfterRelativeLossOf);
   checkPercentage(pureLossApetite);
-  const functionName =
-    'charly_S' +
-    sellAfterRelativeLossOf * 100 +
-    'W' +
-    waitFor +
-    'L' +
-    pureLossApetite * 100;
+  const functionName = `charly_S${sellAfterRelativeLossOf *
+    100}W${waitFor}L${pureLossApetite * 100}`;
   const strategyFunc: Strategy = ticks => {
     const peakValues = getPeakTicks(ticks);
     const boughtFor = ticks[0].open;

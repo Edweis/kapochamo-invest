@@ -1,5 +1,6 @@
 import WebSocket from 'ws';
 import moment from 'moment';
+
 const ws = new WebSocket('wss://stream.binance.com:9443/ws/btcusdt@aggTrade');
 
 let now: number;

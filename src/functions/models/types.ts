@@ -1,4 +1,5 @@
 import { BinanceInfo } from '../../types';
+
 export type Asset = string;
 export type AssetSymbol = string;
 export type ApiTick = number[];

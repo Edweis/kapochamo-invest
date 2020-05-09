@@ -1,10 +1,11 @@
 import { AxiosResponse, AxiosInstance, AxiosRequestConfig } from 'axios';
-type CacheInfo = { fromCache: boolean };
-type AxiosResponseCached<T> = Promise<AxiosResponse<T> & CacheInfo>;
-type AxiosCache = { [url: string]: Promise<AxiosResponse<any>> };
 import qs from 'querystring';
 
 import Bottleneck from 'bottleneck';
+
+type CacheInfo = { fromCache: boolean };
+type AxiosResponseCached<T> = Promise<AxiosResponse<T> & CacheInfo>;
+type AxiosCache = { [url: string]: Promise<AxiosResponse<any>> };
 
 const limiter = new Bottleneck({
   reservoir: 1100,
@@ -17,7 +18,7 @@ const limiter = new Bottleneck({
 export const formatUrl = (url: string, config?: AxiosRequestConfig) => {
   if (config == null) return url;
   const queryString = qs.stringify(config.params);
-  return url + '?' + queryString;
+  return `${url}?${queryString}`;
 };
 const cache: AxiosCache = {};
 export const axiosCacheGet = (axiosInstance: AxiosInstance) => async <T>(

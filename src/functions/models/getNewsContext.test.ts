@@ -1,8 +1,8 @@
+import moment from 'moment';
 import { getAllAssets, getOneNews, getSymbols } from './queries';
 import { getAssetFromInfo } from './extractors/extract';
 import { getTickAround } from './getNewsContext';
 import { BinanceInfo } from '../../types';
-import moment from 'moment';
 import {
   TEST_OPTIMIST_NEWS_TITLE,
   TEST_LISTING_NEWS_TITLE,

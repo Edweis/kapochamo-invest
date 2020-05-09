@@ -1,5 +1,5 @@
-import { axiosCacheGet, formatUrl } from './cache';
 import axios from 'axios';
+import { axiosCacheGet, formatUrl } from './cache';
 
 const getter = axiosCacheGet(axios);
 describe('axiosCacheGet', () => {

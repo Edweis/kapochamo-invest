@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { axiosCacheGet } from './services/cache';
+
 const BASE_URL = 'https://api.binance.com/api/v3';
 
 export const binancePrivate = axios.create({

@@ -2,6 +2,7 @@ import axios from 'axios';
 import cheerio from 'cheerio';
 import puppeteer from 'puppeteer';
 import { BinanceInfoRaw } from '../../types';
+
 export const scrapLatestNews = async () => {
   const url = 'https://www.binance.com/en';
   const linksPath = `.css-n876bn > .css-vurnku`;
@@ -56,6 +57,7 @@ export const scrapAllPages = async (
   let count = 0;
   while (nextLink != null && (pageMax == null || count < pageMax)) {
     count += 1;
+    // eslint-disable-next-line no-await-in-loop
     nextLink = await scrap(nextLink);
   }
   return allLinks.map(link => domain + link);
@@ -67,7 +69,7 @@ export const scrapPageInfo = async (
 ): Promise<BinanceInfoRaw> => {
   const page = await browser.newPage();
   await page.setUserAgent(HEAD_FULL_AGENT);
-  console.debug('about to scrap ' + url);
+  console.debug(`about to scrap ${url}`);
   await page.goto(url);
   await Promise.race([
     page.waitFor(READY_PATH),
@@ -77,8 +79,8 @@ export const scrapPageInfo = async (
   ]);
   const infos = await page.evaluate(() => {
     const headerPath = 'article.article header.article-header';
-    const timePath = headerPath + ' div.article-author li.meta-data time';
-    const titlePath = headerPath + ' h1.article-title';
+    const timePath = `${headerPath} div.article-author li.meta-data time`;
+    const titlePath = `${headerPath} h1.article-title`;
     const contentPath = 'article.article section.article-info div.article-body';
     const title =
       document
