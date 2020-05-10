@@ -1,0 +1,36 @@
+@startuml
+
+title "KapochamoInvest scrapping architecture"
+
+control Cloudwatch as cw
+entity "Watcher λ" as watcher
+boundary "Binance news" as binance_news
+entity "Trader λ" as trader
+boundary "Binance API" as binance_api
+
+note over watcher
+    env:
+    LATEST_NEWS_TITLE
+end note
+note over trader
+    env:
+    STRATEGY
+    TIMEOUT_SELL_AFTER
+    BINANCE_API_KEY
+end note
+
+loop every minute
+    cw -> watcher: async invoke()
+    watcher -> binance_news: GET market/all
+    watcher <-- binance_news: latest news
+    loop each symbol
+        watcher -> trader: async invoke(symbol)
+        loop until strategy validates OR timeout exceeded
+            trader -> binance_api: POST buy symbol
+            trader -> binance_api: GET klines for symbol
+            trader <-- binance_api: klines
+        end loop
+    end loop
+end loop
+
+@enduml

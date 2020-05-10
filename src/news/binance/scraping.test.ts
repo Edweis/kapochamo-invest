@@ -32,7 +32,7 @@ describe('scrapOnePageLinks', () => {
   afterAll(() => browser.close());
 });
 
-describe('scrapAllPages', () => {
+describe.skip('scrapAllPages', () => {
   beforeAll(async () => {
     browser = await puppeteer.launch({ headless });
   });
