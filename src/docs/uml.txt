@@ -1,6 +1,6 @@
 @startuml
 
-title KapochamoInvest scrapping architecture
+title Kapochamo-Invest scrapping architecture
 
 control Cloudwatch as cw
 entity "Watcher λ" as watcher
