@@ -1,5 +1,4 @@
 @startuml
-
 title Kapochamo-Invest scrapping architecture
 
 control Cloudwatch as cw
@@ -23,14 +22,18 @@ loop every minute
     cw -> watcher: async invoke()
     watcher -> binance_news: GET market/all
     watcher <-- binance_news: latest news
-    loop each symbol
-        watcher -> trader: async invoke(symbol)
-        loop until strategy validates OR timeout exceeded
-            trader -> binance_api: POST buy symbol
-            trader -> binance_api: GET klines for symbol
-            trader <-- binance_api: klines
+    alt news is actually new
+        watcher -> watcher: extract symbols from news
+        loop each symbol
+            watcher -> trader: async invoke(symbol)
+            loop until strategy validates OR timeout exceeded
+                trader <-- binance_api: WebSocket get klines
+                trader -> binance_api: POST buy symbol from first tick
+                ...wait until strategy is validated...
+                trader -> binance_api: POST sell symbol
+            end loop
         end loop
-    end loop
+    else failed
+    end
 end loop
-
 @enduml
