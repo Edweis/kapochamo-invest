@@ -1,6 +1,8 @@
 # Jupyther notebook
 # They are converted into .py on pre-commit by husky
 *.ipynb
+src/docs/*.png
+
 # Dependency directories
 node_modules/
 data/
