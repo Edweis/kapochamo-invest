@@ -1,7 +1,6 @@
 import _ from 'lodash';
 import fs from 'fs';
-import { Tick } from './types';
-import { BinanceInfo } from '../../types';
+import { Tick, BinanceInfo } from '../../types';
 import pg from '../../services/postgres';
 
 export const clearData = async () => {

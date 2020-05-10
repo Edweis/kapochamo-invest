@@ -15,7 +15,7 @@ const getUrlFromFile = async (file: string) => {
 const saveImage = async (url: string, out: string) => {
   const response = await axios.get(url, { responseType: 'stream' });
   response.data.pipe(fs.createWriteStream(out));
-  console.debug(`Uml saved in ${out}`);
+  console.debug(`  ✔ Uml saved in ${out}`);
 };
 
 const files = ['./src/docs/uml.txt'];

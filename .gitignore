@@ -1,15 +1,19 @@
-# Jupyther notebook
-# They are converted into .py on pre-commit by husky
+######## Personal
+## Jupither notebook They are converted into .py on pre-commit by husky
 *.ipynb
 src/docs/*.png
 
-# Dependency directories
+######### Dependency directories
 node_modules/
 data/
 emulator/
 
-# Webpack directory
+######### Webpack directory
 .webpack
 
-# Build directory
+######### Build directory
 .build
+
+######### Serverless
+.serverless/
+_warmup
