@@ -9,3 +9,7 @@ for file in ./src/charts/*.ipynb; do
           | .[][]' \
     $file > $output
 done
+
+
+echo '✨  Generate Plain UML images';
+ts-node src/docs/convertPlainUml.ts
