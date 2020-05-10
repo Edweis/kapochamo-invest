@@ -11,5 +11,5 @@ for file in ./src/charts/*.ipynb; do
 done
 
 
-echo '✨  Generate Plan UML images';
-ts-node src/docs/convertPlanUml.ts
+echo '✨  Generate Plant UML images';
+ts-node src/docs/convertPlantUml.ts
