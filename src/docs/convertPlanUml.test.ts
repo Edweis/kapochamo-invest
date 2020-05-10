@@ -1,4 +1,4 @@
-import { encodePlainUrls } from './convertPlainUml';
+import { encodePlainUrls } from './convertPlanUml';
 
 describe('encodePlainUrls', () => {
   it('should work for default example', () => {

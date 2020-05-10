@@ -11,5 +11,5 @@ for file in ./src/charts/*.ipynb; do
 done
 
 
-echo '✨  Generate Plain UML images';
-ts-node src/docs/convertPlainUml.ts
+echo '✨  Generate Plan UML images';
+ts-node src/docs/convertPlanUml.ts
