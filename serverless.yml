@@ -40,6 +40,32 @@ functions:
     events:
       - http: GET hello
 
+resources:
+  Resources:
+    EmailNotification:
+      Type: AWS::SNS::Topic
+      Properties:
+        DisplayName: Email Notification
+        TopicName: EmailNotification
+        Subscription:
+          - Protocol: email
+            Endpoint: rulliere.francois+kapochamo@gmail.com
+
+    EventRule:
+      Type: AWS::Events::Rule
+      Properties:
+        Description: "Send email on lambda notification"
+        EventPattern:
+          source:
+            - "aws.lambda"
+        State: "ENABLED"
+        Targets:
+          - Arn:
+              Fn::GetAtt: TestMeLambdaFunction.Arn # Reference testMe lambda
+            Id: "testLambda"
+
+
+
 plugins:
   - serverless-webpack
   - serverless-plugin-warmup
