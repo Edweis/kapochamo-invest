@@ -27,3 +27,5 @@ export type Tick = {
   takerBuyQuoteAssetVolume: number;
   ignore: number;
 };
+
+export type LambdaTraderPayload = { symbol: string };

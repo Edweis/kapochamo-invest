@@ -9,13 +9,19 @@ provider:
   stage: ${opt:stage, 'dev'}
   region: ap-southeast-1
   environment:
-    SOME_VAR: some value...
+    TRADING_QUEUE_NAME: ${self:provider.stage}-trader-queue
 
   iamRoleStatements:
     - Effect: 'Allow'
       Action:
         - 'lambda:InvokeFunction'
       Resource: '*'
+    - Effect: 'Allow'
+      Action: ["sqs:GetQueueAttributes", "sqs:ReceiveMessage", "sqs:DeleteMessage", "sqs:SendMessage", "sqs:GetQueueUrl"]
+      Resource:
+        - !GetAtt TradingQueue.Arn
+        - !GetAtt TradingQueueDLQ.Arn
+
 
 custom:
   webpack:
@@ -47,7 +53,11 @@ functions:
   trader:
     handler: src/functions/trader.default
     description: Buy and sell a symbol on Binance
-    timeout: 900 # 15 minutes 
+    timeout: 900 # 15 minutes
+    events:
+      - sqs:
+          arn: !GetAtt TradingQueue.Arn
+          batchSize: 1
 
 resources:
   Resources:
@@ -69,9 +79,28 @@ resources:
             - "aws.lambda"
         State: "ENABLED"
         Targets:
-          - Arn:
-              Fn::GetAtt: TestMeLambdaFunction.Arn # Reference testMe lambda
+          - Arn: !GetAtt TestMeLambdaFunction.Arn
             Id: "testLambda"
+
+    # Queues
+    TradingQueue:
+      Type: AWS::SQS::Queue
+      Properties:
+        DelaySeconds: 0
+        MessageRetentionPeriod: 345600 # 4 days
+        QueueName: ${self:provider.environment.TRADING_QUEUE_NAME}
+        ReceiveMessageWaitTimeSeconds: 0
+        VisibilityTimeout: 900
+        RedrivePolicy:
+          deadLetterTargetArn: !GetAtt TradingQueueDLQ.Arn
+          maxReceiveCount: 1
+      DependsOn:
+        - TradingQueueDLQ
+    TradingQueueDLQ:
+      Type: AWS::SQS::Queue
+      Properties:
+        QueueName: ${self:provider.environment.TRADING_QUEUE_NAME}-DLQ
+        MessageRetentionPeriod: 1209600 # 14 days
 
 
 
