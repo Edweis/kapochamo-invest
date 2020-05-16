@@ -10,6 +10,7 @@ provider:
   region: ap-southeast-1
   environment:
     TRADING_QUEUE_NAME: ${self:provider.stage}-trader-queue
+    TOPIC_EMAIL_NAME: EmailNotification
 
   iamRoleStatements:
     - Effect: 'Allow'
@@ -40,17 +41,17 @@ custom:
 
 
 functions:
-  testMe:
+  TestMe:
     handler: src/functions/testFunc.default
     description: Test lambda
     events:
       - http: GET hello
-  watcherBinance:
+  WatcherBinance:
     handler: src/functions/watcher.default
     description: Watch Binance news and trigger trader if needed
     events:
       - http: GET watcher
-  trader:
+  Trader:
     handler: src/functions/trader.default
     description: Buy and sell a symbol on Binance
     timeout: 900 # 15 minutes
@@ -65,22 +66,11 @@ resources:
       Type: AWS::SNS::Topic
       Properties:
         DisplayName: Email Notification
-        TopicName: EmailNotification
+        TopicName: ${self:provider.environment.TOPIC_EMAIL_NAME}
         Subscription:
           - Protocol: email
             Endpoint: rulliere.francois+kapochamo@gmail.com
 
-    EventRule:
-      Type: AWS::Events::Rule
-      Properties:
-        Description: "Send email on lambda notification"
-        EventPattern:
-          source:
-            - "aws.lambda"
-        State: "ENABLED"
-        Targets:
-          - Arn: !GetAtt TestMeLambdaFunction.Arn
-            Id: "testLambda"
 
     # Queues
     TradingQueue:
