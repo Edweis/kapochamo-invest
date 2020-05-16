@@ -23,7 +23,6 @@ module.exports = {
       },
     ],
   },
-  stats: 'verbose',
   resolve: {
     extensions: ['.tsx', '.ts', '.js', '.jsx'],
   },

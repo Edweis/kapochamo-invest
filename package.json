@@ -25,6 +25,7 @@
     "@types/node": "^12.7.5",
     "@types/pg": "^7.14.3",
     "@types/puppeteer": "^2.0.1",
+    "@types/puppeteer-core": "^2.0.0",
     "@types/ws": "^7.2.4",
     "@typescript-eslint/eslint-plugin": "^2.22.0",
     "@typescript-eslint/parser": "^2.2.0",
@@ -58,6 +59,7 @@
     "axios": "^0.19.2",
     "bottleneck": "^2.19.5",
     "cheerio": "^1.0.0-rc.3",
+    "chrome-aws-lambda": "^3.0.4",
     "http-status-codes": "^1.4.0",
     "jest-environment-puppeteer": "^4.4.0",
     "lodash": "^4.17.15",
@@ -65,6 +67,7 @@
     "moment-timezone": "^0.5.28",
     "p-limit": "^2.3.0",
     "pg": "^8.0.2",
+    "puppeteer-core": "^3.0.4",
     "puppeteer": "^2.1.1",
     "ws": "^7.2.5"
   },
