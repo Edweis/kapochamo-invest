@@ -14,8 +14,10 @@ provider:
 
   iamRoleStatements:
     - Effect: 'Allow'
-      Action:
-        - 'lambda:InvokeFunction'
+      Action: ['lambda:InvokeFunction']
+      Resource: '*'
+    - Effect: 'Allow'
+      Action: ['sns:CreateTopic', 'sns:Publish']
       Resource: '*'
     - Effect: 'Allow'
       Action: ["sqs:GetQueueAttributes", "sqs:ReceiveMessage", "sqs:DeleteMessage", "sqs:SendMessage", "sqs:GetQueueUrl"]
@@ -47,12 +49,12 @@ functions:
     events:
       - http: GET hello
   WatcherBinance:
-    handler: src/functions/watcher.default
+    handler: src/functions/watcher/handler.default
     description: Watch Binance news and trigger trader if needed
     events:
       - http: GET watcher
   Trader:
-    handler: src/functions/trader.default
+    handler: src/functions/trader/handler.default
     description: Buy and sell a symbol on Binance
     timeout: 900 # 15 minutes
     events:

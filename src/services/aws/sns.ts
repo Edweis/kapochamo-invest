@@ -12,6 +12,7 @@ const publishToSns = async (topicName: string, data: string) => {
     Message: data,
     TopicArn: topicArn,
   };
+  console.log('Email sent');
   return sns.publish(params).promise();
 };
 

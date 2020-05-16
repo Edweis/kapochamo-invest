@@ -1,6 +1,6 @@
 import HttpStatus from 'http-status-codes';
-import { successResponse, runWarm, errorResponse } from '../helpers';
-import { sendToTrader } from '../services/aws/sqs';
+import { successResponse, runWarm, errorResponse } from '../../helpers';
+import { sendToTrader } from '../../services/aws/sqs';
 
 const SHOULD_FAIL = false;
 const testfunc: Function = async (event: {}) => {
