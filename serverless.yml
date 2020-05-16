@@ -39,6 +39,15 @@ functions:
     description: Test lambda
     events:
       - http: GET hello
+  watcherBinance:
+    handler: src/functions/watcher.default
+    description: Watch Binance news and trigger trader if needed
+    events:
+      - http: GET watcher
+  trader:
+    handler: src/functions/trader.default
+    description: Buy and sell a symbol on Binance
+    timeout: 900 # 15 minutes 
 
 resources:
   Resources:

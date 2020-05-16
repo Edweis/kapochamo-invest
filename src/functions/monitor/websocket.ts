@@ -14,10 +14,10 @@ export const listenTick = (
   let now: number;
   ws.on('open', () => {
     now = moment().unix() * 1000;
-    console.log(`connected to ${ws}`, now);
+    console.log(`connected to ${ws.url}`, now);
   });
 
-  ws.on('close', () => console.log(`disconnected from ${ws}`));
+  ws.on('close', () => console.log(`disconnected from ${ws.url}`));
 
   ws.on('message', (message: string) => {
     const data = JSON.parse(message);
