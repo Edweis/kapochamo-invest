@@ -5,15 +5,20 @@ import { ScrapError } from '../../errors';
 export const binanceInspectUrl =
   'https://www.binance.com/gateway-api/v1/public/market/all?page=1&rows=1';
 const binanceTitlePath = 'data.notices[0].title';
+const binanceLinkPath = 'data.notices[0].title';
 
-export const binanceInspector = async (latestTitle: string) => {
+export const binanceInspector = async (
+  latestTitle: string
+): Promise<string | null> => {
   const response = await axios.get(binanceInspectUrl);
   const title = _get(response.data, binanceTitlePath, null);
+  const link = _get(response.data, binanceLinkPath, null);
   if (title == null)
     throw new ScrapError('Got a null title :o', {
       response,
       binanceInspectUrl,
       binanceTitlePath,
     });
-  return title !== latestTitle;
+  const isNew = title !== latestTitle;
+  return isNew ? link : null;
 };

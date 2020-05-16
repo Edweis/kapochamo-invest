@@ -6,8 +6,10 @@ import { parseMessage } from './parse';
 
 const testfunc: Function = async (event: AWSLambda.SQSEvent) => {
   const message = parseMessage(event);
-  await sendEmail(`Started with ${message}`);
+  await sendEmail(`Started with ${JSON.stringify(message)}`);
+
   const report = await simulateBuyNow('BTCUSDT').catch(errorResponse);
+
   await sendEmail(JSON.stringify(report, null, '\t'));
   return successResponse({ message: 'Success', report, event }, HttpStatus.OK);
 };

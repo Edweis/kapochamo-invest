@@ -28,4 +28,4 @@ export type Tick = {
   ignore: number;
 };
 
-export type LambdaTraderPayload = { symbol: string };
+export type LambdaTraderPayload = { [key: string]: any }; // { symbol: string; info: BinanceInfoRaw };

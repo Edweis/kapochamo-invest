@@ -16,9 +16,9 @@ mockedAxios.get.mockImplementation((url: string) => ({
 const LATEST_NEWS = 'Binance Savings Adds ATOM and NEO to Flexible Savings';
 describe('binanceInspector', () => {
   it('should return true if news is new', async () => {
-    expect(await binanceInspector('Some news News !')).toEqual(true);
+    expect(await binanceInspector('Some news News !')).not.toEqual(null);
   });
   it('should return false if news is new', async () => {
-    expect(await binanceInspector(LATEST_NEWS)).toEqual(false);
+    expect(await binanceInspector(LATEST_NEWS)).toEqual(null);
   });
 });
