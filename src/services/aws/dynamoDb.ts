@@ -32,7 +32,10 @@ const checkPrimaryKey = (data: InsertData) => {
 
 export const updateNews = async (data: InsertData) => {
   checkPrimaryKey(data);
-  const formatedData = _.mapValues(data, value => ({ S: value }));
+  const formatedData = _(data)
+    .pickBy((value): value is string => !!value) // remove undefined values
+    .mapValues(value => ({ S: value }))
+    .value();
   const params = {
     TableName: PREVIOUS_NEWS_DB_NAME,
     Item: formatedData,

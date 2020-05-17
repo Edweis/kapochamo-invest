@@ -21,6 +21,5 @@ export const binanceInspector = async (): Promise<string | null> => {
       binanceTitlePath,
     });
   const existingTitle = await getExistingTitle(title);
-  console.warn(existingTitle);
   return existingTitle == null ? link : null;
 };

@@ -13,3 +13,6 @@ done
 
 echo '✨  Generate Plant UML images';
 ts-node src/docs/convertPlantUml.ts
+
+echo '✨  Checking TypeScript in the whole project';
+tsc --noEmit && echo "  ✔ TypeScript is good !"
