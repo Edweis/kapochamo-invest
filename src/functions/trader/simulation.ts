@@ -21,7 +21,7 @@ export const simulateBuyNow = async (
         tickBought = tick;
         console.warn('-----BUYING----');
         console.warn(tickBought);
-        strategyInstance = followerLst(tickBought, 0.0001);
+        strategyInstance = followerLst(tickBought, 0.05);
       }
 
       // CHECK STRATEGY
