@@ -1,30 +1,26 @@
 import HttpStatus from 'http-status-codes';
-import puppeteer from 'puppeteer-core';
-import chromium from 'chrome-aws-lambda';
-import { successResponse, runWarm, errorResponse } from '../../helpers';
+import { successResponse, runWarm } from '../../helpers';
 import { sendToTrader } from '../../services/aws/sqs';
 import { binanceInspector } from './inspector';
 import { scrapPageInfo } from '../../news/binance/scraping';
+import { getBrowser } from './browser';
+import { updateNews } from '../../services/aws/dynamoDb';
 
-const latestTitle = 'bob';
-const SHOULD_FAIL = false;
 const testfunc: Function = async (event: {}) => {
   console.debug('Oh yeah !', event);
 
-  const link = await binanceInspector(latestTitle);
-  if (link == null)
+  const url = await binanceInspector();
+  if (url == null)
     return successResponse({ message: 'Not new', event }, HttpStatus.CONTINUE);
 
-  const browser = await puppeteer.launch({
-    executablePath: await chromium.executablePath,
-    args: chromium.args,
-    defaultViewport: chromium.defaultViewport,
-    headless: chromium.headless,
-  });
-  const info = await scrapPageInfo(browser, link);
+  // We have a new news 🎉
+  await updateNews({ url });
+  const browser = await getBrowser();
+  const info = await scrapPageInfo(browser, url);
 
   await sendToTrader({ symbol: 'BTCUSDT', info });
-  if (SHOULD_FAIL) return errorResponse({ message: 'Watcher failed', event });
+  await updateNews(info);
+
   return successResponse({ message: 'Success', event }, HttpStatus.OK);
 };
 

@@ -12,6 +12,7 @@ provider:
     TRADING_QUEUE_NAME: ${self:provider.stage}-trader-queue
     TOPIC_EMAIL_NAME: EmailNotification
     PREVIOUS_NEWS_DB_NAME: ${self:provider.stage}-previous-news-dynamodb
+    PREVIOUS_NEWS_DB_PK: url
 
   iamRoleStatements:
     - Effect: 'Allow'
@@ -118,14 +119,11 @@ resources:
       Properties:
         TableName: ${self:provider.environment.PREVIOUS_NEWS_DB_NAME}
         AttributeDefinitions:
-          - AttributeName: title
+          - AttributeName: ${self:provider.environment.PREVIOUS_NEWS_DB_PK}
             AttributeType: S
         KeySchema:
-          - AttributeName: title
+          - AttributeName: ${self:provider.environment.PREVIOUS_NEWS_DB_PK}
             KeyType: HASH
-        ProvisionedThroughput:
-          ReadCapacityUnits: 5
-          WriteCapacityUnits: 5
 
 
 

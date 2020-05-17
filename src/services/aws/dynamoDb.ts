@@ -1,8 +1,7 @@
 import AWS, { DynamoDB } from 'aws-sdk';
 import _ from 'lodash';
-import { PREVIOUS_NEWS_DB_NAME } from '../../constants';
+import { PREVIOUS_NEWS_DB_NAME, PREVIOUS_NEWS_DB_PK } from '../../constants';
 
-console.debug({ PREVIOUS_NEWS_DB_NAME });
 const dynamodb = new AWS.DynamoDB();
 
 export const formatItem = (item: DynamoDB.AttributeMap | undefined) => {
@@ -12,7 +11,7 @@ export const formatItem = (item: DynamoDB.AttributeMap | undefined) => {
   return _.mapValues(item, value => value.S);
 };
 
-export const checkTitle = async (title: string) => {
+export const getExistingTitle = async (title: string) => {
   const params = {
     TableName: PREVIOUS_NEWS_DB_NAME,
     Key: { title: { S: title } },
@@ -22,8 +21,17 @@ export const checkTitle = async (title: string) => {
   return formatItem(result.Item);
 };
 
-type InsertData = { [key: string]: string };
+type InsertData = { [key: string]: string | null };
+const checkPrimaryKey = (data: InsertData) => {
+  if (data[PREVIOUS_NEWS_DB_PK] == null) {
+    throw Error(
+      `Primary key ${PREVIOUS_NEWS_DB_PK} not found in ${JSON.stringify(data)}`
+    );
+  }
+};
+
 export const updateNews = async (data: InsertData) => {
+  checkPrimaryKey(data);
   const formatedData = _.mapValues(data, value => ({ S: value }));
   const params = {
     TableName: PREVIOUS_NEWS_DB_NAME,
