@@ -1,7 +1,7 @@
 import axios from 'axios';
 import _get from 'lodash/get';
 import { ScrapError } from '../../errors';
-import { getExistingTitle } from '../../services/aws/dynamoDb';
+import { getExistingUrl } from '../../services/aws/dynamoDb';
 
 export const binanceInspectUrl =
   'https://www.binance.com/gateway-api/v1/public/market/all?page=1&rows=1';
@@ -20,6 +20,6 @@ export const binanceInspector = async (): Promise<string | null> => {
       binanceInspectUrl,
       binanceTitlePath,
     });
-  const existingTitle = await getExistingTitle(title);
-  return existingTitle == null ? link : null;
+  const existingUrl = await getExistingUrl(link);
+  return existingUrl == null ? link : null;
 };

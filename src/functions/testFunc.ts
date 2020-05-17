@@ -1,12 +1,12 @@
 import HttpStatus from 'http-status-codes';
 import { successResponse, runWarm, errorResponse } from '../helpers';
-import { getExistingTitle, updateNews } from '../services/aws/dynamoDb';
+import { getExistingUrl, updateNews } from '../services/aws/dynamoDb';
 
 const SHOULD_FAIL = false;
 const testfunc: Function = async (event: AWSLambda.SQSEvent) => {
   console.debug('Oh yeah !', event);
   await updateNews({ title: 'hello', url: 'http', now: Date.now().toString() });
-  const isTitleNew = await getExistingTitle('hello');
+  const isTitleNew = await getExistingUrl('hello');
   console.warn({ isTitleNew });
 
   if (SHOULD_FAIL)

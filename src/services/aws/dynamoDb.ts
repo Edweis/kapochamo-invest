@@ -11,10 +11,10 @@ export const formatItem = (item: DynamoDB.AttributeMap | undefined) => {
   return _.mapValues(item, value => value.S);
 };
 
-export const getExistingTitle = async (title: string) => {
+export const getExistingUrl = async (url: string) => {
   const params = {
     TableName: PREVIOUS_NEWS_DB_NAME,
-    Key: { title: { S: title } },
+    Key: { [PREVIOUS_NEWS_DB_PK]: { S: url } },
   };
   const result = await dynamodb.getItem(params).promise();
   console.log('Fetched from DynamoDb', params, result);

@@ -1,4 +1,5 @@
-export const isTest = process.env.JEST_WORKER_ID;
+export const isTest = process.env.JEST_WORKER_ID != null;
+export const isRunLocally = process.env.IS_LOCAL != null;
 
 if (isTest) {
   process.env.TRADING_QUEUE_NAME = 'TRADING_QUEUE_NAME';
