@@ -15,6 +15,7 @@ export const getExistingUrl = async (url: string) => {
   const params = {
     TableName: PREVIOUS_NEWS_DB_NAME,
     Key: { [PREVIOUS_NEWS_DB_PK]: { S: url } },
+    AttributesToGet: [PREVIOUS_NEWS_DB_PK],
   };
   const result = await dynamodb.getItem(params).promise();
   console.log('Fetched from DynamoDb', params, result);
