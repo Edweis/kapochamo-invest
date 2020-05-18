@@ -129,7 +129,7 @@ resources:
           ReadCapacityUnits: 5
           WriteCapacityUnits: 5
 
-
+# TODOOOOOO TEST PAYMENT OR SCRAP ANOTHER WEBSITE
 
 plugins:
   - serverless-webpack
