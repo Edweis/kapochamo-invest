@@ -13,7 +13,8 @@
     "jsx": "preserve",
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "target": "es6"
+    "target": "es6",
+    "strictPropertyInitialization": false
   },
   "types": {
     "jest-environment-puppeteer": true
