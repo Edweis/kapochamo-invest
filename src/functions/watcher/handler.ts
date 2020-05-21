@@ -17,7 +17,7 @@ const testfunc: Function = async (event: {}) => {
   const info = await scrapPageInfo(browser, url);
 
   await sendToTrader({ symbol: 'BTCUSDT', info });
-  await updateNews({ ...info, addedAt: new Date().toString() });
+  await updateNews({ ...info, addedAt: new Date().toISOString() });
 
   return successResponse({ message: 'Success', event }, HttpStatus.OK);
 };

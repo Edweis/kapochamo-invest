@@ -6,7 +6,7 @@ import { parseMessage } from './parse';
 
 const traderLambda: Function = async (event: AWSLambda.SQSEvent) => {
   const message = parseMessage(event);
-  await sendEmail(`Started with ${JSON.stringify(message)}`);
+  await sendEmail(`Start with ${JSON.stringify(message, null, '\t')}`);
 
   const report = await simulateBuyNow('BTCUSDT');
 
