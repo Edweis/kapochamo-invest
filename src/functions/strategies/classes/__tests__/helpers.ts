@@ -1,4 +1,4 @@
-import { Tick } from '../../../../../types';
+import { Tick } from '../../../../types';
 
 export const toTick = (num: number): Tick => ({
   openTime: num,

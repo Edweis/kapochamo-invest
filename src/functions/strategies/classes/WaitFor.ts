@@ -1,5 +1,5 @@
 import Strategy, { StrategyInterface } from './generic';
-import { Tick } from '../../../../types';
+import { Tick } from '../../../types';
 
 class WaitFor extends Strategy implements StrategyInterface {
   private waitFor: number;

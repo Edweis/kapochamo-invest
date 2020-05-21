@@ -1,5 +1,5 @@
 import Strategy, { StrategyInterface } from './generic';
-import { Tick } from '../../../../types';
+import { Tick } from '../../../types';
 import WaitFor from './WaitFor';
 import RelativeFollower from './RelativeFollower';
 

@@ -1,4 +1,4 @@
-import { BinanceInfo, Tick } from '../../types';
+import { BinanceInfo, Tick } from '../types';
 
 export type Asset = string;
 export type AssetSymbol = string;

@@ -1,8 +1,8 @@
 import moment from 'moment';
-import { binancePublicGet } from '../../api';
+import { binancePublicGet } from '../api';
 
 import { AssetSymbol } from './types';
-import { ApiTick } from '../../types';
+import { ApiTick } from '../types';
 import { formatTickFromApi } from './helpers';
 
 type ParamsKLines = {

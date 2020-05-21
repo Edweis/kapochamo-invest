@@ -1,6 +1,6 @@
 import Strategy, { StrategyInterface } from './generic';
 import { checkPercentage } from '../helpers';
-import { Tick } from '../../../../types';
+import { Tick } from '../../../types';
 
 type Percentage = number;
 

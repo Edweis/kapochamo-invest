@@ -1,5 +1,5 @@
-import { BinanceInfo } from '../../../types';
-import { clearData, exportTicks, savePerformance } from '../export';
+import { BinanceInfo } from '../../types';
+import { clearData, exportTicks, savePerformance } from './export';
 import { getTickAround } from '../getNewsContext';
 import { onlyBnb } from '../extractors';
 import { Strategy, Extractor } from '../types';

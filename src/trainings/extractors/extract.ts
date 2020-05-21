@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { BinanceInfo } from '../../../types';
+import { BinanceInfo } from '../../types';
 import { Asset } from '../types';
 
 const MATCH_SPEC_CHAR = /[^\w\s]/gi;

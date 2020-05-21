@@ -1,5 +1,5 @@
-import { followerLst } from '../models/strategies/listeners';
-import { StrategyInstance } from '../models/types';
+import { followerLst } from '../strategies/listeners';
+import { StrategyInstance } from '../types';
 import { listenTick } from './websocket';
 import { sleep } from '../../helpers/common';
 import { Tick } from '../../types';

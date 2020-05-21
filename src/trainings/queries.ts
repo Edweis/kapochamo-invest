@@ -1,6 +1,6 @@
-import pg from '../../services/postgres';
+import pg from '../services/postgres';
 import { Asset, AssetSymbol } from './types';
-import { BinanceInfo } from '../../types';
+import { BinanceInfo } from '../types';
 
 export const getAllAssets = async () => {
   const response = await pg.query(

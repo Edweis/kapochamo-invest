@@ -1,13 +1,13 @@
 import { getOneNews } from '../queries';
 import { getPerformanceForNews } from './performance';
-import { TEST_OPTIMIST_NEWS_TITLE } from '../../../test-constants';
-import { BinanceInfo } from '../../../types';
+import { TEST_OPTIMIST_NEWS_TITLE } from '../../test-constants';
+import { BinanceInfo } from '../../types';
 import {
   followerLst,
   waitLst,
   convertSync,
   highestSync,
-} from '../strategies/listeners';
+} from '../../functions/strategies/listeners';
 
 let testNews: BinanceInfo;
 describe('getPerformanceForNews', () => {

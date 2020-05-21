@@ -1,8 +1,8 @@
-import { BinanceInfo } from '../../../types';
+import { BinanceInfo } from '../../types';
 import {
   TEST_OPTIMIST_NEWS_TITLE,
   TEST_LISTING_NEWS_TITLE,
-} from '../../../test-constants';
+} from '../../test-constants';
 import {
   allCurrency,
   relatedAgainstUsdt,

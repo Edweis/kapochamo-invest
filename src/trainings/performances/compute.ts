@@ -1,6 +1,6 @@
 import moment from 'moment';
 import { Strategy } from '../types';
-import { Tick } from '../../../types';
+import { Tick } from '../../types';
 
 const binanceFees = {
   'VIP 0': 0.001,

@@ -1,8 +1,8 @@
 import _ from 'lodash';
 import { getNews } from '../queries';
-import { clearPerformances } from '../export';
+import { clearPerformances } from './export';
 import { getPerformanceForNews } from './performance';
-import { BinanceInfo } from '../../../types';
+import { BinanceInfo } from '../../types';
 import { Strategy } from '../types';
 import {
   followerLst,
@@ -11,7 +11,7 @@ import {
   charly,
   convertSync,
   highestSync,
-} from '../strategies/listeners';
+} from '../../functions/strategies/listeners';
 import { onlyBnb, relatedAgainstUsdt, relatedAgainstBnb } from '../extractors';
 
 let allNews: BinanceInfo[];

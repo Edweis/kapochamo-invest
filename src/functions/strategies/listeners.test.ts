@@ -4,7 +4,7 @@ import {
   relativeFollower,
   convertSync,
 } from './listeners';
-import { Tick } from '../../../types';
+import { Tick } from '../../types';
 
 const toTick = (num: number): Tick => ({
   openTime: num,

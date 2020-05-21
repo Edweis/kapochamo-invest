@@ -1,4 +1,4 @@
-import { Tick, ApiTick } from '../../types';
+import { Tick, ApiTick } from '../types';
 
 export const formatTickFromApi = (apiTick: ApiTick): Tick => ({
   openTime: apiTick[0],

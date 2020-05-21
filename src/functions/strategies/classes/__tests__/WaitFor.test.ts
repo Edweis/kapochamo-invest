@@ -1,5 +1,5 @@
 import WaitFor from '../WaitFor';
-import { Tick } from '../../../../../types';
+import { Tick } from '../../../../types';
 import { tickify } from './helpers';
 
 const timeTicks = (ticks: Tick[]) =>

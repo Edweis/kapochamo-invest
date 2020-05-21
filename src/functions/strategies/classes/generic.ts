@@ -1,4 +1,4 @@
-import { Tick } from '../../../../types';
+import { Tick } from '../../../types';
 
 export interface StrategyInterface extends Strategy {
   name: string;
