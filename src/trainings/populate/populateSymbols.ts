@@ -1,5 +1,5 @@
-import pg from '../services/postgres';
-import { binancePublic } from '../api';
+import pg from '../../services/postgres';
+import { binancePublic } from '../../api';
 
 export const populateSymbols = async () => {
   const result = await binancePublic.get('/exchangeInfo');

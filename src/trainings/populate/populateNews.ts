@@ -1,9 +1,9 @@
 import puppeteer from 'puppeteer';
 import pLimit from 'p-limit';
-import pg from '../services/postgres';
-import { scrapPageInfo } from '../news/binance/scraping';
-import { BinanceInfoRaw } from '../types';
-import { sleep } from '../helpers';
+import pg from '../../services/postgres';
+import { scrapPageInfo } from '../../news/binance/scraping';
+import { BinanceInfoRaw } from '../../types';
+import { sleep } from '../../helpers';
 
 const PARALLEL_RUN = 5;
 const limit = pLimit(PARALLEL_RUN);

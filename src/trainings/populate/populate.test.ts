@@ -6,8 +6,8 @@ import {
   getAllLinks,
 } from './populateNews';
 import { populateSymbols } from './populateSymbols';
-import { NEWS_LINKS } from '../news/binance/constants';
-import { scrapAllPages } from '../news/binance/scraping';
+import { NEWS_LINKS } from '../../news/binance/constants';
+import { scrapAllPages } from '../../news/binance/scraping';
 
 jest.setTimeout(300000);
 
