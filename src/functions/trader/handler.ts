@@ -8,7 +8,10 @@ const traderLambda: Function = async (event: AWSLambda.SQSEvent) => {
   const message = parseMessage(event);
   await sendEmail(`Start with ${JSON.stringify(message, null, '\t')}`);
 
-  const report = await simulateBuyNow('BTCUSDT');
+  const report = await simulateBuyNow('BTCUSDT').catch(async error => {
+    await sendEmail(JSON.stringify(error, null, '\t'));
+    throw error;
+  });
 
   await sendEmail(JSON.stringify(report, null, '\t'));
   return successResponse({ message: 'Success', report, event }, HttpStatus.OK);
