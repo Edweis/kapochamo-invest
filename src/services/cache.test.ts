@@ -1,6 +1,8 @@
 import axios from 'axios';
 import { axiosCacheGet, formatUrl } from './cache';
 
+jest.setTimeout(30000);
+
 const getter = axiosCacheGet(axios);
 describe('axiosCacheGet', () => {
   it('should no cache the first request', async () => {
