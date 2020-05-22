@@ -1,6 +1,6 @@
 import moment from 'moment';
 import { Tick } from '../../types';
-import { StrategyInterface } from '../../functions/strategies';
+import { StrategyInterface, Highest } from '../../functions/strategies';
 
 const binanceFees = {
   'VIP 0': 0.001,
@@ -28,6 +28,7 @@ export const computePerformance = (
   if (futurTicks.length === 0) return null;
 
   strategy.buy(futurTicks[0]);
+  if (strategy instanceof Highest) strategy.feedHistory(futurTicks);
   const sellTick = futurTicks.find(tick => strategy.shouldSell(tick));
 
   if (sellTick == null) return null;

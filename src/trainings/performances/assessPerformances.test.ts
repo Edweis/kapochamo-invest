@@ -9,7 +9,7 @@ import {
   WaitFor,
   Charly,
   StrategyInterface,
-  // highestSync,
+  Highest,
 } from '../../functions/strategies';
 import { onlyBnb, relatedAgainstUsdt, relatedAgainstBnb } from '../extractors';
 
@@ -27,7 +27,7 @@ describe.skip('getPerformanceForNews', () => {
     const config = { file: false, database: true };
     const extractors = [onlyBnb, relatedAgainstUsdt, relatedAgainstBnb];
     const strategies: StrategyInterface[] = [
-      // highestSync,
+      new Highest(),
       new WaitFor(15),
       new Follower(0.001),
       new Follower(0.005),
