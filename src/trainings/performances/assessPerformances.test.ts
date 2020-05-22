@@ -10,7 +10,7 @@ import {
   Charly,
   StrategyInterface,
   // highestSync,
-} from '../../functions/strategies/classes';
+} from '../../functions/strategies';
 import { onlyBnb, relatedAgainstUsdt, relatedAgainstBnb } from '../extractors';
 
 let allNews: BinanceInfo[];

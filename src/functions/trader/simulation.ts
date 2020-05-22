@@ -1,4 +1,4 @@
-import { Follower } from '../strategies/classes';
+import { Follower } from '../strategies';
 import { listenTick } from './websocket';
 import { sleep } from '../../helpers/common';
 import { Tick } from '../../types';

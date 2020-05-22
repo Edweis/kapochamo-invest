@@ -6,7 +6,7 @@ import {
   Follower,
   WaitFor,
   // highestSync,
-} from '../../functions/strategies/classes';
+} from '../../functions/strategies';
 
 let testNews: BinanceInfo;
 describe('getPerformanceForNews', () => {
