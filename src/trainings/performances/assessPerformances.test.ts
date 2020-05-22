@@ -3,15 +3,14 @@ import { getNews } from '../queries';
 import { clearPerformances } from './export';
 import { getPerformanceForNews } from './performance';
 import { BinanceInfo } from '../../types';
-import { Strategy } from '../types';
 import {
-  followerLst,
-  relativeFollower,
-  waitLst,
-  charly,
-  convertSync,
-  highestSync,
-} from '../../functions/strategies/listeners';
+  Follower,
+  RelativeFollower,
+  WaitFor,
+  Charly,
+  StrategyInterface,
+  // highestSync,
+} from '../../functions/strategies/classes';
 import { onlyBnb, relatedAgainstUsdt, relatedAgainstBnb } from '../extractors';
 
 let allNews: BinanceInfo[];
@@ -27,19 +26,19 @@ describe.skip('getPerformanceForNews', () => {
     const newsToTest = _.take(allNews, 200);
     const config = { file: false, database: true };
     const extractors = [onlyBnb, relatedAgainstUsdt, relatedAgainstBnb];
-    const strategies: Strategy[] = [
-      highestSync,
-      convertSync(waitLst, [15]),
-      convertSync(followerLst, [0.001]),
-      convertSync(followerLst, [0.005]),
-      convertSync(followerLst, [0.01]),
-      convertSync(followerLst, [0.02]),
-      convertSync(followerLst, [0.05]),
-      convertSync(followerLst, [0.1]),
-      convertSync(relativeFollower, [0.01, 0.05]),
-      convertSync(relativeFollower, [0.05, 0.05]),
-      convertSync(charly, [15, 0.1, 0.05]),
-      convertSync(charly, [15, 0.3, 0.05]),
+    const strategies: StrategyInterface[] = [
+      // highestSync,
+      new WaitFor(15),
+      new Follower(0.001),
+      new Follower(0.005),
+      new Follower(0.01),
+      new Follower(0.02),
+      new Follower(0.05),
+      new Follower(0.1),
+      new RelativeFollower(0.01, 0.05),
+      new RelativeFollower(0.05, 0.05),
+      new Charly(15, 0.1, 0.05),
+      new Charly(15, 0.3, 0.05),
     ];
     await Promise.all(
       strategies.map(async strategy =>

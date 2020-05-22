@@ -2,12 +2,13 @@ import { BinanceInfo } from '../../types';
 import { clearData, exportTicks, savePerformance } from './export';
 import { getTickAround } from '../getNewsContext';
 import { onlyBnb } from '../extractors';
-import { Strategy, Extractor } from '../types';
+import { Extractor } from '../types';
+import { StrategyInterface } from '../../functions/strategies/classes';
 import { computePerformance } from './compute';
 
 export const getPerformanceForNews = async (
   info: BinanceInfo,
-  strategy: Strategy,
+  strategy: StrategyInterface,
   extractor: Extractor = onlyBnb,
   shouldExport = { file: false, database: false }
 ) => {

@@ -1,6 +1,6 @@
 import moment from 'moment';
-import { Strategy } from '../types';
 import { Tick } from '../../types';
+import { StrategyInterface } from '../../functions/strategies/classes';
 
 const binanceFees = {
   'VIP 0': 0.001,
@@ -19,7 +19,7 @@ const fees = binanceFees['VIP 0'];
 const SHOULD_DISPLAY_PERFORMANCE = false;
 const toUnix = (date: Date) => moment(date).unix() * 1000;
 export const computePerformance = (
-  strategy: Strategy,
+  strategy: StrategyInterface,
   ticks: Tick[],
   datetime: Date
 ) => {
@@ -27,11 +27,12 @@ export const computePerformance = (
   const futurTicks = ticks.filter(tick => tick.openTime >= now);
   if (futurTicks.length === 0) return null;
 
-  const sellTick = strategy(futurTicks);
+  strategy.buy(futurTicks[0]);
+  const sellTick = futurTicks.find(tick => strategy.shouldSell(tick));
 
   if (sellTick == null) return null;
 
-  // check tick exists
+  // check tick exists; FIXE IS THAT NEEDED ?
   const allTimes = futurTicks.map(tick => tick.openTime);
   if (!allTimes.includes(sellTick.openTime))
     throw Error('Strategy yield a non existing tick');
@@ -44,7 +45,7 @@ export const computePerformance = (
     console.debug(strategy.name, { valueNow, sellFor, sellAt, now });
   }
 
-  // return yield
+  // return yield SHOULD BE IN STRATEGY
   const rawYield = (sellFor - valueNow) / sellFor;
   return 100 * (rawYield - 2 * fees);
 };
