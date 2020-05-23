@@ -13,7 +13,7 @@ export const binanceInspector = async (): Promise<string | null> => {
   const response = await axios.get(binanceInspectUrl);
   const title = _get(response.data, binanceTitlePath, null);
   const link = _get(response.data, binanceLinkPath, null);
-  console.log('news fetched:', response.data, { title, link });
+  console.log('news fetched:', { title, link });
   if (title == null)
     throw new ScrapError('Got a null title :o', {
       response,

@@ -5,8 +5,9 @@ import { binanceInspector } from './inspector';
 import { scrapPageInfo } from '../../news/binance/scraping';
 import { getBrowser } from './browser';
 import { updateNews } from '../../services/aws/dynamoDb';
+import { watcherReportTemplate } from './report';
 
-const testfunc: Function = async (event: {}) => {
+const binanceWatcherLambda: Function = async (event: {}) => {
   const url = await binanceInspector();
   if (url == null)
     return successResponse({ message: 'Not new', event }, HttpStatus.CONTINUE);
@@ -16,10 +17,12 @@ const testfunc: Function = async (event: {}) => {
   const browser = await getBrowser();
   const info = await scrapPageInfo(browser, url);
 
-  await sendToTrader({ symbol: 'BTCUSDT', info });
+  const symbols = ['BTCUSDT', 'BNBUSDT'];
+  await Promise.all(symbols.map(symbol => sendToTrader({ symbol, info })));
   await updateNews({ ...info, addedAt: new Date().toISOString() });
+  await watcherReportTemplate(info, symbols);
 
   return successResponse({ message: 'Success', event }, HttpStatus.OK);
 };
 
-export default testfunc;
+export default binanceWatcherLambda;
