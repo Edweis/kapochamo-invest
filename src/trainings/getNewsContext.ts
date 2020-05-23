@@ -1,5 +1,5 @@
 import moment from 'moment';
-import { binancePublicGet } from '../api';
+import { binancePublicGet } from '../services/binance';
 
 import { AssetSymbol } from './types';
 import { ApiTick } from '../types';

@@ -2,6 +2,7 @@
 ## Jupither notebook They are converted into .py on pre-commit by husky
 *.ipynb
 src/docs/*.png
+.env
 
 ######### Dependency directories
 node_modules/

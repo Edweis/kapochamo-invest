@@ -60,6 +60,7 @@
     "bottleneck": "^2.19.5",
     "cheerio": "^1.0.0-rc.3",
     "chrome-aws-lambda": "^3.0.4",
+    "dotenv": "^8.2.0",
     "http-status-codes": "^1.4.0",
     "jest-environment-puppeteer": "^4.4.0",
     "lodash": "^4.17.15",
@@ -67,8 +68,8 @@
     "moment-timezone": "^0.5.28",
     "p-limit": "^2.3.0",
     "pg": "^8.0.2",
-    "puppeteer-core": "^3.0.4",
     "puppeteer": "^2.1.1",
+    "puppeteer-core": "^3.0.4",
     "ws": "^7.2.5"
   },
   "husky": {
