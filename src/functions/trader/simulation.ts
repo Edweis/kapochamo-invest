@@ -1,4 +1,4 @@
-import { Follower } from '../strategies';
+import { StrategyInterface } from '../strategies';
 import { listenTick } from './websocket';
 import { sleep } from '../../helpers/common';
 import { Tick } from '../../types';
@@ -17,6 +17,7 @@ const sellTick = (tick: Tick) => {
 };
 
 export const simulateBuyNow = async (
+  strategy: StrategyInterface,
   symbol: string
 ): Promise<TradingReport> => {
   return new Promise((resolve, reject) => {
@@ -26,12 +27,11 @@ export const simulateBuyNow = async (
       reject(new Error('Manual timeout exceeded'));
     });
 
-    const strategyInstance = new Follower(0.005);
     let tickBought: Tick;
     listenTick(symbol, (tick, ws) => {
       // BUY
       if (tickBought == null) {
-        strategyInstance.buy(tick);
+        strategy.buy(tick);
         tickBought = buyTick(tick);
       }
 
@@ -41,7 +41,7 @@ export const simulateBuyNow = async (
       console.log(tick.close, variation);
 
       // SELL
-      if (strategyInstance.shouldSell(tick)) {
+      if (strategy.shouldSell(tick)) {
         sellTick(tick);
         console.warn('Earning: ', variation);
         ws.close();
