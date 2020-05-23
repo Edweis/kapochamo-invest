@@ -12,7 +12,7 @@ class Highest extends Strategy implements StrategyInterface {
     super(`highest`);
   }
 
-  buy = (tick: Tick) => {
+  init = (tick: Tick) => {
     this.highest = tick.close;
   };
 

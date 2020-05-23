@@ -27,7 +27,7 @@ class RelativeFollower extends Strategy implements StrategyInterface {
     this.pureLossApetite = pureLossApetite;
   }
 
-  buy = (tick: Tick) => {
+  init = (tick: Tick) => {
     this.highest = tick.close;
     this.boughtFor = tick.close;
   };

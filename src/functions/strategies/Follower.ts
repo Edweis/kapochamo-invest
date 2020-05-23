@@ -15,7 +15,7 @@ class Follower extends Strategy implements StrategyInterface {
     this.sellAfterLossOf = sellAfterLossOf;
   }
 
-  buy = (tick: Tick) => {
+  init = (tick: Tick) => {
     this.highest = tick.close;
   };
 

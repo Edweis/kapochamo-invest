@@ -24,7 +24,7 @@ class Charly extends Strategy implements StrategyInterface {
     );
   }
 
-  buy = (tick: Tick) => {
+  init = (tick: Tick) => {
     this.WaitForInstance.buy(tick);
     this.RelativeFollowerInstance.buy(tick);
   };

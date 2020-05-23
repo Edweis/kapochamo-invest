@@ -5,16 +5,6 @@ import { Tick } from '../../types';
 
 const ABORT_AFTER_SEC = 14 * 60;
 type TradingReport = { buy: Tick; sell: Tick; variation: number };
-const buyTick = (tick: Tick) => {
-  console.warn('-----BUYING----');
-  console.warn(tick);
-  return tick;
-};
-
-const sellTick = (tick: Tick) => {
-  console.warn('-----SELLING----');
-  console.warn(tick);
-};
 
 export const simulateBuyNow = async (
   strategy: StrategyInterface,
@@ -30,20 +20,14 @@ export const simulateBuyNow = async (
     let tickBought: Tick;
     listenTick(symbol, (tick, ws) => {
       // BUY
-      if (tickBought == null) {
-        strategy.buy(tick);
-        tickBought = buyTick(tick);
-      }
+      if (!strategy.didBuy) strategy.buy(tick);
 
-      // CHECK STRATEGY
-      const variation =
-        (100 * (tick.close - tickBought.close)) / tickBought.close;
+      const variation = strategy.getVariation(tick);
       console.log(tick.close, variation);
 
       // SELL
       if (strategy.shouldSell(tick)) {
-        sellTick(tick);
-        console.warn('Earning: ', variation);
+        strategy.sell(tick);
         ws.close();
         const report = { buy: tickBought, sell: tick, variation };
         resolve(report);

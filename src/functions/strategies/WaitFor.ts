@@ -11,7 +11,7 @@ class WaitFor extends Strategy implements StrategyInterface {
     this.waitFor = waitFor;
   }
 
-  buy = (tick: Tick) => {
+  init = (tick: Tick) => {
     this.endAt = tick.openTime + this.waitFor * 60 * 1000;
   };
 
