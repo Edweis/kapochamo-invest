@@ -129,9 +129,9 @@ resources:
           ReadCapacityUnits: 5
           WriteCapacityUnits: 5
 
-# TODOOOOOO TEST PAYMENT OR SCRAP ANOTHER WEBSITE
 
 plugins:
+  - serverless-dotenv-plugin
   - serverless-webpack
   - serverless-plugin-warmup
   - serverless-prune-plugin
