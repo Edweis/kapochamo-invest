@@ -20,7 +20,8 @@ module.exports = {
     'import/prefer-default-export':'off',
     'no-throw-literal': 'off',
     'no-shadow': 'off',
-    '@typescript-eslint/explicit-function-return-type': 'off'
+    '@typescript-eslint/explicit-function-return-type': 'off',
+    'import/no-extraneous-dependencies': ['error', {'devDependencies': true}] //https://stackoverflow.com/questions/44939304/eslint-should-be-listed-in-the-projects-dependencies-not-devdependencies
    },
   settings: {
     'import/resolver': {

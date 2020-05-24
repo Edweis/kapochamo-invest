@@ -1,9 +1,11 @@
 import qs from 'querystring';
 import HttpStatus from 'http-status-codes';
-import { binancePublic, binancePrivate, sign } from './binance';
+import { binancePublic, binancePrivate, getOrderParams } from './binance';
 
-const SYMBOL = 'ETHBTC';
+// Mock date
+
 describe('should test on public endpoints', () => {
+  const SYMBOL = 'ETHBTC';
   it('should ping', async () => {
     const result = await binancePublic.get('/ping');
     expect(result.status).toEqual(200);
@@ -62,37 +64,25 @@ describe('should test on public endpoints', () => {
 });
 
 describe('should work for test order', () => {
-  it('should sign properly', async () => {
-    const params = qs.stringify({
-      symbol: 'LTCBTC',
-      side: 'BUY',
-      type: 'LIMIT',
-      timeInForce: 'GTC',
-      quantity: 1,
-      price: 0.1,
-      recvWindow: 5000,
-      timestamp: 1499827319559,
-    });
-    const signature = sign(params);
-    expect(signature).toEqual(
-      'fb769dffb00b13a7c30245fec08cb0c6006d4c74307e6d818f451645e952c04e'
-    );
+  it('should create a valid request', async () => {
+    const params = getOrderParams('BUY', 'BNBBTC', 1);
+    const response = await binancePrivate.post(`/order/test?${params}`);
+    expect(response.status).toEqual(HttpStatus.OK);
   });
 
-  it('should create a valid request', async () => {
-    const params = qs.stringify({
-      symbol: 'BNBBTC',
+  it('should sign properly', async () => {
+    const STATIC_TIMESTAMP = 1590230294773;
+    Date.now = jest.fn(() => STATIC_TIMESTAMP);
+    const params = getOrderParams('BUY', 'LTCBTC', 1);
+    expect(qs.parse(params)).toEqual({
+      quantity: '1',
+      recvWindow: '5000',
       side: 'BUY',
+      signature:
+        '13324a08644cd38f12b3054f4f4188acac78860b8d18e4aa1110fdaadd4e2a52',
+      symbol: 'LTCBTC',
+      timestamp: STATIC_TIMESTAMP.toString(),
       type: 'MARKET',
-      quantity: 1,
-      recvWindow: 5000,
-      timestamp: Date.now(),
     });
-    const signature = sign(params);
-    const response = await binancePrivate.post(
-      `/order/test?${params}&signature=${signature}`
-    );
-
-    expect(response.status).toEqual(HttpStatus.OK);
   });
 });

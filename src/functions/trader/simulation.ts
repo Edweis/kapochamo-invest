@@ -2,6 +2,7 @@ import { StrategyInterface } from '../strategies';
 import { listenTick } from './websocket';
 import { sleep } from '../../helpers/common';
 import { Tick } from '../../types';
+import Order from '../order';
 
 const ABORT_AFTER_SEC = 14 * 60;
 type TradingReport = { buy: Tick; sell: Tick; variation: number };
@@ -11,6 +12,8 @@ export const simulateBuyNow = async (
   symbol: string
 ): Promise<TradingReport> => {
   return new Promise((resolve, reject) => {
+    strategy.setOrder(new Order(symbol, 0.01));
+
     // Reject after timeout
     sleep(ABORT_AFTER_SEC * 1000).then(() => {
       // TODOOOOO SELL TICK AND TERMINATE IN TIMEOUT : CLASSIFY STRATEGY ?
