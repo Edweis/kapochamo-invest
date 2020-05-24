@@ -5,7 +5,7 @@ export type OrderPostFullResponse = {
   clientOrderId: string;
   transactTime: number;
   price: string;
-  origQty: string;
+  origQty: number;
   executedQty: string;
   cummulativeQuoteQty: string;
   status: string;

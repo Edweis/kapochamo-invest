@@ -1,8 +1,8 @@
 import { binancePrivate, getOrderParams } from '../../services/binance';
 import { OrderPostFullResponse } from './types';
-import { isRunLocally, isTest } from '../../constants';
+import { isTest } from '../../constants';
 
-const endpoint = isRunLocally || isTest ? '/order/test' : 'order';
+const endpoint = isTest ? '/order/test' : 'order';
 class Order {
   symbol: string;
 
@@ -24,9 +24,16 @@ class Order {
       .post<OrderPostFullResponse>(`${endpoint}?${params}`)
       .then(response => {
         console.warn('TX DONE', response.data);
-        if (side === 'BUY')
-          this.quantityAssetBought = Number(response.data.origQty);
-        if (side === 'SELL') this.quantityFinal = Number(response.data.origQty);
+        if (side === 'BUY') this.quantityAssetBought = response.data.origQty;
+        if (side === 'SELL') this.quantityFinal = response.data.origQty;
+      })
+      .catch(error => {
+        console.error(
+          'Error at /order',
+          error.response.data,
+          error.request.url
+        );
+        throw error;
       });
   };
 
@@ -35,8 +42,9 @@ class Order {
   };
 
   sell = () => {
-    if (this.quantityAssetBought)
+    if (this.quantityAssetBought == null) {
       throw new Error('You must buy before selling');
+    }
     return this.sendOrder('SELL');
   };
 }

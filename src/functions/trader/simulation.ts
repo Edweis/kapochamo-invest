@@ -12,7 +12,7 @@ export const simulateBuyNow = async (
   symbol: string
 ): Promise<TradingReport> => {
   return new Promise((resolve, reject) => {
-    strategy.setOrder(new Order(symbol, 0.01));
+    strategy.setOrder(new Order(symbol, 1));
 
     // Reject after timeout
     sleep(ABORT_AFTER_SEC * 1000).then(() => {
