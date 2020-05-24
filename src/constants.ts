@@ -9,6 +9,8 @@ if (isTest) {
   process.env.TOPIC_EMAIL_NAME = 'TOPIC_EMAIL_NAME';
   process.env.PREVIOUS_NEWS_DB_NAME = 'PREVIOUS_NEWS_DB_NAME';
   process.env.PREVIOUS_NEWS_DB_PK = 'PREVIOUS_NEWS_DB_PK';
+  process.env.BINANCE_API_KEY = 'BINANCE_API_KEY';
+  process.env.BINANCE_PRIVATE_KEY = 'BINANCE_PRIVATE_KEY';
 }
 if (process.env.TRADING_QUEUE_NAME == null)
   throw Error('TRADING_QUEUE_NAME undefined');

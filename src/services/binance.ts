@@ -29,14 +29,22 @@ export const getOrderParams = (
   symbol: string,
   quantity: number
 ) => {
-  const params = qs.stringify({
+  const params = {
     symbol,
     type: 'MARKET',
-    quantity,
     recvWindow: 5000,
     timestamp: Date.now(),
+    quantity,
     side,
-  });
+  };
+  const query = qs.stringify(params);
+  const signature = sign(query);
+  return `${query}&signature=${signature}`;
+};
+
+export const getListOrders = async () => {
+  const params = qs.stringify({ timestamp: Date.now(), symbol: 'BNBBTC' });
   const signature = sign(params);
-  return `${params}&signature=${signature}`;
+  console.debug({ binancePrivate });
+  return binancePrivate.get(`/allOrders?${params}&signature=${signature}`);
 };

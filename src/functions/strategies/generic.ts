@@ -1,15 +1,10 @@
 import { Tick } from '../../types';
-import { isTest } from '../../constants';
 import Order from '../order';
 
 export interface StrategyInterface extends Strategy {
   init: (tick: Tick) => void;
   shouldSell: (tick: Tick) => boolean;
 }
-
-const logTransaction = (message: any) => {
-  if (!isTest) console.log(message);
-};
 
 class Strategy extends Object {
   name: string;
@@ -40,8 +35,6 @@ class Strategy extends Object {
   };
 
   buy = (tick: Tick) => {
-    logTransaction('-----BUYING----');
-    logTransaction(tick);
     this.boughtTick = tick;
     this.didBuy = true;
     if (this.init != null) this.init(tick);
@@ -60,8 +53,6 @@ class Strategy extends Object {
   };
 
   sell = (tick: Tick) => {
-    logTransaction('-----SELLING----');
-    logTransaction(tick);
     this.soldTick = tick;
     if (this.order != null) return this.order.sell();
     return Promise.resolve(); // We can't use async func class property. This is a trick

@@ -1,6 +1,5 @@
 import qs from 'querystring';
-import HttpStatus from 'http-status-codes';
-import { binancePublic, binancePrivate, getOrderParams } from './binance';
+import { binancePublic, getOrderParams } from './binance';
 
 // Mock date
 
@@ -63,13 +62,7 @@ describe('should test on public endpoints', () => {
   });
 });
 
-describe('should work for test order', () => {
-  it('should create a valid request', async () => {
-    const params = getOrderParams('BUY', 'BNBBTC', 1);
-    const response = await binancePrivate.post(`/order/test?${params}`);
-    expect(response.status).toEqual(HttpStatus.OK);
-  });
-
+describe('sign', () => {
   it('should sign properly', async () => {
     const STATIC_TIMESTAMP = 1590230294773;
     Date.now = jest.fn(() => STATIC_TIMESTAMP);
@@ -79,7 +72,7 @@ describe('should work for test order', () => {
       recvWindow: '5000',
       side: 'BUY',
       signature:
-        '13324a08644cd38f12b3054f4f4188acac78860b8d18e4aa1110fdaadd4e2a52',
+        'e663f3cac2a6ab668a7ac864097a077dbf18b64bb04e01f8047c8fa7d9d4b212',
       symbol: 'LTCBTC',
       timestamp: STATIC_TIMESTAMP.toString(),
       type: 'MARKET',
