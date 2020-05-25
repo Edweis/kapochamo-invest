@@ -68,11 +68,11 @@ describe('sign', () => {
     Date.now = jest.fn(() => STATIC_TIMESTAMP);
     const params = getOrderParams('BUY', 'LTCBTC', 1);
     expect(qs.parse(params)).toEqual({
-      quantity: '1',
+      quoteOrderQty: '1',
       recvWindow: '5000',
       side: 'BUY',
       signature:
-        'e663f3cac2a6ab668a7ac864097a077dbf18b64bb04e01f8047c8fa7d9d4b212',
+        'ced1f161527070f8d4f2f09737c8a4cd7ca108a81638dfdb4b5a8e84be10b8ba',
       symbol: 'LTCBTC',
       timestamp: STATIC_TIMESTAMP.toString(),
       type: 'MARKET',

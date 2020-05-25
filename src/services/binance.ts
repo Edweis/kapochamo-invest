@@ -29,14 +29,15 @@ export const getOrderParams = (
   symbol: string,
   quantity: number
 ) => {
-  const params = {
+  const params: any = {
     symbol,
     type: 'MARKET',
     recvWindow: 5000,
     timestamp: Date.now(),
-    quantity,
     side,
   };
+  if (side === 'BUY') params.quoteOrderQty = quantity;
+  if (side === 'SELL') params.quantity = quantity;
   const query = qs.stringify(params);
   const signature = sign(query);
   return `${query}&signature=${signature}`;

@@ -6,13 +6,13 @@ import Order from '../order';
 
 const ABORT_AFTER_SEC = 14 * 60;
 type TradingReport = { buy: Tick; sell: Tick; variation: number };
-
+const USDT_TO_BET = 50;
 export const simulateBuyNow = async (
   strategy: StrategyInterface,
   symbol: string
 ): Promise<TradingReport> => {
   return new Promise((resolve, reject) => {
-    strategy.setOrder(new Order(symbol, 1));
+    strategy.setOrder(new Order(symbol, USDT_TO_BET));
 
     // Reject after timeout
     sleep(ABORT_AFTER_SEC * 1000).then(() => {

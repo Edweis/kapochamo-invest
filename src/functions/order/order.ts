@@ -6,26 +6,37 @@ const endpoint = isTest ? '/order/test' : 'order';
 class Order {
   symbol: string;
 
-  quantityAssetBought: number | null = null;
+  quantityBase: number | null = null;
 
-  quantityInitial: number;
+  quantityQuoteFinal: number | null = null;
 
-  quantityFinal: number | null = null;
+  quantityQuoteAvailable: number;
 
-  constructor(symbol: string, quantityBnb: number) {
+  quantityQuoteSpent: number | null = null;
+
+  constructor(symbol: string, quantityQuote: number) {
     this.symbol = symbol;
-    this.quantityInitial = quantityBnb;
+    this.quantityQuoteAvailable = quantityQuote;
   }
 
   private sendOrder = (side: 'BUY' | 'SELL') => {
-    const params = getOrderParams(side, this.symbol, this.quantityInitial);
+    let quantity = this.quantityQuoteAvailable;
+    if (side === 'SELL') {
+      if (this.quantityBase == null)
+        throw new Error('You must buy before selling');
+      quantity = this.quantityBase;
+    }
+    const params = getOrderParams(side, this.symbol, quantity);
     console.warn('TX : ', { side }, params);
     return binancePrivate
       .post<OrderPostFullResponse>(`${endpoint}?${params}`)
       .then(response => {
-        console.warn('TX DONE', response.data);
-        if (side === 'BUY') this.quantityAssetBought = response.data.origQty;
-        if (side === 'SELL') this.quantityFinal = response.data.origQty;
+        // console.warn('TX DONE', response.data);
+        if (side === 'BUY') {
+          this.quantityBase = response.data.origQty;
+          this.quantityQuoteSpent = response.data.cummulativeQuoteQty;
+        }
+        if (side === 'SELL') this.quantityQuoteFinal = response.data.origQty;
       })
       .catch(error => {
         console.error(
@@ -42,9 +53,6 @@ class Order {
   };
 
   sell = () => {
-    if (this.quantityAssetBought == null) {
-      throw new Error('You must buy before selling');
-    }
     return this.sendOrder('SELL');
   };
 }
