@@ -1,29 +1,22 @@
 @startuml
-title Kapochamo-Invest scrapping architecture
+title Kapochamo-Invest automated trading architecture
 
 control Cloudwatch as cw
 entity "Watcher λ" as watcher
 boundary "Binance news" as binance_news
+boundary "News DB" as news_db
 entity "Trader λ" as trader
 boundary "Binance API" as binance_api
 
-note over watcher
-    env:
-    LATEST_NEWS_TITLE
-end note
-note over trader
-    env:
-    STRATEGY
-    TIMEOUT_SELL_AFTER
-    BINANCE_API_KEY
-end note
 
 loop every minute
     cw -> watcher: async invoke()
     watcher -> binance_news: GET market/all
     watcher <-- binance_news: latest news
+    watcher -> news_db: Does news exist ?
     alt news is actually new
         watcher -> watcher: extract symbols from news
+        watcher -> news_db: insert news (title, content, url, ...)
         loop each symbol
             watcher -> trader: async invoke(symbol)
             loop until strategy validates OR timeout exceeded

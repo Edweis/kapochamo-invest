@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import pLimit from 'p-limit';
 import { getNews } from '../queries';
 import { clearPerformances } from './export';
 import { getPerformanceForNews } from './performance';
@@ -12,6 +13,8 @@ import {
   Highest,
 } from '../../functions/strategies';
 import { onlyBnb, relatedAgainstUsdt, relatedAgainstBnb } from '../extractors';
+
+const limit = pLimit(5); // DoS Binance creates error
 
 let allNews: BinanceInfo[];
 
@@ -43,10 +46,12 @@ describe.skip('getPerformanceForNews', () => {
     await Promise.all(
       strategies.map(async strategy =>
         Promise.all(
-          extractors.map(extractor =>
+          extractors.map(async extractor =>
             Promise.all(
               newsToTest.map(async news =>
-                getPerformanceForNews(news, strategy, extractor, config)
+                limit(async () =>
+                  getPerformanceForNews(news, strategy, extractor, config)
+                )
               )
             )
           )
