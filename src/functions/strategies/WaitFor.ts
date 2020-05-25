@@ -1,7 +1,7 @@
-import Strategy, { StrategyInterface } from './generic';
+import Strategy from './generic';
 import { Tick } from '../../types';
 
-class WaitFor extends Strategy implements StrategyInterface {
+class WaitFor extends Strategy {
   private waitFor: number;
 
   private endAt: number;

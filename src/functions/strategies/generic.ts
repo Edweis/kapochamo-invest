@@ -1,19 +1,10 @@
 import { Tick } from '../../types';
 import Order from '../order';
 
-export interface StrategyInterface extends Strategy {
-  init: (tick: Tick) => void;
-  shouldSell: (tick: Tick) => boolean;
-}
-
 class Strategy extends Object {
   name: string;
 
   didBuy = false;
-
-  boughtTick: Tick;
-
-  soldTick: Tick;
 
   shouldSell: (tick: Tick) => boolean;
 
@@ -35,25 +26,15 @@ class Strategy extends Object {
   };
 
   buy = (tick: Tick) => {
-    this.boughtTick = tick;
     this.didBuy = true;
-    if (this.init != null) this.init(tick);
+    if (this.init != null) this.init(tick); // SHOULD USE WHAT COMES FROM ORDER, NOT TICK
     if (this.order != null) return this.order.buy();
     return Promise.resolve(); // We can't use async func class property. This is a trick
   };
 
-  getVariation = (tick?: Tick) => {
-    const tickToCompare = tick ?? this.soldTick;
-    if (tickToCompare == null) throw new Error('No tick to compare to');
-    if (this.boughtTick == null) throw new Error('No tick bought');
-    return (
-      (100 * (tickToCompare.close - this.boughtTick.close)) /
-      this.boughtTick.close
-    );
-  };
+  getVariation = (tick?: Tick) => this.order?.getVariation(tick?.close) || null;
 
-  sell = (tick: Tick) => {
-    this.soldTick = tick;
+  sell = () => {
     if (this.order != null) return this.order.sell();
     return Promise.resolve(); // We can't use async func class property. This is a trick
   };

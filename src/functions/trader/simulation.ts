@@ -1,22 +1,22 @@
-import { StrategyInterface } from '../strategies';
+import { Strategy } from '../strategies';
 import { listenTick } from './websocket';
 import { sleep } from '../../helpers/common';
 import { Tick } from '../../types';
-import Order from '../order';
 
 const ABORT_AFTER_SEC = 14 * 60;
-type TradingReport = { buy: Tick; sell: Tick; variation: number };
-const USDT_TO_BET = 50;
+type TradingReport = { buy: Tick; sell: Tick; variation: number | null };
+
 export const simulateBuyNow = async (
-  strategy: StrategyInterface,
-  symbol: string
+  strategy: Strategy
 ): Promise<TradingReport> => {
   return new Promise((resolve, reject) => {
-    strategy.setOrder(new Order(symbol, USDT_TO_BET));
+    if (strategy.order == null) throw new Error('Order has no symbol');
+    const { symbol } = strategy.order;
+    console.warn(`Strart trade of ${strategy.name} for ${symbol}`);
 
     // Reject after timeout
     sleep(ABORT_AFTER_SEC * 1000).then(() => {
-      // TODOOOOO SELL TICK AND TERMINATE IN TIMEOUT : CLASSIFY STRATEGY ?
+      strategy.sell();
       reject(new Error('Manual timeout exceeded'));
     });
 
@@ -30,7 +30,7 @@ export const simulateBuyNow = async (
 
       // SELL
       if (strategy.shouldSell(tick)) {
-        strategy.sell(tick);
+        strategy.sell();
         ws.close();
         const report = { buy: tickBought, sell: tick, variation };
         resolve(report);

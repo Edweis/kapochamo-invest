@@ -1,12 +1,12 @@
-import Strategy, { StrategyInterface } from './generic';
+import Strategy from './generic';
 import { Tick } from '../../types';
 import WaitFor from './WaitFor';
 import RelativeFollower from './RelativeFollower';
 
-class Charly extends Strategy implements StrategyInterface {
-  private WaitForInstance: StrategyInterface;
+class Charly extends Strategy {
+  private WaitForInstance: Strategy;
 
-  private RelativeFollowerInstance: StrategyInterface;
+  private RelativeFollowerInstance: Strategy;
 
   constructor(
     waitFor: number,

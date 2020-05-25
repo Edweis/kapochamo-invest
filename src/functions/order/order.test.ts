@@ -7,7 +7,7 @@ jest.mock('axios', () => mockAxios);
 const QUANTITY = 50;
 const QUANTITY_SPENT = 49.955103;
 const QUANTITY_BASE = 3.09;
-const QUANTITY_BASE_FINAL = 49.961901;
+const QUANTITY_QUOTE_FINAL = 49.961901;
 const SYMBOL = 'BNBUSDT';
 const buyFakeResponse: OrderPostFullResponse = {
   symbol: 'BNBUSDT',
@@ -42,7 +42,7 @@ const sellFakeResponse: OrderPostFullResponse = {
   price: '0.00000000',
   origQty: QUANTITY_BASE,
   executedQty: QUANTITY_BASE,
-  cummulativeQuoteQty: QUANTITY_BASE_FINAL,
+  cummulativeQuoteQty: QUANTITY_QUOTE_FINAL,
   status: 'FILLED',
   timeInForce: 'GTC',
   type: 'MARKET',
@@ -93,6 +93,14 @@ describe('Order', () => {
     order.sell();
   });
 
+  it('should have the right variation of some qunatity', () => {
+    const conversion = QUANTITY_SPENT / QUANTITY_BASE;
+    expect(order.getVariation(conversion)).toEqual(0);
+    expect(order.getVariation(conversion * 0.8)).toEqual(-20);
+    expect(order.getVariation(conversion * 1.2)).toEqual(20);
+    expect(order.getVariation(0)).toEqual(-100);
+  });
+
   it('should sell', async () => {
     order.sell();
     mockAxios.mockResponse({ data: sellFakeResponse });
@@ -106,7 +114,12 @@ describe('Order', () => {
     );
     expect(mockAxios.post.mock.calls[0][0]).toContain('SELL');
 
-    // expect(order.quantityInitial).toEqual(QUANTITY);
-    // expect(order.quantityFinal).toEqual(QUANTITY);
+    expect(order.quantityQuoteFinal).toEqual(QUANTITY_QUOTE_FINAL);
+  });
+
+  it('should have the right variation', () => {
+    const variation =
+      (100 * (QUANTITY_QUOTE_FINAL - QUANTITY_SPENT)) / QUANTITY_SPENT;
+    expect(order.getVariation()).toEqual(variation);
   });
 });

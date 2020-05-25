@@ -1,10 +1,10 @@
-import Strategy, { StrategyInterface } from './generic';
+import Strategy from './generic';
 import { checkPercentage } from './helpers';
 import { Tick } from '../../types';
 
 type Percentage = number;
 
-class Follower extends Strategy implements StrategyInterface {
+class Follower extends Strategy {
   private sellAfterLossOf: Percentage;
 
   private highest: number;

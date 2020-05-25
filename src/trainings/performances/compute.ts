@@ -1,6 +1,6 @@
 import moment from 'moment';
 import { Tick } from '../../types';
-import { StrategyInterface, Highest } from '../../functions/strategies';
+import { Strategy, Highest } from '../../functions/strategies';
 
 const binanceFees = {
   'VIP 0': 0.001,
@@ -19,7 +19,7 @@ const fees = binanceFees['VIP 0'];
 const SHOULD_DISPLAY_PERFORMANCE = false;
 const toUnix = (date: Date) => moment(date).unix() * 1000;
 export const computePerformance = (
-  strategy: StrategyInterface,
+  strategy: Strategy,
   ticks: Tick[],
   datetime: Date
 ) => {

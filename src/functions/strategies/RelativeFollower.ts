@@ -1,10 +1,10 @@
-import Strategy, { StrategyInterface } from './generic';
+import Strategy from './generic';
 import { checkPercentage } from './helpers';
 import { Tick } from '../../types';
 
 type Percentage = number;
 
-class RelativeFollower extends Strategy implements StrategyInterface {
+class RelativeFollower extends Strategy {
   private sellAfterRelativeLossOf: Percentage;
 
   private pureLossApetite: Percentage;

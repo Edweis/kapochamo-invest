@@ -1,8 +1,8 @@
 import { binancePrivate, getOrderParams } from '../../services/binance';
 import { OrderPostFullResponse } from './types';
-import { isTest } from '../../constants';
+import { isTest, isRunLocally } from '../../constants';
 
-const endpoint = isTest ? '/order/test' : 'order';
+const endpoint = isTest || isRunLocally ? '/order/test' : 'order';
 class Order {
   symbol: string;
 
@@ -20,6 +20,7 @@ class Order {
   }
 
   private sendOrder = (side: 'BUY' | 'SELL') => {
+    // UGLY REFACTOR ME
     let quantity = this.quantityQuoteAvailable;
     if (side === 'SELL') {
       if (this.quantityBase == null)
@@ -31,12 +32,13 @@ class Order {
     return binancePrivate
       .post<OrderPostFullResponse>(`${endpoint}?${params}`)
       .then(response => {
-        // console.warn('TX DONE', response.data);
+        console.warn('TX DONE', response.data);
         if (side === 'BUY') {
           this.quantityBase = response.data.origQty;
           this.quantityQuoteSpent = response.data.cummulativeQuoteQty;
         }
-        if (side === 'SELL') this.quantityQuoteFinal = response.data.origQty;
+        if (side === 'SELL')
+          this.quantityQuoteFinal = response.data.cummulativeQuoteQty;
       })
       .catch(error => {
         console.error(
@@ -54,6 +56,21 @@ class Order {
 
   sell = () => {
     return this.sendOrder('SELL');
+  };
+
+  getVariation = (priceBase?: number) => {
+    if (this.quantityBase == null) return null;
+    const quoteQuantity =
+      priceBase == null
+        ? this.quantityQuoteFinal
+        : priceBase * this.quantityBase;
+    if (quoteQuantity == null) return null;
+    if (this.quantityQuoteSpent == null) return null;
+    const variation =
+      (100 * (quoteQuantity - this.quantityQuoteSpent)) /
+      this.quantityQuoteSpent;
+    if (Math.abs(variation) < 1e-10) return 0;
+    return variation;
   };
 }
 

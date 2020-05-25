@@ -8,7 +8,7 @@ import {
   RelativeFollower,
   WaitFor,
   Charly,
-  StrategyInterface,
+  Strategy,
   Highest,
 } from '../../functions/strategies';
 import { onlyBnb, relatedAgainstUsdt, relatedAgainstBnb } from '../extractors';
@@ -26,7 +26,7 @@ describe.skip('getPerformanceForNews', () => {
     const newsToTest = _.take(allNews, 200);
     const config = { file: false, database: true };
     const extractors = [onlyBnb, relatedAgainstUsdt, relatedAgainstBnb];
-    const strategies: StrategyInterface[] = [
+    const strategies: Strategy[] = [
       new Highest(),
       new WaitFor(15),
       new Follower(0.001),

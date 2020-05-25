@@ -1,9 +1,9 @@
-import Strategy, { StrategyInterface } from './generic';
+import Strategy from './generic';
 import { Tick } from '../../types';
 
 const HISTORY_ERROR_MESSAGE =
   'Highest Strategy did not have history. Make sure to use feedHistory before';
-class Highest extends Strategy implements StrategyInterface {
+class Highest extends Strategy {
   private highest: number;
 
   private hasHistory = false;
