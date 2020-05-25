@@ -28,8 +28,8 @@ class Winner extends Strategy {
     const shouldSell =
       (tick.close - this.boughtAt) / this.boughtAt >= this.winOf;
     console.debug('Winner', {
-      var: (tick.close - this.boughtAt) / this.boughtAt,
-      threshold: this.winOf,
+      var: (100 * (tick.close - this.boughtAt)) / this.boughtAt,
+      threshold: 100 * this.winOf,
     });
     const willFollowerSell = this.follower.shouldSell(tick);
     return willFollowerSell || shouldSell;

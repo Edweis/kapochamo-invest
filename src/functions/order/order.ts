@@ -1,8 +1,8 @@
 import { binancePrivate, getOrderParams } from '../../services/binance';
 import { OrderPostFullResponse } from './types';
-import { isTest, isRunLocally } from '../../constants';
+import { isTest } from '../../constants';
 
-const endpoint = isTest || isRunLocally ? '/order/test' : 'order';
+const endpoint = isTest ? '/order/test' : 'order';
 class Order {
   symbol: string;
 
@@ -14,48 +14,51 @@ class Order {
 
   quantityQuoteSpent: number | null = null;
 
+  logger: (message: { [key: string]: any }) => void = console.warn;
+
   constructor(symbol: string, quantityQuote: number) {
     this.symbol = symbol;
     this.quantityQuoteAvailable = quantityQuote;
   }
 
-  private sendOrder = (side: 'BUY' | 'SELL') => {
-    // UGLY REFACTOR ME
-    let quantity = this.quantityQuoteAvailable;
-    if (side === 'SELL') {
-      if (this.quantityBase == null)
-        throw new Error('You must buy before selling');
-      quantity = this.quantityBase;
-    }
+  private sendOrder = (side: 'BUY' | 'SELL', quantity: number) => {
     const params = getOrderParams(side, this.symbol, quantity);
-    console.warn('TX : ', { side }, params);
+    console.log('TX : ', { side }, params);
     return binancePrivate
       .post<OrderPostFullResponse>(`${endpoint}?${params}`)
-      .then(response => {
-        console.warn('TX DONE', response.data);
-        if (side === 'BUY') {
-          this.quantityBase = response.data.origQty;
-          this.quantityQuoteSpent = response.data.cummulativeQuoteQty;
-        }
-        if (side === 'SELL')
-          this.quantityQuoteFinal = response.data.cummulativeQuoteQty;
-      })
       .catch(error => {
-        console.error(
-          'Error at /order',
-          error.response.data,
-          error.request.url
-        );
-        throw error;
+        let message = `Api error at ${error.request.url}\n`;
+        message += `${error.message} : ${error.response.data}`;
+        throw { ...error, message };
       });
   };
 
   buy = () => {
-    return this.sendOrder('BUY');
+    const quantity = this.quantityQuoteAvailable;
+    return this.sendOrder('BUY', quantity).then(response => {
+      this.quantityBase = response.data.origQty;
+      this.quantityQuoteSpent = response.data.cummulativeQuoteQty;
+      this.logger({
+        message: 'BUY TX DONE',
+        url: response.request.url,
+        data: response.data,
+      });
+    });
   };
 
   sell = () => {
-    return this.sendOrder('SELL');
+    if (this.quantityBase == null)
+      throw new Error('You must buy before selling');
+    const quantity = this.quantityBase;
+    return this.sendOrder('SELL', quantity).then(response => {
+      this.quantityQuoteFinal = response.data.cummulativeQuoteQty;
+      this.logger({
+        message: 'SELL TX DONE',
+        url: response.request.url,
+        variation: this.getVariation(),
+        data: response.data,
+      });
+    });
   };
 
   getVariation = (priceBase?: number) => {
