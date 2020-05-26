@@ -1,5 +1,5 @@
 import HttpStatus from 'http-status-codes';
-import { WaitFor } from '../strategies';
+import { Follower } from '../strategies';
 import { successResponse, runWarm, errorResponse } from '../../helpers';
 import { simulateBuyNow } from './simulation';
 import { parseMessage } from './parse';
@@ -15,7 +15,7 @@ const traderLambda: Function = async (event: AWSLambda.SQSEvent) => {
   try {
     const message = parseMessage(event);
 
-    const strategy = new WaitFor(1);
+    const strategy = new Follower(2);
     const order = new Order(message.symbol, USDT_TO_BET);
     strategy.setOrder(order);
     const report = await simulateBuyNow(strategy);
