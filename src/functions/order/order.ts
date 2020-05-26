@@ -1,6 +1,7 @@
 import { binancePrivate, getOrderParams } from '../../services/binance';
 import { OrderPostFullResponse } from './types';
 import { isTest } from '../../constants';
+import { sendEmail } from '../../services/aws/sns';
 
 const endpoint = isTest ? '/order/test' : 'order';
 class Order {
@@ -14,7 +15,8 @@ class Order {
 
   quantityQuoteSpent: number | null = null;
 
-  logger: (message: { [key: string]: any }) => void = console.warn;
+  logger = (message: { [key: string]: any }) =>
+    sendEmail(JSON.stringify(message, null, '\t'));
 
   constructor(symbol: string, quantityQuote: number) {
     this.symbol = symbol;

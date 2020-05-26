@@ -32,7 +32,11 @@ export const simulateBuyNow = async (
       if (strategy.shouldSell(tick)) {
         await strategy.sell();
         ws.close();
-        const report = { buy: tickBought, sell: tick, variation };
+        const report = {
+          buy: tickBought,
+          sell: tick,
+          variation: strategy.getVariation(),
+        };
         resolve(report);
       }
     });
