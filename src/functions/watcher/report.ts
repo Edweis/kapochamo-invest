@@ -8,6 +8,6 @@ export const watcherReportTemplate = async (
   let message = 'A new news was published :';
   message += JSON.stringify(info, null, '\t');
   message += '\n';
-  message += `Traded on ${symbols.join(',')}`;
+  message += `Traded on ${symbols.join(', ')}`;
   await sendEmail(message);
 };

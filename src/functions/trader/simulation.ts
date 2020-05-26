@@ -15,22 +15,22 @@ export const simulateBuyNow = async (
     console.warn(`Strart trade of ${strategy.name} for ${symbol}`);
 
     // Reject after timeout
-    sleep(ABORT_AFTER_SEC * 1000).then(() => {
-      strategy.sell();
+    sleep(ABORT_AFTER_SEC * 1000).then(async () => {
+      await strategy.sell();
       reject(new Error('Manual timeout exceeded'));
     });
 
     let tickBought: Tick;
-    listenTick(symbol, (tick, ws) => {
+    listenTick(symbol, async (tick, ws) => {
       // BUY
-      if (!strategy.didBuy) strategy.buy(tick);
+      if (!strategy.didBuy) strategy.buy(tick); // note that we don't wait to buy
 
       const variation = strategy.getVariation(tick);
       console.log(tick.close, variation);
 
       // SELL
       if (strategy.shouldSell(tick)) {
-        strategy.sell();
+        await strategy.sell();
         ws.close();
         const report = { buy: tickBought, sell: tick, variation };
         resolve(report);

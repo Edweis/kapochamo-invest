@@ -83,7 +83,7 @@ filtered_array = array[
         computed_perf=('computed_perf', 'mean')
     )\
 .sort_values(['computed_perf'], ascending=False)
-filtered_array.head(1)
+filtered_array.head(10)
 
 #filtered_array.plot(x='words', y='computed_perf')
 
@@ -96,4 +96,6 @@ extractorFilter =  perf_df['extractor'] == 'relatedAgainstUsdt'
 perf_ser = perf_df[strategyFilter & extractorFilter& wordFilter]['performance']
 print(perf_ser.describe())
 perf_ser.apply(lambda p: 1+p/100).prod()
+
+
 
