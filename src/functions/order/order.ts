@@ -40,7 +40,7 @@ class Order {
     return this.sendOrder('BUY', quantity).then(response => {
       this.quantityBase = response.data.origQty;
       this.quantityQuoteSpent = response.data.cummulativeQuoteQty;
-      this.logger({
+      return this.logger({
         message: 'BUY TX DONE',
         url: response.request.url,
         data: response.data,
@@ -52,9 +52,10 @@ class Order {
     if (this.quantityBase == null)
       throw new Error('You must buy before selling');
     const quantity = this.quantityBase;
+
     return this.sendOrder('SELL', quantity).then(response => {
       this.quantityQuoteFinal = response.data.cummulativeQuoteQty;
-      this.logger({
+      return this.logger({
         message: 'SELL TX DONE',
         url: response.request.url,
         variation: this.getVariation(),

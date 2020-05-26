@@ -16,5 +16,6 @@ const publishToSns = async (topicName: string, data: string) => {
   return sns.publish(params).promise();
 };
 
-export const sendEmail = async (data: string) =>
-  publishToSns(TOPIC_EMAIL_NAME, data);
+export const sendEmail = async (data: string) => {
+  await publishToSns(TOPIC_EMAIL_NAME, data);
+};
