@@ -13,7 +13,8 @@ provider:
     TOPIC_EMAIL_NAME: EmailNotification
     PREVIOUS_NEWS_DB_NAME: ${self:provider.stage}-previous-news-dynamo
     PREVIOUS_NEWS_DB_PK: url
-    STATIC_DATA_BUCKET: static-data-s3
+    SYMBOL_DB_NAME: symbol-dynamo
+    SYMBOL_DB_PK: symbol
 
   iamRoleStatements:
     - Effect: 'Allow'
@@ -43,6 +44,14 @@ provider:
         - dynamodb:GetItem
       Resource:
         - !GetAtt PreviousNewsDb.Arn
+        - !GetAtt SymbolDb.Arn
+    - Effect: "Allow"
+      Action:
+        - "s3:GetObject"
+        - "s3:PutObject"
+      Resource:
+        - !Sub "arn:aws:s3:::${self:provider.environment.SYMBOL_DB_NAME}/*"
+        - !Sub "arn:aws:s3:::${self:provider.environment.SYMBOL_DB_NAME}"
 
 
 custom:
@@ -62,11 +71,11 @@ custom:
 
 
 functions:
-  TestMe:
-    handler: src/functions/testFunc.default
-    description: Test lambda
+  PopulateSymbols:
+    handler: src/functions/populateSymbols.default
+    description: Populate symbols in dynamo database
     events:
-      - http: GET hello
+      - http: GET populateSymbols
   WatcherBinance:
     handler: src/functions/watcher/handler.default
     description: Watch Binance news and trigger trader if needed
@@ -129,13 +138,19 @@ resources:
         ProvisionedThroughput:
           ReadCapacityUnits: 5
           WriteCapacityUnits: 5
-
-    # Database csv as s3
-    StaticDataBucket:
-      Type: AWS::S3::Bucket
+    SymbolDb:
+      Type: AWS::DynamoDB::Table
       Properties:
-        BucketName: ${self:provider.environment.STATIC_DATA_BUCKET}
-
+        TableName: ${self:provider.environment.SYMBOL_DB_NAME}
+        AttributeDefinitions:
+          - AttributeName: ${self:provider.environment.SYMBOL_DB_PK}
+            AttributeType: S
+        KeySchema:
+          - AttributeName: ${self:provider.environment.SYMBOL_DB_PK}
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 5
+          WriteCapacityUnits: 5
 
 
 plugins:
