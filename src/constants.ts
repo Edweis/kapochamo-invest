@@ -8,11 +8,11 @@ if (isTest) {
   process.env.TRADING_QUEUE_NAME = 'TRADING_QUEUE_NAME';
   process.env.TOPIC_EMAIL_NAME = 'TOPIC_EMAIL_NAME';
   process.env.PREVIOUS_NEWS_DB_NAME = 'PREVIOUS_NEWS_DB_NAME';
-  process.env.PREVIOUS_NEWS_DB_PK = 'PREVIOUS_NEWS_DB_PK';
+  process.env.PREVIOUS_NEWS_DB_PK = 'url';
   process.env.BINANCE_API_KEY = 'BINANCE_API_KEY';
   process.env.BINANCE_PRIVATE_KEY = 'BINANCE_PRIVATE_KEY';
   process.env.SYMBOL_DB_NAME = 'SYMBOL_DB_NAME';
-  process.env.SYMBOL_DB_PK = 'SYMBOL_DB_PK';
+  process.env.SYMBOL_DB_PK = 'symbol';
 }
 if (process.env.TRADING_QUEUE_NAME == null)
   throw Error('TRADING_QUEUE_NAME undefined');

@@ -15,7 +15,7 @@ const traderLambda: Function = async (event: AWSLambda.SQSEvent) => {
   try {
     const message = parseMessage(event);
 
-    const strategy = new Follower(2);
+    const strategy = new Follower(0.02);
     const order = new Order(message.symbol, USDT_TO_BET);
     strategy.setOrder(order);
     const report = await simulateBuyNow(strategy);

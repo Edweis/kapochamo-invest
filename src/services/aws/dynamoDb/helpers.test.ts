@@ -1,4 +1,4 @@
-import { formatItemToObject } from './dynamoDb';
+import { formatItemToObject } from './helpers';
 
 describe('formatItemToObject', () => {
   it('should handle empty items', () => {

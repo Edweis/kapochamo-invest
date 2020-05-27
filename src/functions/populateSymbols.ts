@@ -1,12 +1,12 @@
 import HttpStatus from 'http-status-codes';
 import _ from 'lodash';
-import { successResponse, runWarm } from '../helpers';
+import { successResponse } from '../helpers';
 import { resetSymbols, TradeSymbol } from '../services/aws/dynamoDb';
 import { binancePublic } from '../services/binance';
 
 const keyToSaveInDb = ['symbol', 'status', 'baseAsset', 'quoteAsset'];
 type ExchangeInfo = { symbols: TradeSymbol[] };
-const testfunc: Function = async () => {
+const populateSymbols: Function = async () => {
   const result = await binancePublic.get<ExchangeInfo>('/exchangeInfo');
   const cleanResults = result.data.symbols.map(symbol =>
     _.pick(symbol, keyToSaveInDb)
@@ -15,4 +15,4 @@ const testfunc: Function = async () => {
   return successResponse({ message: 'Success', cleanResults }, HttpStatus.OK);
 };
 
-export default runWarm(testfunc);
+export default populateSymbols;

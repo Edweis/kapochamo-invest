@@ -1,0 +1,21 @@
+{
+  "tables": [
+    {
+      "TableName": "PREVIOUS_NEWS_DB_NAME",
+      "KeySchema": [{ "AttributeName": "url", "KeyType": "HASH" }],
+      "AttributeDefinitions": [
+        { "AttributeName": "url", "AttributeType": "S" }
+      ],
+      "ProvisionedThroughput": { "ReadCapacityUnits": 5, "WriteCapacityUnits": 5 }
+    },
+    {
+      "TableName": "SYMBOL_DB_NAME",
+      "KeySchema": [{ "AttributeName": "symbol", "KeyType": "HASH" }],
+      "AttributeDefinitions": [
+        { "AttributeName": "symbol", "AttributeType": "S" }
+      ],
+      "ProvisionedThroughput": { "ReadCapacityUnits": 5, "WriteCapacityUnits": 5 }
+    }
+  ],
+  "basePort": 8000
+}

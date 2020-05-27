@@ -1,34 +1,16 @@
-import AWS, { DynamoDB } from 'aws-sdk';
-import _ from 'lodash';
+import dynamodb from './dynamoDb';
 import {
   PREVIOUS_NEWS_DB_NAME,
   PREVIOUS_NEWS_DB_PK,
   SYMBOL_DB_NAME,
   SYMBOL_DB_PK,
-} from '../../constants';
-
-const dynamodb = new AWS.DynamoDB();
-
-type InsertData = { [key: string]: string | null };
-export type TradeSymbol = {
-  symbol: string;
-  status: string;
-  baseAsset: string;
-  quoteAsset: string;
-};
-
-export const formatItemToObject = (item: DynamoDB.AttributeMap | undefined) => {
-  if (item == null) return null;
-  const keys = _.keys(item);
-  if (keys.length === 0) return null;
-  return _.mapValues(item, value => value.S || value.N || '');
-};
-
-export const formatObjectToItem = (data: InsertData): DynamoDB.AttributeMap =>
-  _(data)
-    .pickBy((value): value is string => !!value) // remove undefined values
-    .mapValues(value => ({ S: value }))
-    .value();
+} from '../../../constants';
+import {
+  InsertData,
+  TradeSymbol,
+  formatItemToObject,
+  formatObjectToItem,
+} from './helpers';
 
 export const getSymbols = async (): Promise<TradeSymbol[]> => {
   const params = { TableName: SYMBOL_DB_NAME };
@@ -65,6 +47,7 @@ export const resetSymbols = async (symbols: TradeSymbol[]) => {
         TableName: SYMBOL_DB_NAME,
         Item: formatObjectToItem(symbol),
       };
+      // console.debug(params.Item[SYMBOL_DB_PK]);
       return dynamodb.putItem(params).promise();
     })
   );

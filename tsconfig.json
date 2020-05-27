@@ -19,5 +19,5 @@
   "types": {
     "jest-environment-puppeteer": true
   },
-  "include": ["src"]
+  "include": ["src", "src/**/*"]
 }
