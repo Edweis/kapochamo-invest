@@ -12,13 +12,13 @@ const headless = true;
 jest.setTimeout(30000);
 
 let browser: puppeteer.Browser;
-describe('scrapLatestNews', () => {
+describe.skip('scrapLatestNews', () => {
   it('should run', async () => {
     expect(await scrapLatestNews()).toBeTruthy();
   });
 });
 
-describe('scrapOnePageLinks', () => {
+describe.skip('scrapOnePageLinks', () => {
   const initialLink =
     'https://binance.zendesk.com/hc/en-us/sections/115000106672-New-Crypto-Listings?page=4';
   beforeAll(async () => {
@@ -44,7 +44,7 @@ describe.skip('scrapAllPages', () => {
   afterAll(async () => browser.close());
 });
 
-describe('scrapPageInfo', () => {
+describe.skip('scrapPageInfo', () => {
   const link =
     'https://binance.zendesk.com/hc/en-us/articles/360041793272-Binance-Launches-Options-Trading-on-Mobile-App';
   beforeAll(async () => {

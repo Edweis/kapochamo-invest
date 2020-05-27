@@ -5,11 +5,7 @@ import { formatTickFromWs } from './helpers';
 
 export const listenTick = async <T>(
   symbol: string,
-  callback: (
-    tick: Tick,
-    ws: WebSocket,
-    resolveWs: (value: T) => void
-  ) => Promise<void>
+  callback: (tick: Tick, resolveWs: (value: T) => void) => Promise<void>
 ): Promise<T> => {
   const formatedSymbol = symbol.toLowerCase();
   const url = `wss://stream.binance.com:9443/ws/${formatedSymbol}@kline_1m`;
@@ -23,14 +19,17 @@ export const listenTick = async <T>(
   });
   ws.on('close', () => console.log(`disconnected from ${ws.url}`));
 
-  return new Promise((resolve, reject) => {
+  return new Promise<T>((resolve, reject) => {
     ws.on('error', error => {
       console.error(error);
       reject(error);
     });
     ws.on('message', async (message: string) => {
       const data = JSON.parse(message);
-      await callback(formatTickFromWs(data), ws, resolve);
+      await callback(formatTickFromWs(data), resolve);
     });
+  }).then(result => {
+    ws.close();
+    return result;
   });
 };

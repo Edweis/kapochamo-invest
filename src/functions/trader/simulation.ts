@@ -19,7 +19,7 @@ export const simulateBuyNow = async (
       reject(new Error('Manual timeout exceeded'));
     });
 
-    listenTick<TradingReport>(symbol, async (tick, ws, resolveWs) => {
+    listenTick<TradingReport>(symbol, async (tick, resolveWs) => {
       // BUY
       if (!strategy.didBuy) strategy.buy(tick); // note that we don't wait to buy
 
@@ -29,7 +29,6 @@ export const simulateBuyNow = async (
       // SELL
       if (strategy.shouldSell(tick)) {
         await strategy.sell();
-        ws.close();
         const report = { variation: strategy.getVariation() };
         resolveWs(report);
       }
