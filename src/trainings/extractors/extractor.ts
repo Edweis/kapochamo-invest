@@ -1,4 +1,4 @@
-import { getAssetFromInfo } from './extract';
+import { getAssetFromInfo, getWords } from './extract';
 import { Extractor } from '../types';
 import { getAllAssets, getSymbols } from '../queries';
 
@@ -28,4 +28,12 @@ export const relatedAgainstBnb: Extractor = async info => {
 export const onlyBnb: Extractor = async news => {
   if (news.title == null) return [];
   return ['BNBUSDT'];
+};
+
+const COLD_WORDS = ['removal', 'delist', 'distributed'];
+export const filterByColdWord: Extractor = async news => {
+  if (news.title == null) return [];
+  const words = getWords(news.title);
+  if (COLD_WORDS.some(word => words.includes(word))) return [];
+  return relatedAgainstUsdt(news);
 };
