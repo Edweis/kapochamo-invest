@@ -18,11 +18,13 @@ const saveImage = async (url: string, out: string) => {
   console.debug(`  ✔ Uml saved in ${out}`);
 };
 
-const files = ['./src/docs/uml.txt'];
+const files = ['uml.txt'];
+const source = './src/docs/';
+const outDirectory = './src/docs/public/';
 const getImages = async () => {
   const promises = files.map(async file => {
-    const urls = await getUrlFromFile(file);
-    const out = file.replace('.txt', '.png');
+    const urls = await getUrlFromFile(source + file);
+    const out = outDirectory + file.replace('.txt', '.png');
     await saveImage(urls.img, out);
   });
   Promise.all(promises);

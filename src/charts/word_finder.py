@@ -64,14 +64,14 @@ words_exploded_df = word_df \
     .agg(
         count=('words', 'count'), 
         computed_perf=('performance', 'mean')
-    ).sort_values(['computed_perf'], ascending=False)
+    ).sort_values(['computed_perf'], ascending=True)
 
 words_exploded_df.head(10)
 
 array = words_exploded_df.reset_index()
 strategyFilter = array['strategy'].str.startswith('charly_')
 extractorFilter =  array['extractor'] == 'relatedAgainstUsdt'
-countFilter = array['count'] > 5
+countFilter = array['count'] > 2
 filtered_array = array[
     strategyFilter & 
     extractorFilter &

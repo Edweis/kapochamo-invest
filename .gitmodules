@@ -1,0 +1,3 @@
+[submodule "src/docs/public"]
+	path = src/docs/public
+	url = git@github.com:Edweis/kapochamo-invest-public.git
