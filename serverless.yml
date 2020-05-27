@@ -42,6 +42,7 @@ provider:
         - dynamodb:Scan
         - dynamodb:PutItem
         - dynamodb:GetItem
+        - dynamodb:DeleteItem
       Resource:
         - !GetAtt PreviousNewsDb.Arn
         - !GetAtt SymbolDb.Arn

@@ -6,13 +6,13 @@ import { binancePublic } from '../services/binance';
 
 const keyToSaveInDb = ['symbol', 'status', 'baseAsset', 'quoteAsset'];
 type ExchangeInfo = { symbols: TradeSymbol[] };
-const testfunc: Function = async (event: AWSLambda.SQSEvent) => {
+const testfunc: Function = async () => {
   const result = await binancePublic.get<ExchangeInfo>('/exchangeInfo');
   const cleanResults = result.data.symbols.map(symbol =>
     _.pick(symbol, keyToSaveInDb)
   ) as TradeSymbol[];
   await resetSymbols(cleanResults);
-  return successResponse({ message: 'Success', event }, HttpStatus.OK);
+  return successResponse({ message: 'Success', cleanResults }, HttpStatus.OK);
 };
 
 export default runWarm(testfunc);
