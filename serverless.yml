@@ -13,6 +13,7 @@ provider:
     TOPIC_EMAIL_NAME: EmailNotification
     PREVIOUS_NEWS_DB_NAME: ${self:provider.stage}-previous-news-dynamo
     PREVIOUS_NEWS_DB_PK: url
+    STATIC_DATA_BUCKET: static-data-s3
 
   iamRoleStatements:
     - Effect: 'Allow'
@@ -128,6 +129,13 @@ resources:
         ProvisionedThroughput:
           ReadCapacityUnits: 5
           WriteCapacityUnits: 5
+
+    # Database csv as s3
+    StaticDataBucket:
+      Type: AWS::S3::Bucket
+      Properties:
+        BucketName: ${self:provider.environment.STATIC_DATA_BUCKET}
+
 
 
 plugins:
