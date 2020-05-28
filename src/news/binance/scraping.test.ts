@@ -56,7 +56,7 @@ describe.skip('scrapPageInfo', () => {
     expect(links.content).toContain(
       'the official launch of Binance Options trading'
     );
-    expect(links.time).toContain('2020-04-13T07:41:44Z');
+    expect(links.time.toISOString()).toEqual('2020-04-13T07:41:44.000Z');
     expect(links.title).toContain(
       'Binance Launches Options Trading on Mobile App'
     );

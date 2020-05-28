@@ -95,8 +95,8 @@ export const scrapPageInfo = async (
     const content =
       document.querySelector(contentPath)?.textContent?.trim() || '';
 
-    return { title, time: new Date(time), content };
+    return { title, time, content };
   });
   await page.close();
-  return { ...infos, url };
+  return { ...infos, time: new Date(infos.time), url };
 };
