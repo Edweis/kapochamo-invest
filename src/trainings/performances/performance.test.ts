@@ -1,15 +1,10 @@
-import { getOneNews } from '../queries';
 import { getPerformanceForNews } from './performance';
-import { TEST_OPTIMIST_NEWS_TITLE } from '../../test-constants';
-import { BinanceInfo } from '../../types';
+import { TEST_OPTIMIST_NEWS } from '../../test-constants';
 import { Follower, WaitFor, Highest } from '../../functions/strategies';
 
-let testNews: BinanceInfo;
+const testNews = TEST_OPTIMIST_NEWS;
 describe('getPerformanceForNews', () => {
   const highestPerf = 6.273632581267119;
-  beforeAll(async () => {
-    testNews = await getOneNews(TEST_OPTIMIST_NEWS_TITLE);
-  });
   it('should performe as expected for highestSync', async () => {
     const performances = await getPerformanceForNews(testNews, new Highest());
     expect(performances.BNBUSDT).toEqual(highestPerf);

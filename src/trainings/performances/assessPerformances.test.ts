@@ -12,7 +12,11 @@ import {
   Strategy,
   Highest,
 } from '../../functions/strategies';
-import { onlyBnb, relatedAgainstUsdt, relatedAgainstBnb } from '../extractors';
+import {
+  onlyBnb,
+  relatedAgainstUsdt,
+  relatedAgainstBnb,
+} from '../../functions/extractors';
 
 const limit = pLimit(5); // DoS Binance creates error
 

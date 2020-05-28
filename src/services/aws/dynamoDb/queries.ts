@@ -1,4 +1,4 @@
-import dynamodb from './dynamoDb';
+import AWS from 'aws-sdk';
 import {
   PREVIOUS_NEWS_DB_NAME,
   PREVIOUS_NEWS_DB_PK,
@@ -12,7 +12,11 @@ import {
   formatObjectToItem,
 } from './helpers';
 
+const dynamodb = new AWS.DynamoDB();
+
+let symbolCache: TradeSymbol[] | null = null;
 export const getSymbols = async (): Promise<TradeSymbol[]> => {
+  if (symbolCache != null) return symbolCache;
   const params = { TableName: SYMBOL_DB_NAME };
   const result = await dynamodb.scan(params).promise();
   if (result.Items == null)
@@ -20,6 +24,7 @@ export const getSymbols = async (): Promise<TradeSymbol[]> => {
   const formatedItems = result.Items.map(formatItemToObject);
   if (formatedItems.some(item => item == null))
     throw Error(`Items contains null value ${SYMBOL_DB_NAME}`);
+  symbolCache = formatedItems as TradeSymbol[];
   return formatedItems as TradeSymbol[];
 };
 
@@ -36,8 +41,9 @@ export const resetSymbols = async (symbols: TradeSymbol[]) => {
       return dynamodb.deleteItem(params).promise();
     })
   );
+
   console.log(
-    `${SYMBOL_DB_NAME} table has been droped of ${allKeys.length} objects.`
+    `${SYMBOL_DB_NAME} table has been dropped of ${allKeys.length} objects.`
   );
 
   // Populate table

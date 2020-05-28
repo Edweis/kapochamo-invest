@@ -14,14 +14,14 @@ CREATE TABLE news (
 CREATE TABLE symbol (
   symbol VARCHAR NOT NULL PRIMARY KEY,
   status VARCHAR NOT NULL,
-  base_asset VARCHAR NOT NULL,
-  quote_asset VARCHAR NOT NULL
+  "baseAsset" VARCHAR NOT NULL,
+  "quoteAsset" VARCHAR NOT NULL
 );
 
 CREATE TABLE performance (
   url VARCHAR NOT NULL,
   strategy VARCHAR NOT NULL,
-  symbol VARCHAR NOT NULL REFERENCES symbol(symbol),
+  symbol VARCHAR,
   performance FLOAT,
   extractor VARCHAR,
   FOREIGN KEY (url) REFERENCES links(url),

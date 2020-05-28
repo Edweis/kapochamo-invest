@@ -1,32 +1,20 @@
 import moment from 'moment';
-import { getAllAssets, getOneNews, getSymbols } from './queries';
-import { getAssetFromInfo } from './extractors/extract';
-import { getTickAround } from './getNewsContext';
-import { BinanceInfo } from '../types';
 import {
-  TEST_OPTIMIST_NEWS_TITLE,
-  TEST_LISTING_NEWS_TITLE,
-} from '../test-constants';
+  getAllAssets,
+  getCombinedSymbols,
+} from '../functions/extractors/helpers';
+import { getTickAround } from './getNewsContext';
+import { TEST_OPTIMIST_NEWS, TEST_LISTING_NEWS } from '../test-constants';
 
+jest.setTimeout(10000);
+jest.mock('../services/aws/dynamoDb/queries');
 describe('Optimist news', () => {
   let assets: string[] = [];
-  let testNews: BinanceInfo;
+  const testNews = TEST_OPTIMIST_NEWS;
   const MATCHING_ASSETS = ['BNB', 'CTSI'];
-  beforeAll(async () => {
-    testNews = await getOneNews(TEST_OPTIMIST_NEWS_TITLE);
-  });
-  it('testNews should correspond to reality', () => {
-    expect(testNews.title).toEqual(TEST_OPTIMIST_NEWS_TITLE);
-    expect(testNews.time.toISOString()).toEqual('2020-04-13T09:53:13.000Z');
-    expect(testNews.content).toMatch(/The Cartesi token sale/);
-  });
   it('should populate ticks', async () => {
     assets = await getAllAssets();
-    expect(assets.length).toBeGreaterThan(200);
-  });
-  it('should find asset from info', () => {
-    const matchAsset = getAssetFromInfo(testNews, assets);
-    expect(matchAsset).toEqual(MATCHING_ASSETS);
+    expect(assets.length).toBeGreaterThan(100);
   });
   it('should request for ticks on an asset', async () => {
     const ticks = await getTickAround(testNews.time, 'BNBUSDT');
@@ -38,14 +26,14 @@ describe('Optimist news', () => {
     expect(ticks[99].openTime).toEqual(startMinuteUnix * 1000);
   });
   it('get symbol from assets', async () => {
-    const symbols = await getSymbols(MATCHING_ASSETS, MATCHING_ASSETS);
+    const symbols = await getCombinedSymbols(MATCHING_ASSETS, MATCHING_ASSETS);
     expect(symbols).toEqual(['CTSIBNB']);
   });
 });
 
 describe('Listing news', () => {
   let assets: string[] = [];
-  let testNews: BinanceInfo;
+  const testNews = TEST_LISTING_NEWS;
   const MATCHING_ASSETS = ['BNB', 'BTC', 'HIVE', 'USDT'];
   const MATCHING_SYMBOLS = [
     'BNBBTC',
@@ -55,21 +43,13 @@ describe('Listing news', () => {
     'HIVEBTC',
     'HIVEUSDT',
   ];
-  beforeAll(async () => {
-    testNews = await getOneNews(TEST_LISTING_NEWS_TITLE);
-  });
   it('testNews should correspond to reality', () => {
-    expect(testNews.title).toEqual(TEST_LISTING_NEWS_TITLE);
     expect(testNews.time.toISOString()).toEqual('2020-04-27T03:57:00.000Z');
     expect(testNews.content).toMatch(/Binance will list Hive/);
   });
   it('should populate ticks', async () => {
     assets = await getAllAssets();
     expect(assets.length).toBeGreaterThan(200);
-  });
-  it('should find asset from info', () => {
-    const matchAsset = getAssetFromInfo(testNews, assets);
-    expect(matchAsset).toEqual(MATCHING_ASSETS);
   });
   it('should request for ticks on an asset', async () => {
     const hiveTicks = await getTickAround(testNews.time, 'HIVEBNB');
@@ -78,7 +58,7 @@ describe('Listing news', () => {
     expect(bnbTicks.length).toEqual(200);
   });
   it('get symbol from assets', async () => {
-    const symbols = await getSymbols(MATCHING_ASSETS, MATCHING_ASSETS);
+    const symbols = await getCombinedSymbols(MATCHING_ASSETS, MATCHING_ASSETS);
     expect(symbols).toEqual(MATCHING_SYMBOLS);
   });
 });

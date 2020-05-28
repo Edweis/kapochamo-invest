@@ -1,27 +1,25 @@
-import { getAssetFromInfo, getWords } from './extract';
+import { getAssetFromInfo, getWords } from './formating';
 import { Extractor } from '../types';
-import { getAllAssets, getSymbols } from '../queries';
-
-const assetPromise = getAllAssets();
+import { getAllAssets, getCombinedSymbols } from './helpers';
 
 export const allCurrency: Extractor = async info => {
-  const allAssets = await assetPromise;
+  const allAssets = await getAllAssets();
   const assets = getAssetFromInfo(info, allAssets);
-  const symbols = await getSymbols(assets, assets);
+  const symbols = await getCombinedSymbols(assets, assets);
   return symbols;
 };
 
 export const relatedAgainstUsdt: Extractor = async info => {
-  const allAssets = await assetPromise;
+  const allAssets = await getAllAssets();
   const assets = getAssetFromInfo(info, allAssets);
-  const symbols = await getSymbols(assets, ['USDT']);
+  const symbols = await getCombinedSymbols(assets, ['USDT']);
   return symbols;
 };
 
 export const relatedAgainstBnb: Extractor = async info => {
-  const allAssets = await assetPromise;
+  const allAssets = await getAllAssets();
   const assets = getAssetFromInfo(info, allAssets);
-  const symbols = await getSymbols(assets, ['BNB']);
+  const symbols = await getCombinedSymbols(assets, ['BNB']);
   return symbols;
 };
 

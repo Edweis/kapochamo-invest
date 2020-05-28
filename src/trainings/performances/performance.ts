@@ -1,7 +1,7 @@
 import { BinanceInfo } from '../../types';
 import { clearData, exportTicks, savePerformance } from './export';
 import { getTickAround } from '../getNewsContext';
-import { onlyBnb } from '../extractors';
+import { onlyBnb } from '../../functions/extractors';
 import { Extractor } from '../types';
 import { Strategy } from '../../functions/strategies';
 import { computePerformance } from './compute';

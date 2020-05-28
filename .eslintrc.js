@@ -21,6 +21,7 @@ module.exports = {
     'no-throw-literal': 'off',
     'no-shadow': 'off',
     '@typescript-eslint/explicit-function-return-type': 'off',
+    '@typescript-eslint/no-empty-function': 'off',
     'import/no-extraneous-dependencies': ['error', {'devDependencies': true}] //https://stackoverflow.com/questions/44939304/eslint-should-be-listed-in-the-projects-dependencies-not-devdependencies
    },
   settings: {

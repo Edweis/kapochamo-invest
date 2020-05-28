@@ -1,3 +1,4 @@
+set -e # exit whan any command fails
 
 echo '✨  Check TypeScript in the whole project';
 tsc --noEmit && echo "  ✔ TypeScript is good !"

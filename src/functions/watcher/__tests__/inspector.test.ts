@@ -4,19 +4,10 @@ import {
   MOCK_REAL_API_RESPONSES,
   MOCK_FAKE_API_RESPONSES,
 } from './apiResponses';
-import { getExistingUrl } from '../../../services/aws/dynamoDb';
 
 jest.mock('axios');
-jest.mock('../../../services/aws/dynamoDb');
+jest.mock('../../../services/aws/dynamoDb/queries');
 const mockedAxios = (axios as unknown) as jest.Mocked<typeof axios>;
-const mockeGetExistingUrl = (getExistingUrl as unknown) as jest.MockedFunction<
-  typeof getExistingUrl
->;
-const LATEST_NEWS =
-  'https://binance.zendesk.com/hc/en-us/articles/360042918512';
-mockeGetExistingUrl.mockImplementation(async title =>
-  title === LATEST_NEWS ? { url: title } : null
-);
 
 describe('binanceInspector', () => {
   it('should return null if news is not new', async () => {
