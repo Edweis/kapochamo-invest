@@ -12,11 +12,11 @@ export const simulateBuyNow = async (
   const { symbol } = strategy.order;
   console.warn(`Strart trade of ${strategy.name} for ${symbol}`);
 
-  return new Promise((resolve, reject) => {
+  return new Promise(resolve => {
     // Reject after timeout
     sleep(ABORT_AFTER_SEC * 1000).then(async () => {
       await strategy.sell();
-      reject(new Error('Manual timeout exceeded'));
+      resolve();
     });
 
     listenTick<TradingReport>(symbol, async (tick, resolveWs) => {
