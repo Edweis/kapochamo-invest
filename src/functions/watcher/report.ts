@@ -1,8 +1,8 @@
 import { sendEmail } from '../../services/aws/sns';
-import { BinanceInfoRaw } from '../../types';
+import { BinanceInfo } from '../../types';
 
 export const watcherReportTemplate = async (
-  info: BinanceInfoRaw,
+  info: BinanceInfo,
   symbols: string[]
 ) => {
   let message = 'A new news was published :';

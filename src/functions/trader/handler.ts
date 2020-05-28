@@ -1,6 +1,6 @@
 import HttpStatus from 'http-status-codes';
 import { Follower } from '../strategies';
-import { successResponse, runWarm, errorResponse } from '../../helpers';
+import { successResponse, errorResponse } from '../../helpers';
 import { simulateBuyNow } from './simulation';
 import { parseMessage } from './parse';
 import Order from '../order';
@@ -30,4 +30,4 @@ const traderLambda: Function = async (event: AWSLambda.SQSEvent) => {
   }
 };
 
-export default runWarm(traderLambda);
+export default traderLambda;

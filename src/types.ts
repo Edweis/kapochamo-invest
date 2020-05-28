@@ -5,13 +5,6 @@ export type BinanceInfo = {
   url: string;
 };
 
-export type BinanceInfoRaw = {
-  title: string | null;
-  text: string | null;
-  time: string | null;
-  url: string;
-};
-
 export type ApiTick = number[];
 export type Tick = {
   openTime: number;

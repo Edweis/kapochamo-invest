@@ -1,7 +1,7 @@
 import axios from 'axios';
 import cheerio from 'cheerio';
 import puppeteer from 'puppeteer';
-import { BinanceInfoRaw } from '../../types';
+import { BinanceInfo } from '../../types';
 
 export const scrapLatestNews = async () => {
   const url = 'https://www.binance.com/en';
@@ -66,7 +66,7 @@ export const scrapAllPages = async (
 export const scrapPageInfo = async (
   browser: puppeteer.Browser,
   url: string
-): Promise<BinanceInfoRaw> => {
+): Promise<BinanceInfo> => {
   const page = await browser.newPage();
   await page.setUserAgent(HEAD_FULL_AGENT);
   console.debug(`about to scrap ${url}`);
@@ -86,16 +86,16 @@ export const scrapPageInfo = async (
       document
         .querySelector(titlePath)
         ?.textContent?.trim()
-        .replace('\n', '') || null;
+        .replace('\n', '') || '';
     const time =
       document
         .querySelector(timePath)
         ?.getAttribute('datetime')
-        ?.trim() || null;
-    const text =
-      document.querySelector(contentPath)?.textContent?.trim() || null;
+        ?.trim() || '';
+    const content =
+      document.querySelector(contentPath)?.textContent?.trim() || '';
 
-    return { title, time, text };
+    return { title, time: new Date(time), content };
   });
   await page.close();
   return { ...infos, url };

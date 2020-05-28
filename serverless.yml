@@ -60,12 +60,6 @@ custom:
     webpackConfig: ./webpack.config.js
     includeModules: true
     packager: 'npm' # Packager that will be used to package your external modules
-  warmup:
-    enabled: true
-    events:
-      - schedule: rate(5 minutes)
-    prewarm: true
-    concurrency: 1
   prune:
     automatic: true
     number: 5 # Number of versions to keep
@@ -76,7 +70,7 @@ functions:
     handler: src/functions/populateSymbols.default
     description: Populate symbols in dynamo database
     events:
-      - http: GET populateSymbols
+      - schedule: rate(14 days)
   WatcherBinance:
     handler: src/functions/watcher/handler.default
     description: Watch Binance news and trigger trader if needed
@@ -157,5 +151,4 @@ resources:
 plugins:
   - serverless-dotenv-plugin
   - serverless-webpack
-  - serverless-plugin-warmup
   - serverless-prune-plugin

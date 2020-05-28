@@ -52,8 +52,8 @@ describe.skip('scrapPageInfo', () => {
   });
   it('should scrap info on a page', async () => {
     const links = await scrapPageInfo(browser, link);
-    expect(links.text).toContain('Fellow Binancians,');
-    expect(links.text).toContain(
+    expect(links.content).toContain('Fellow Binancians,');
+    expect(links.content).toContain(
       'the official launch of Binance Options trading'
     );
     expect(links.time).toContain('2020-04-13T07:41:44Z');

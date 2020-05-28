@@ -1,16 +1,14 @@
 import HttpStatus from 'http-status-codes';
 import { successResponse } from '../../helpers';
 import { sendToTrader } from '../../services/aws/sqs';
-import { getSymbols, updateNews } from '../../services/aws/dynamoDb';
+import { updateNews } from '../../services/aws/dynamoDb';
 import { binanceInspector } from './inspector';
 import { scrapPageInfo } from '../../news/binance/scraping';
 import { getBrowser } from './browser';
-
+import { filterByColdWord } from '../extractors';
 import { watcherReportTemplate } from './report';
 
 const binanceWatcherLambda: Function = async (event: {}) => {
-  const file = await getSymbols();
-  console.debug(file);
   const url = await binanceInspector();
   if (url == null)
     return successResponse({ message: 'Not new', event }, HttpStatus.CONTINUE);
@@ -20,9 +18,14 @@ const binanceWatcherLambda: Function = async (event: {}) => {
   const browser = await getBrowser();
   const info = await scrapPageInfo(browser, url);
 
-  const symbols = ['BTCUSDT', 'BNBUSDT'];
+  const symbols = await filterByColdWord(info);
+  console.debug('About to trade ', symbols);
   await Promise.all(symbols.map(symbol => sendToTrader({ symbol, info })));
-  await updateNews({ ...info, addedAt: new Date().toISOString() });
+  await updateNews({
+    ...info,
+    time: info.time.toISOString(),
+    addedAt: new Date().toISOString(),
+  });
   await watcherReportTemplate(info, symbols);
 
   return successResponse({ message: 'Success', event }, HttpStatus.OK);

@@ -2,16 +2,16 @@ import puppeteer from 'puppeteer';
 import pLimit from 'p-limit';
 import pg from '../../services/postgres';
 import { scrapPageInfo } from '../../news/binance/scraping';
-import { BinanceInfoRaw } from '../../types';
+import { BinanceInfo } from '../../types';
 import { sleep } from '../../helpers';
 
 const PARALLEL_RUN = 5;
 const limit = pLimit(PARALLEL_RUN);
 
-const insertNews = async (info: BinanceInfoRaw) => {
+const insertNews = async (info: BinanceInfo) => {
   await pg.query(
     'INSERT INTO news(title, time, content, url) VALUES($1, $2, $3, $4) RETURNING *',
-    [info.title, info.time, info.text, info.url]
+    [info.title, info.time, info.content, info.url]
   );
 };
 // const removeAllNews = async () => pg.query('DELETE FROM news');
