@@ -8,15 +8,15 @@ import {
 import { populateSymbols } from './populateSymbols';
 import { NEWS_LINKS } from '../../news/binance/constants';
 import { scrapAllPages } from '../../news/binance/scraping';
+import { PUPPETTER_PARAMS } from '../../helpers/common';
 
 jest.setTimeout(300000);
 
-const headless = true;
 let browser: puppeteer.Browser;
 
 describe.skip('news', () => {
   beforeAll(async () => {
-    browser = await puppeteer.launch({ headless });
+    browser = await puppeteer.launch(PUPPETTER_PARAMS);
   });
   // it.skip('should remove all links ', async () => {
   //   await removeAllLinks();
