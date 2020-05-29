@@ -12,7 +12,7 @@ class WaitFor extends Strategy {
   }
 
   init = (tick: Tick) => {
-    this.endAt = tick.openTime + this.waitFor * 60 * 1000;
+    this.endAt = tick.openTime + this.waitFor * 60 * 1000; // minute
   };
 
   shouldSell = (tick: Tick) => {

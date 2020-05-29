@@ -4,7 +4,7 @@ echo '✨  Check TypeScript in the whole project';
 tsc --noEmit && echo "  ✔ TypeScript is good !"
 
 echo '✨  Pretty notebooks';
-for file in ./src/charts/*.ipynb; do
+for file in ./src/docs/public/scripts/*.ipynb; do
     [ -f "$file" ] || break
     output=${file/\.ipynb/\.py}
     echo "  ✔ writing in $output"

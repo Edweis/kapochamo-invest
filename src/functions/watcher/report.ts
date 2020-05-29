@@ -5,9 +5,11 @@ export const watcherReportTemplate = async (
   info: BinanceInfo,
   symbols: string[]
 ) => {
-  let message = 'A new news was published :';
-  message += JSON.stringify(info, null, '\t');
-  message += '\n';
+  let message = 'A news was published : \n\n';
+  message += `${info.title}\n`;
+  message += `${info.url}\n\n`;
+  message += `Published at :\t${info.time.toISOString()}\n`;
+  message += `Action at : \t${new Date().toISOString()}\n`;
   message += `Traded on ${symbols.join(', ')}`;
   await sendEmail(message);
 };
