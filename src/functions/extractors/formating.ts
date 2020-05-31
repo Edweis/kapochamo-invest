@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import BinanceInfoNEXT from '../watcher/Info';
+import { BinanceInfo } from '../../types';
 import { Asset } from '../types';
 
 const MATCH_SPEC_CHAR = /[^\w\s]/gi;
@@ -34,7 +34,7 @@ export const getAssetsFromText = (text: string, assets: string[]) => {
 };
 
 export const getAssetFromInfo = async (
-  info: BinanceInfoNEXT,
+  info: BinanceInfo,
   assets: string[]
 ): Promise<Asset[]> => {
   const tokenText = getAssetsFromText((await info.getContent()) || '', assets);

@@ -1,5 +1,5 @@
 import { sendEmail } from '../../services/aws/sns';
-import BinanceInfoNEXT from './Info';
+import { BinanceInfo } from '../../types';
 import { getSymbols } from '../../services/aws/dynamoDb';
 
 const TRADE_BASE_URL = 'https://www.binance.com/en/trade/';
@@ -12,7 +12,7 @@ export const getChartFromSymbol = async (symbol: string) => {
 };
 
 export const watcherReportTemplate = async (
-  info: BinanceInfoNEXT,
+  info: BinanceInfo,
   symbols: string[]
 ) => {
   const time = await info.getTime();
