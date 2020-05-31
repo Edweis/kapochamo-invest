@@ -26,12 +26,12 @@ describe('getAssetFromInfo', () => {
     assets = await getAllAssets();
     // console.debug(assets);
   });
-  it('should work on info', () => {
-    expect(getAssetFromInfo(TEST_OPTIMIST_NEWS, assets)).toEqual([
+  it('should work on info', async () => {
+    expect(await getAssetFromInfo(TEST_OPTIMIST_NEWS, assets)).toEqual([
       'BNB',
       'CTSI',
     ]);
-    expect(getAssetFromInfo(TEST_LISTING_NEWS, assets)).toEqual([
+    expect(await getAssetFromInfo(TEST_LISTING_NEWS, assets)).toEqual([
       'BNB',
       'BTC',
       'HIVE',

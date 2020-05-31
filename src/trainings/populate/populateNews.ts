@@ -4,14 +4,17 @@ import pg from '../../services/postgres';
 import { scrapPageInfo } from '../../news/binance/scraping';
 import { BinanceInfo } from '../../types';
 import { sleep } from '../../helpers';
+import BinanceInfoNEXT from '../../functions/watcher/Info';
 
 const PARALLEL_RUN = 5;
 const limit = pLimit(PARALLEL_RUN);
 
 const insertNews = async (info: BinanceInfo) => {
+  const time = await info.getTime();
+  const content = await info.getContent();
   await pg.query(
     'INSERT INTO news(title, time, content, url) VALUES($1, $2, $3, $4) RETURNING *',
-    [info.title, info.time, info.content, info.url]
+    [info.title, time, content, info.url]
   );
 };
 // const removeAllNews = async () => pg.query('DELETE FROM news');
@@ -46,7 +49,8 @@ export const scrapAllPagesInfo = async (
           return;
         }
         const info = await scrapPageInfo(browser, link);
-        await insertNews(info);
+
+        await insertNews(BinanceInfoNEXT.fromObject(info));
         await sleep(2000);
       })
     )

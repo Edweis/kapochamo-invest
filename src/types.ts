@@ -1,9 +1,6 @@
-export type BinanceInfo = {
-  title: string;
-  content: string;
-  time: Date;
-  url: string;
-};
+import BinanceInfoNEXT from './functions/watcher/Info';
+
+export type BinanceInfo = BinanceInfoNEXT;
 
 export type ApiTick = number[];
 export type Tick = {

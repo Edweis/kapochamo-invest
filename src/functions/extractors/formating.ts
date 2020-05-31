@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { BinanceInfo } from '../../types';
+import BinanceInfoNEXT from '../watcher/Info';
 import { Asset } from '../types';
 
 const MATCH_SPEC_CHAR = /[^\w\s]/gi;
@@ -33,11 +33,11 @@ export const getAssetsFromText = (text: string, assets: string[]) => {
   return assets.filter(asset => tokens.includes(asset));
 };
 
-export const getAssetFromInfo = (
-  info: BinanceInfo,
+export const getAssetFromInfo = async (
+  info: BinanceInfoNEXT,
   assets: string[]
-): Asset[] => {
-  const tokenText = getAssetsFromText(info.content || '', assets);
+): Promise<Asset[]> => {
+  const tokenText = getAssetsFromText((await info.getContent()) || '', assets);
   const tokenTitle = getAssetsFromText(info.title || '', assets);
   const uniqAssets = _.uniq([...tokenText, ...tokenTitle]);
   return uniqAssets.sort();
