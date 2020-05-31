@@ -7,9 +7,11 @@ type CacheInfo = { fromCache: boolean };
 type AxiosResponseCached<T> = Promise<AxiosResponse<T> & CacheInfo>;
 type AxiosCache = { [url: string]: Promise<AxiosResponse<any>> };
 
+const BINANCE_REQUEST_LIMIT = 1200;
+const LEEWAY = 300;
 const limiter = new Bottleneck({
-  reservoir: 1100,
-  reservoirRefreshAmount: 1100,
+  reservoir: BINANCE_REQUEST_LIMIT - LEEWAY,
+  reservoirRefreshAmount: BINANCE_REQUEST_LIMIT - LEEWAY,
   reservoirRefreshInterval: 60 * 1000,
   maxConcurrent: 100,
   minTime: 10,

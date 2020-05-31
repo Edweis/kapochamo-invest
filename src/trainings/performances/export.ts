@@ -41,6 +41,7 @@ export const savePerformance = async (
     )
     .catch(err => {
       console.error({ strategy, symbol, performance, extractor }, err);
+      throw err;
     });
-  console.debug('exported: ', strategy, symbol, performance, extractor);
+  console.debug('exported: ', extractor, strategy, symbol, performance);
 };

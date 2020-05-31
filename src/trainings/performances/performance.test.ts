@@ -27,6 +27,6 @@ describe('getPerformanceForNews', () => {
   it('should performe as expected for follower 10%', async () => {
     const strategy = new Follower(0.1);
     const performances = await getPerformanceForNews(testNews, strategy);
-    expect(performances.BNBUSDT).toEqual(null); // happen to be a steady rise, never sell
+    expect(performances.BNBUSDT).toEqual(3.077128664381159); // happen to be a steady rise
   });
 });

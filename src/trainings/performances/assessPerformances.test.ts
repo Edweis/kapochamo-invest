@@ -16,11 +16,16 @@ import {
   onlyBnb,
   relatedAgainstUsdt,
   relatedAgainstBnb,
+  relatedAgainstUsdtAndBnb,
+  filterCharly,
+  filterByColdWord,
 } from '../../functions/extractors';
 
 const limit = pLimit(5); // DoS Binance creates error
 
 let allNews: BinanceInfo[];
+
+jest.mock('../../services/aws/dynamoDb/queries');
 
 describe.skip('getPerformanceForNews', () => {
   beforeAll(async () => {
@@ -32,7 +37,14 @@ describe.skip('getPerformanceForNews', () => {
     await clearPerformances();
     const newsToTest = _.take(allNews, 200);
     const config = { file: false, database: true };
-    const extractors = [onlyBnb, relatedAgainstUsdt, relatedAgainstBnb];
+    const extractors = [
+      filterCharly,
+      filterByColdWord,
+      onlyBnb,
+      relatedAgainstUsdt,
+      relatedAgainstBnb,
+      relatedAgainstUsdtAndBnb,
+    ];
     const strategies: Strategy[] = [
       new Highest(),
       new WaitFor(15),
@@ -64,14 +76,3 @@ describe.skip('getPerformanceForNews', () => {
     );
   });
 });
-// Get stats with :
-// SELECT
-//   extractor, strategy,
-//   (1+avg(performance)/100)^count(performance)-1 as TRI,
-//   stddev_samp(performance),
-//   count(performance) as nb_trades,
-//   count(DISTINCT url) as nb_news,
-//   count(symbol) as nb_symols
-// FROM performance
-// GROUP BY strategy, extractor
-// ORDER BY 3 DESC

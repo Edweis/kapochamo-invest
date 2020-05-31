@@ -1,4 +1,5 @@
 import moment from 'moment';
+import _ from 'lodash';
 import { Tick } from '../../types';
 import { Strategy, Highest } from '../../functions/strategies';
 
@@ -17,6 +18,7 @@ const binanceFees = {
 const fees = binanceFees['VIP 0'];
 
 const SHOULD_DISPLAY_PERFORMANCE = false;
+const TICK_TIMEOUT = 20;
 const toUnix = (date: Date) => moment(date).unix() * 1000;
 export const computePerformance = (
   strategy: Strategy,
@@ -29,14 +31,17 @@ export const computePerformance = (
 
   strategy.buy(futurTicks[0]);
   if (strategy instanceof Highest) strategy.feedHistory(futurTicks);
-  const sellTick = futurTicks.find(tick => strategy.shouldSell(tick));
+  let sellTick = futurTicks.find(tick => strategy.shouldSell(tick));
 
-  if (sellTick == null) return null;
+  if (sellTick == null)
+    sellTick = futurTicks[TICK_TIMEOUT] || _.last(futurTicks);
 
   // check tick exists; FIXE IS THAT NEEDED ?
   const allTimes = futurTicks.map(tick => tick.openTime);
   if (!allTimes.includes(sellTick.openTime))
-    throw Error('Strategy yield a non existing tick');
+    throw Error(
+      `Strategy yield a non existing tick ${sellTick.openTime} ${strategy.name}`
+    );
 
   // display stats
   const sellFor = sellTick.close;

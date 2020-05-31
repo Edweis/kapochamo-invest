@@ -14,7 +14,7 @@ class Charly extends Strategy {
     pureLossApetite: number
   ) {
     super(
-      `charly_S_${sellAfterRelativeLossOf * 100}W${waitFor}L${pureLossApetite *
+      `charly_S${sellAfterRelativeLossOf * 100}W${waitFor}L${pureLossApetite *
         100}`
     );
     this.WaitForInstance = new WaitFor(waitFor);
