@@ -15,11 +15,12 @@ export const watcherReportTemplate = async (
   info: BinanceInfo,
   symbols: string[]
 ) => {
+  const time = await info.getTime();
   const chartUrls = symbols.map(getChartFromSymbol);
   let message = 'A news was published : \n\n';
   message += `${info.title}\n`;
   message += `${info.url}\n\n`;
-  message += `Published at :\t${info.time.toISOString()}\n`;
+  message += `Published at :\t${time.toISOString()}\n`;
   message += `Action at : \t${new Date().toISOString()}\n`;
   message += `Traded on ${symbols.join(', ')}\n`;
   message += `\t${chartUrls.join('\n')}`;

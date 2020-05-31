@@ -1,7 +1,6 @@
 import axios from 'axios';
 import cheerio from 'cheerio';
 import puppeteer from 'puppeteer';
-import { BinanceInfo } from '../../types';
 
 export const scrapLatestNews = async () => {
   const url = 'https://www.binance.com/en';
@@ -66,7 +65,7 @@ export const scrapAllPages = async (
 export const scrapPageInfo = async (
   browser: puppeteer.Browser,
   url: string
-): Promise<BinanceInfo> => {
+) => {
   const page = await browser.newPage();
   await page.setUserAgent(HEAD_FULL_AGENT);
   console.debug(`about to scrap ${url}`);

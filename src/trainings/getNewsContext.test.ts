@@ -17,9 +17,10 @@ describe('Optimist news', () => {
     expect(assets.length).toBeGreaterThan(100);
   });
   it('should request for ticks on an asset', async () => {
-    const ticks = await getTickAround(testNews.time, 'BNBUSDT');
+    const time = await testNews.getTime();
+    const ticks = await getTickAround(time, 'BNBUSDT');
     expect(ticks.length).toEqual(200);
-    const startMinuteUnix = moment(testNews.time)
+    const startMinuteUnix = moment(time)
       .startOf('m')
       .unix();
     ticks.find(tick => tick.openTime === startMinuteUnix * 1000);
@@ -43,18 +44,24 @@ describe('Listing news', () => {
     'HIVEBTC',
     'HIVEUSDT',
   ];
+  let time: Date;
+  let content: string;
+  beforeAll(async () => {
+    time = await testNews.getTime();
+    content = await testNews.getContent();
+  });
   it('testNews should correspond to reality', () => {
-    expect(testNews.time.toISOString()).toEqual('2020-04-27T03:57:00.000Z');
-    expect(testNews.content).toMatch(/Binance will list Hive/);
+    expect(time.toISOString()).toEqual('2020-04-27T03:57:00.000Z');
+    expect(content).toMatch(/Binance will list Hive/);
   });
   it('should populate ticks', async () => {
     assets = await getAllAssets();
     expect(assets.length).toBeGreaterThan(200);
   });
   it('should request for ticks on an asset', async () => {
-    const hiveTicks = await getTickAround(testNews.time, 'HIVEBNB');
+    const hiveTicks = await getTickAround(time, 'HIVEBNB');
     expect(hiveTicks.length).toEqual(0); // news listing
-    const bnbTicks = await getTickAround(testNews.time, 'BNBUSDT');
+    const bnbTicks = await getTickAround(time, 'BNBUSDT');
     expect(bnbTicks.length).toEqual(200);
   });
   it('get symbol from assets', async () => {

@@ -12,8 +12,7 @@ export const getPerformanceForNews = async (
   extractor: Extractor = onlyBnb,
   shouldExport = { file: false, database: false }
 ) => {
-  if (info.time == null) throw Error("Can't evaluate a null date");
-  const { time } = info;
+  const time = await info.getTime();
   const symbols = await extractor(info);
   if (symbols.length > 30) {
     throw Error(`To many symbols (${symbols.length}) for ${info.title}`);
@@ -22,10 +21,9 @@ export const getPerformanceForNews = async (
   const performances: { [symbol: string]: number | null } = {};
   await Promise.all(
     symbols.map(async symbol => {
-      const datetime = new Date(time);
-      const ticks = await getTickAround(datetime, symbol);
+      const ticks = await getTickAround(time, symbol);
       if (shouldExport.file) await exportTicks(symbol, ticks);
-      const performance = computePerformance(strategy, ticks, datetime);
+      const performance = computePerformance(strategy, ticks, time);
       if (shouldExport.database)
         await savePerformance(
           info,

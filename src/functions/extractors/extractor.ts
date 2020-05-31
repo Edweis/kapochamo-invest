@@ -4,21 +4,21 @@ import { getAllAssets, getCombinedSymbols } from './helpers';
 
 export const allCurrency: Extractor = async info => {
   const allAssets = await getAllAssets();
-  const assets = getAssetFromInfo(info, allAssets);
+  const assets = await getAssetFromInfo(info, allAssets);
   const symbols = await getCombinedSymbols(assets, assets);
   return symbols;
 };
 
 export const relatedAgainstUsdt: Extractor = async info => {
   const allAssets = await getAllAssets();
-  const assets = getAssetFromInfo(info, allAssets);
+  const assets = await getAssetFromInfo(info, allAssets);
   const symbols = await getCombinedSymbols(assets, ['USDT']);
   return symbols;
 };
 
 export const relatedAgainstBnb: Extractor = async info => {
   const allAssets = await getAllAssets();
-  const assets = getAssetFromInfo(info, allAssets);
+  const assets = await getAssetFromInfo(info, allAssets);
   const symbols = await getCombinedSymbols(assets, ['BNB']);
   return symbols;
 };

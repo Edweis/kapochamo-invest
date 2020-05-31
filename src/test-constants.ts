@@ -1,6 +1,6 @@
-import { BinanceInfo } from './types';
+import BinanceInfoNEXT from './functions/watcher/Info';
 
-export const TEST_OPTIMIST_NEWS: BinanceInfo = {
+export const TEST_OPTIMIST_NEWS = BinanceInfoNEXT.fromObject({
   title: 'Introducing the Cartesi (CTSI) Token Sale on Binance Launchpad',
   url:
     'https://binance.zendesk.com/hc/en-us/articles/360041795572-Introducing-the-Cartesi-CTSI-Token-Sale-on-Binance-Launchpad',
@@ -150,8 +150,8 @@ export const TEST_OPTIMIST_NEWS: BinanceInfo = {
     'Facebook: https://www.facebook.com/binance \n' +
     'Instagram: https://www.instagram.com/binance',
   time: new Date('2020-04-13 09:53:13+00'),
-};
-export const TEST_LISTING_NEWS: BinanceInfo = {
+});
+export const TEST_LISTING_NEWS = BinanceInfoNEXT.fromObject({
   title: 'Binance Will List Hive (HIVE)',
   url:
     'https://binance.zendesk.com/hc/en-us/articles/360042363352-Binance-Will-List-Hive-HIVE-',
@@ -181,4 +181,4 @@ export const TEST_LISTING_NEWS: BinanceInfo = {
     'Facebook: https://www.facebook.com/binance\n' +
     'Instagram: https://www.instagram.com/binance',
   time: new Date('2020-04-27 03:57:00+00'),
-};
+});
