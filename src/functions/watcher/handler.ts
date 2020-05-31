@@ -1,6 +1,6 @@
 import HttpStatus from 'http-status-codes';
 import { successResponse } from '../../helpers';
-// import { sendToTrader } from '../../services/aws/sqs';
+import { sendToTrader } from '../../services/aws/sqs';
 import { updateNews } from '../../services/aws/dynamoDb';
 import { binanceInspector } from './inspector';
 import { scrapPageInfo } from '../../news/binance/scraping';
@@ -20,7 +20,7 @@ const binanceWatcherLambda: Function = async (event: {}) => {
 
   const symbols = await filterByColdWord(info);
   console.debug('About to trade ', symbols);
-  // await Promise.all(symbols.map(symbol => sendToTrader({ symbol, info })));
+  await Promise.all(symbols.map(symbol => sendToTrader({ symbol, info })));
   await watcherReportTemplate(info, symbols);
   await updateNews({
     ...info,
