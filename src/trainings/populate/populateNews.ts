@@ -21,7 +21,7 @@ export const postLinks = async (url: string) =>
 export const getAllLinks = async () =>
   pg
     .query<{ url: string }>(
-      'SELECT * FROM links ORDER BY substring(url, 47, 12) DESC' // most recent first
+      'SELECT url FROM links ORDER BY substring(url, 47, 12) DESC' // most recent first
     )
     .then(result => result.rows.map(({ url }) => url));
 export const checkNewsExists = async (url: string) => {
