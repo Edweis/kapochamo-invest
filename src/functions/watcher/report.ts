@@ -16,7 +16,7 @@ export const watcherReportTemplate = async (
   symbols: string[]
 ) => {
   const time = await info.getTime();
-  const chartUrls = symbols.map(getChartFromSymbol);
+  const chartUrls = await Promise.all(symbols.map(getChartFromSymbol));
   let message = 'A news was published : \n\n';
   message += `${info.title}\n`;
   message += `${info.url}\n\n`;
