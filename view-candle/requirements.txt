@@ -1,2 +1,4 @@
 numpy==1.17.4
 Jinja2==2.11.2
+python-dateutil==2.8.1
+requests==2.23.0
