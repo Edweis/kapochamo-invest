@@ -1,9 +1,11 @@
 import json
 import numpy as np
+from jinja2 import Template
 
 def main(event, context):
     a = np.arange(15).reshape(3, 5)
-    body = "<h1> HELLO François</h1>"
+    template = Template(open('template.html').read())
+    body = template.render(name='François')
 
     response = {
         "statusCode": 200,
