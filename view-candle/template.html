@@ -30,15 +30,11 @@
         .btn{background-color:#e67d1e;border-bottom-color:#e67d1e;border-bottom-left-radius:4px;border-bottom-right-radius:4px;border-bottom-style:solid;border-bottom-width:1px;border-image-outset:0;border-image-repeat:stretch;border-image-slice:100%;border-image-source:none;border-image-width:1;border-left-color:#e67d1e;border-left-style:solid;border-left-width:1px;border-right-color:#e67d1e;border-right-style:solid;border-right-width:1px;border-top-color:#e67d1e;border-top-left-radius:4px;border-top-right-radius:4px;border-top-style:solid;border-top-width:1px;box-sizing:border-box;color:#fff;cursor:pointer;display:inline-block;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";font-size:16px;font-weight:400;line-height:24px;padding-bottom:6px;padding-left:12px;padding-right:12px;padding-top:6px;text-align:center;text-decoration:#212529;text-decoration-color:#212529;text-decoration-line:none;text-decoration-style:solid;text-decoration-thickness:auto;transition-delay:0s,0s,0s,0s;transition-duration:.15s,.15s,.15s,.15s;transition-property:color,background-color,border-color,box-shadow;transition-timing-function:ease-in-out,ease-in-out,ease-in-out,ease-in-out;margin:auto}
 
     </style>
-
     <script src="https://cdn.jsdelivr.net/npm/promise-polyfill@8/dist/polyfill.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/eligrey-classlist-js-polyfill@1.2.20171210/classList.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/findindex_polyfill_mdn"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/tail.datetime@0.4.13/js/tail.datetime.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
-
-
-    <script src="../../assets/ohlc.js"></script>
   </head>
 
   <body>
@@ -54,6 +50,10 @@
            <div>
              <label for="symbol">Symbol</label>
              <input type="text" id="symbol" name="symbol">
+           </div>
+           <div>
+             <label for="limit">Duration (min)</label>
+             <input type="text" id="limit" name="limit">
            </div>
            <div>
              <a class="btn" id="submit">Submit</a>
@@ -86,6 +86,7 @@
         // FORM
         document.querySelector("#time").value = startDate;
         document.querySelector("#symbol").value = '{{symbol}}';
+        document.querySelector("#limit").value = '{{limit}}';
         tail.DateTime("#time", {
             weekStart: 1,
             position: "#time-holder-anchor",
@@ -100,8 +101,9 @@
           const baseUrl = window.location.protocol + "//" + window.location.host  + window.location.pathname;
           const newTime = document.querySelector("#time").value;
           const newSymbol = document.querySelector("#symbol").value;
+          const newLimit = document.querySelector("#limit").value;
           const timeUnix = new Date(newTime).getTime()
-          const queryString = "symbol="+newSymbol+"&time="+timeUnix;
+          const queryString = "symbol="+newSymbol+"&time="+timeUnix+"&limit="+newLimit;
           window.location = baseUrl+"?"+queryString;
           event.preventDefault();
         }, false);
