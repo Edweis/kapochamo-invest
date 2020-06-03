@@ -47,6 +47,17 @@ def main(event, context):
     # Get ticks
     tick_response = requests.get(base_url+'/klines', parameters)
     ticks = tick_response.json()
+    if tick_response.status_code != 200:
+        return {
+            "statusCode": 400,
+            "body": {
+                "error": ticks,
+                "time": time,
+                "symbol": symbol,
+                "limit": limit
+            },
+            "headers": { 'Content-Type': 'application/json' }
+        }
     formated_ticks = [
         {"x": tick[0], "y": [float(v) for v in tick[1:5] ]} for tick in ticks
     ]
