@@ -56,7 +56,7 @@
              <input type="text" id="symbol" name="symbol">
            </div>
            <div>
-             <a class="btn">Submit</a>
+             <a class="btn" id="submit">Submit</a>
            </div>
          </form>
        </div>
@@ -96,7 +96,16 @@
             timeStepMinutes: 1,
             timeStepSeconds: 1,
         });
-        const baseUrl = window.location.protocol + "//" + window.location.host  + window.location.pathname;
+        document.querySelector("#submit").addEventListener("click", function (event) {
+          const baseUrl = window.location.protocol + "//" + window.location.host  + window.location.pathname;
+          const newTime = document.querySelector("#time").value;
+          const newSymbol = document.querySelector("#symbol").value;
+          const timeUnix = new Date(newTime).getTime()
+          const queryString = "symbol="+newSymbol+"&time="+timeUnix;
+          window.location = baseUrl+"?"+queryString;
+          event.preventDefault();
+        }, false);
+
     </script>
 
 
