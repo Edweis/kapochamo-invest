@@ -5,7 +5,6 @@ import requests
 
 base_url = 'https://api.binance.com/api/v3'
 parameters = {
-    'symbol': 'BTCUSDT',
     'limit': 1000,
     'interval': '1m'
 }
@@ -28,6 +27,7 @@ columns = [
 def main(event, context):
     print(event)
     time = 1587271070010
+    symbol = 'BTCUSDT'
     if type(event) != 'str':
         if 'queryStringParameters' in event:
             qs  = event['queryStringParameters']
@@ -35,7 +35,11 @@ def main(event, context):
             if qs is not None:
                 if 'time' in qs:
                     time = qs['time']
+                if 'symbol' in qs:
+                    symbol = qs['symbol']
+
     parameters['startTime'] = time
+    parameters['symbol'] = symbol
 
     # Get ticks
     tick_response = requests.get(base_url+'/klines', parameters)
@@ -46,7 +50,11 @@ def main(event, context):
 
     # fill template
     template = Template(open('template.html').read())
-    body = template.render(name='François', data=formated_ticks)
+    body = template.render(
+        data=formated_ticks,
+        time=time,
+        symbol=symbol
+    )
 
 
     response = {
@@ -58,4 +66,4 @@ def main(event, context):
 
 
 if __name__ == "__main__":
-    print(main('', ''))
+    print(main('', '')['body'])

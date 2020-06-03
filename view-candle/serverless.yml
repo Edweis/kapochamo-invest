@@ -10,7 +10,7 @@ functions:
     handler: handler.main
     events:
       - http:
-          path: candle/view
+          path: view
           method: get
 
 plugins:
