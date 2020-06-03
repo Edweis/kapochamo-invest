@@ -75,7 +75,12 @@
           height: 800
         },
         title: { text: '{{symbol}} - '+startDate.toISOString(), align: 'left' },
-        xaxis: { type: 'datetime' },
+        xaxis: {
+          type: 'datetime',
+          labels: {
+            formatter: value => new Date(value).toISOString().replace(':00.000Z','').replace('T', ' ')
+          }
+        },
         yaxis: { tooltip: { enabled: true } }
         };
 
