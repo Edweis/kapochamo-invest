@@ -50,12 +50,12 @@ def main(event, context):
     if tick_response.status_code != 200:
         return {
             "statusCode": 400,
-            "body": {
+            "body": json.dumps({
                 "error": ticks,
                 "time": time,
                 "symbol": symbol,
                 "limit": limit
-            },
+            }),
             "headers": { 'Content-Type': 'application/json' }
         }
     formated_ticks = [
@@ -72,12 +72,11 @@ def main(event, context):
     )
 
 
-    response = {
+    return {
         "statusCode": 200,
         "body": body,
         "headers": { 'Content-Type': 'text/html' }
     }
-    return response
 
 
 if __name__ == "__main__":
