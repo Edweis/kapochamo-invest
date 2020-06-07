@@ -3,6 +3,7 @@ import { axiosCacheGet, formatUrl } from './cache';
 
 jest.setTimeout(30000);
 
+type Response = { fromCache: boolean };
 const getter = axiosCacheGet(axios);
 describe('axiosCacheGet', () => {
   it('should no cache the first request', async () => {

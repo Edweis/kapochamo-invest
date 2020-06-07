@@ -22,6 +22,5 @@ export const resetSymbols = async (symbols: TradeSymbol[]) => {
 
 const LATEST_NEWS =
   'https://binance.zendesk.com/hc/en-us/articles/360042918512';
-export const getExistingUrl = async (url: string) =>
-  url === LATEST_NEWS ? { url } : null;
 export const updateNews = async () => {};
+export const getLastUrl = async () => LATEST_NEWS;

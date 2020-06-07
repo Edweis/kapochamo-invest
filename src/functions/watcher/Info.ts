@@ -7,7 +7,7 @@ type BinanceInfoOject = {
   content: string;
   time: Date;
 };
-class BinanceInfoNEXT {
+class BinanceInfo {
   url: string;
 
   title: string;
@@ -29,7 +29,7 @@ class BinanceInfoNEXT {
   }
 
   static fromObject(object: BinanceInfoOject) {
-    const instance = new BinanceInfoNEXT(object.url, object.title);
+    const instance = new BinanceInfo(object.url, object.title);
     instance.content = object.content;
     instance.time = object.time;
     return instance;
@@ -69,4 +69,4 @@ class BinanceInfoNEXT {
   }
 }
 
-export default BinanceInfoNEXT;
+export default BinanceInfo;

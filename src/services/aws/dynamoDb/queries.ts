@@ -1,16 +1,12 @@
 import AWS from 'aws-sdk';
 import {
-  PREVIOUS_NEWS_DB_NAME,
-  PREVIOUS_NEWS_DB_PK,
+  NEWS_TRIGGER_DB_NAME,
+  NEWS_TRIGGER_DB_PK,
   SYMBOL_DB_NAME,
   SYMBOL_DB_PK,
+  NEWS_TRIGGER_DB_VALUE,
 } from '../../../constants';
-import {
-  InsertData,
-  TradeSymbol,
-  formatItemToObject,
-  formatObjectToItem,
-} from './helpers';
+import { TradeSymbol, formatItemToObject, formatObjectToItem } from './helpers';
 
 const dynamodb = new AWS.DynamoDB();
 
@@ -62,31 +58,25 @@ export const resetSymbols = async (symbols: TradeSymbol[]) => {
   );
 };
 
-export const getExistingUrl = async (url: string) => {
+const BINANCE_KEY = 'BINANCE';
+export const getLastUrl = async () => {
   const params = {
-    TableName: PREVIOUS_NEWS_DB_NAME,
-    Key: { [PREVIOUS_NEWS_DB_PK]: { S: url } },
-    AttributesToGet: [PREVIOUS_NEWS_DB_PK],
+    TableName: NEWS_TRIGGER_DB_NAME,
+    Key: { [NEWS_TRIGGER_DB_PK]: { S: BINANCE_KEY } },
+    AttributesToGet: [NEWS_TRIGGER_DB_VALUE],
   };
   const result = await dynamodb.getItem(params).promise();
   console.log('Fetched from DynamoDb', params, result);
-  return formatItemToObject(result.Item);
+  return result.Item && result.Item.url.S;
 };
 
-const checkPrimaryKey = (data: InsertData) => {
-  if (data[PREVIOUS_NEWS_DB_PK] == null) {
-    throw Error(
-      `Primary key ${PREVIOUS_NEWS_DB_PK} not found in ${JSON.stringify(data)}`
-    );
-  }
-};
-
-export const updateNews = async (data: InsertData) => {
-  checkPrimaryKey(data);
-  const formatedData = formatObjectToItem(data);
+export const updateLastNews = async (url: string) => {
   const params = {
-    TableName: PREVIOUS_NEWS_DB_NAME,
-    Item: formatedData,
+    TableName: NEWS_TRIGGER_DB_NAME,
+    Item: {
+      [NEWS_TRIGGER_DB_PK]: { S: BINANCE_KEY },
+      [NEWS_TRIGGER_DB_VALUE]: { S: url },
+    },
   };
   await dynamodb.putItem(params).promise();
   console.log('Inserted in DynamoDb', params);

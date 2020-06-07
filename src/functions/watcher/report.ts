@@ -1,5 +1,4 @@
 import { sendEmail } from '../../services/aws/sns';
-import { BinanceInfo } from '../../types';
 import { getSymbols } from '../../services/aws/dynamoDb';
 
 const TRADE_BASE_URL = 'https://www.binance.com/en/trade/';
@@ -12,15 +11,14 @@ export const getChartFromSymbol = async (symbol: string) => {
 };
 
 export const watcherReportTemplate = async (
-  info: BinanceInfo,
+  url: string,
+  title: string,
   symbols: string[]
 ) => {
-  const time = await info.getTime();
   const chartUrls = await Promise.all(symbols.map(getChartFromSymbol));
   let message = 'A news was published : \n\n';
-  message += `${info.title}\n`;
-  message += `${info.url}\n\n`;
-  message += `Published at :\t${time.toISOString()}\n`;
+  message += `${title}\n`;
+  message += `${url}\n\n`;
   message += `Action at : \t${new Date().toISOString()}\n`;
   message += `Traded on ${symbols.join(', ')}\n`;
   message += `\t${chartUrls.join('\n')}`;
