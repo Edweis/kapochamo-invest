@@ -10,7 +10,6 @@ export const binanceTitlePath = 'data.notices[0].title';
 export const binanceUrlPath = 'data.notices[0].url';
 
 export const binanceInspector = async (profiling?: Profiling) => {
-  console.log('about to fetch news');
   const existingUrl = await getLastUrl();
   const response = await axios.get(binanceInspectUrl);
   if (profiling) profiling.log('Api call');
@@ -23,6 +22,5 @@ export const binanceInspector = async (profiling?: Profiling) => {
       binanceTitlePath,
     });
   if (profiling) profiling.log('Here is the url');
-  console.debug('test', { existingUrl, url });
   return existingUrl === url ? null : { url, title };
 };

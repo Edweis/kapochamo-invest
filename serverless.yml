@@ -7,7 +7,7 @@ provider:
   name: aws
   runtime: nodejs12.x
   stage: ${opt:stage, 'dev'}
-  region: ap-southeast-1
+  region: ap-northeast-1
   environment:
     TRADING_QUEUE_NAME: ${self:provider.stage}-trader-queue
     TOPIC_EMAIL_NAME: EmailNotification
@@ -97,6 +97,8 @@ resources:
         Subscription:
           - Protocol: email
             Endpoint: rulliere.francois+kapochamo@gmail.com
+          - Protocol: email
+            Endpoint: paul_gaymard+kapochamo@hotmail.fr
 
 
     # Queues

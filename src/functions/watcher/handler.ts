@@ -10,8 +10,10 @@ const binanceWatcherLambda: Function = async (event: {}) => {
   const profiling = new Profiling();
   const info = await binanceInspector(profiling);
   profiling.log('Fetch news');
-  if (info == null)
+  if (info == null) {
+    console.debug(profiling.toString());
     return { message: 'Not new', profiling: profiling.toString(), event };
+  }
   profiling.log('Update News');
 
   // We have a new news 🎉
