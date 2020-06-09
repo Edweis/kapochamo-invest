@@ -3,6 +3,7 @@
 *.ipynb
 src/docs/*.png
 .env
+.DS_Store
 
 ######### Dependency directories
 node_modules/
