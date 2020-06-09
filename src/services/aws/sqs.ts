@@ -1,6 +1,6 @@
 import AWS from 'aws-sdk';
-import { TRADING_QUEUE_NAME } from '../../constants';
-import { LambdaTraderPayload } from '../../types';
+import { TRADING_QUEUE_NAME, SELLER_QUEUE_NAME } from '../../constants';
+import { LambdaTraderMessage, SellerMessage } from '../../types';
 
 const sqs = new AWS.SQS();
 
@@ -13,8 +13,11 @@ const sendToQueue = async <T>(queueName: string, data: T) => {
     QueueUrl: queueUrl,
   };
   console.log(`Sending to queue ${queueName}`, params);
-  return sqs.sendMessage(params).promise();
+  await sqs.sendMessage(params).promise();
 };
 
-export const sendToTrader = (data: LambdaTraderPayload) =>
+export const sendToTrader = (data: LambdaTraderMessage) =>
   sendToQueue(TRADING_QUEUE_NAME, data);
+
+export const sendToSeller = (data: SellerMessage) =>
+  sendToQueue(SELLER_QUEUE_NAME, data);

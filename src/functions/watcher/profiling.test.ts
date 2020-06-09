@@ -15,7 +15,7 @@ describe('computeProfiling', () => {
     prof.report.push({ name: 'batman', hrtime: batmanTime });
     prof.report.push({ name: 'robin', hrtime: robinTime });
     expect(prof.toString()).toEqual(
-      'batman: 123s 456ms 789μs 111ns\nrobin: 987s 654ms 321μs 222ns'
+      'batman              : 123s 456ms 789μs 111ns\nrobin               : 987s 654ms 321μs 222ns'
     );
   });
 });

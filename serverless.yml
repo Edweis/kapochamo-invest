@@ -9,7 +9,7 @@ provider:
   stage: ${opt:stage, 'dev'}
   region: ap-northeast-1
   environment:
-    TRADING_QUEUE_NAME: ${self:provider.stage}-trader-queue
+    SELLER_QUEUE_NAME: ${self:provider.stage}-trader-queue
     TOPIC_EMAIL_NAME: EmailNotification
     NEWS_TRIGGER_DB_NAME: ${self:provider.stage}-news-trigger-db
     NEWS_TRIGGER_DB_PK: key
@@ -77,8 +77,8 @@ functions:
     events:
       - http: GET watcher
       - schedule: rate(1 minute)
-  Trader:
-    handler: src/functions/trader/handler.default
+  Seller:
+    handler: src/functions/seller/handler.default
     description: Buy and sell a symbol on Binance
     timeout: 900 # 15 minutes
     events:
@@ -107,7 +107,7 @@ resources:
       Properties:
         DelaySeconds: 0
         MessageRetentionPeriod: 345600 # 4 days
-        QueueName: ${self:provider.environment.TRADING_QUEUE_NAME}
+        QueueName: ${self:provider.environment.SELLER_QUEUE_NAME}
         ReceiveMessageWaitTimeSeconds: 0
         VisibilityTimeout: 900
         RedrivePolicy:
@@ -118,7 +118,7 @@ resources:
     TradingQueueDLQ:
       Type: AWS::SQS::Queue
       Properties:
-        QueueName: ${self:provider.environment.TRADING_QUEUE_NAME}-DLQ
+        QueueName: ${self:provider.environment.SELLER_QUEUE_NAME}-DLQ
         MessageRetentionPeriod: 1209600 # 14 days
 
     # Database

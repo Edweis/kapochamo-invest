@@ -5,7 +5,7 @@ export const isRunLocally = process.env.IS_LOCAL != null;
 dotenv.config();
 
 if (isTest) {
-  process.env.TRADING_QUEUE_NAME = 'TRADING_QUEUE_NAME';
+  process.env.SELLER_QUEUE_NAME = 'SELLER_QUEUE_NAME';
   process.env.TOPIC_EMAIL_NAME = 'TOPIC_EMAIL_NAME';
   process.env.NEWS_TRIGGER_DB_NAME = 'NEWS_TRIGGER_DB_NAME';
   process.env.NEWS_TRIGGER_DB_PK = 'url';
@@ -14,8 +14,8 @@ if (isTest) {
   process.env.SYMBOL_DB_NAME = 'SYMBOL_DB_NAME';
   process.env.SYMBOL_DB_PK = 'symbol';
 }
-if (process.env.TRADING_QUEUE_NAME == null)
-  throw Error('TRADING_QUEUE_NAME undefined');
+if (process.env.SELLER_QUEUE_NAME == null)
+  throw Error('SELLER_QUEUE_NAME undefined');
 if (process.env.TOPIC_EMAIL_NAME == null)
   throw Error('TOPIC_EMAIL_NAME undefined');
 if (process.env.NEWS_TRIGGER_DB_NAME == null)
@@ -29,7 +29,8 @@ if (process.env.BINANCE_PRIVATE_KEY == null)
 if (process.env.SYMBOL_DB_NAME == null) throw Error('SYMBOL_DB_PK undefined');
 if (process.env.SYMBOL_DB_PK == null) throw Error('SYMBOL_DB_PK undefined');
 
-export const { TRADING_QUEUE_NAME } = process.env;
+export const { SELLER_QUEUE_NAME } = process.env;
+export const TRADING_QUEUE_NAME = SELLER_QUEUE_NAME;
 export const { TOPIC_EMAIL_NAME } = process.env;
 export const { NEWS_TRIGGER_DB_NAME } = process.env;
 export const { NEWS_TRIGGER_DB_PK } = process.env;

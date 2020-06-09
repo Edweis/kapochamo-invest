@@ -13,7 +13,7 @@ const publishToSns = async (topicName: string, data: string) => {
     TopicArn: topicArn,
   };
   console.log('Email sent');
-  return sns.publish(params).promise();
+  await sns.publish(params).promise();
 };
 
 export const sendEmail = async (data: string) => {

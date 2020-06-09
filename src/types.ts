@@ -1,4 +1,5 @@
 import BinanceInfoNEXT from './functions/watcher/Info';
+import { OrderPostFullResponse } from './services/types';
 
 export type BinanceInfo = BinanceInfoNEXT;
 
@@ -18,4 +19,6 @@ export type Tick = {
   ignore: number;
 };
 
-export type LambdaTraderPayload = { [key: string]: any }; // { symbol: string; info: BinanceInfoRaw };
+export type LambdaTraderMessage = { [key: string]: any }; // { symbol: string; info: BinanceInfoRaw };
+
+export type SellerMessage = OrderPostFullResponse;

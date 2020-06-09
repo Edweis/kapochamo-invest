@@ -3,6 +3,7 @@ import crypto from 'crypto';
 import qs from 'querystring';
 import { axiosCacheGet } from './cache';
 import { BINANCE_API_KEY, BINANCE_PRIVATE_KEY } from '../constants';
+import { OrderPostFullResponse } from './types';
 
 const BASE_URL = 'https://api.binance.com/api/v3';
 
@@ -48,4 +49,13 @@ export const getListOrders = async () => {
   const signature = sign(params);
   console.debug({ binancePrivate });
   return binancePrivate.get(`/allOrders?${params}&signature=${signature}`);
+};
+
+export const sendOrder = (
+  side: 'BUY' | 'SELL',
+  symbol: string,
+  quantity: number
+) => {
+  const params = getOrderParams(side, symbol, quantity);
+  return binancePrivate.post<OrderPostFullResponse>(`order?${params}`);
 };

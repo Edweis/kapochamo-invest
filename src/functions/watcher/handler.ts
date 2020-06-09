@@ -1,13 +1,17 @@
-import { sendToTrader } from '../../services/aws/sqs';
+import { sendToSeller } from '../../services/aws/sqs';
 import { updateLastNews } from '../../services/aws/dynamoDb';
 import { binanceInspector } from './inspector';
 import { watcherReportTemplate } from './report';
 import { extractCharly, isReady } from '../extractors/simplifiedExtractors';
 import Profiling from './profiling';
+import { sendOrder } from '../../services/binance';
+import { sendEmail } from '../../services/aws/sns';
 
+const USDT_TO_BET = 30;
 const binanceWatcherLambda: Function = async (event: {}) => {
-  await isReady;
   const profiling = new Profiling();
+  await isReady;
+  profiling.log('Setup');
   const info = await binanceInspector(profiling);
   profiling.log('Fetch news');
   if (info == null) {
@@ -20,13 +24,22 @@ const binanceWatcherLambda: Function = async (event: {}) => {
   const symbols = extractCharly(info.title);
   profiling.log('Extractor');
 
-  await Promise.all(symbols.map(symbol => sendToTrader({ symbol, info })));
+  await Promise.all(
+    symbols.map(async symbol => {
+      const response = await sendOrder('BUY', symbol, USDT_TO_BET);
+      await sendToSeller(response.data);
+    })
+  );
   await updateLastNews(info.url);
-  profiling.log('Send to queue');
-
-  await watcherReportTemplate(info.url, info.title, symbols);
+  const report = await watcherReportTemplate(
+    info.url,
+    info.title,
+    symbols,
+    profiling
+  );
+  await sendEmail(report);
   profiling.log('send template');
-  return { message: 'Success', profiling: profiling.toString(), event };
+  return profiling.toString();
 };
 
 export default binanceWatcherLambda;
