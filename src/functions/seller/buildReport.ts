@@ -22,7 +22,7 @@ const getTimeDiff = (start: Date, end: Date) => {
   const ms = diff % 1000;
   const sec = ((diff - ms) / 1000) % 60;
   const min = (diff - ms - sec * 1000) / 60000;
-  return `    ${min}:${sec}:${ms}`;
+  return `    ${min}:${sec}.${ms}`;
 };
 export const buildReport = async (
   buyResponse: SellerMessage,
