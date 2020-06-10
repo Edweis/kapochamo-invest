@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    "allowJs": true,
+    "skipLibCheck": false, 
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "noEmit": false,
+    "jsx": "preserve",
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "target": "es6",
+    "strictPropertyInitialization": false
+  },
+  "types": {
+    "jest-environment-puppeteer": true
+  },
+  "include": ["src", "src/**/*"]
+}
