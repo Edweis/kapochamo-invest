@@ -76,7 +76,6 @@ functions:
     description: Watch Binance news and trigger trader if needed
     events:
       - http: GET watcher
-      - schedule: rate(1 minute)
   Seller:
     handler: src/functions/seller/handler.default
     description: Buy and sell a symbol on Binance

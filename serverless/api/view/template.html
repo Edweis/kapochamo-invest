@@ -89,7 +89,7 @@
 
 
         // FORM
-        document.querySelector("#time").value = startDate;
+        document.querySelector("#time").value = startDate.toISOString();
         document.querySelector("#symbol").value = '{{symbol}}';
         document.querySelector("#limit").value = '{{limit}}';
         tail.DateTime("#time", {
