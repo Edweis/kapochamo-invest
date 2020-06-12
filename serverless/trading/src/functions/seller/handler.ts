@@ -12,7 +12,7 @@ const seller: Function = async (event: AWSLambda.SQSEvent) => {
     const buyBaseQuantity = buyResponse.origQty;
 
     const strategy = new Follower(0.02);
-    await waitToSell(strategy, symbol);
+    await waitToSell(strategy, symbol); // TODO CONTINUE TO SELL AFTER TIMEOUT
     const sellRequest = await sendOrder('SELL', symbol, buyBaseQuantity);
 
     const report = await buildReport(buyResponse, sellRequest.data);

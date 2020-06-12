@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+  <title>CandleStick Chart {{name}}</title>
+
+  <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tail.datetime@0.4.13/css/tail.datetime-default-orange.min.css" />
+
+  <style>
+    #chart {
+      width: 100%;
+      margin-left: 16px;
+    }
+
+    .container-chart {
+      display: flex;
+    }
+
+    #time-holder form>div {
+      display: flex;
+      justify-content: space-between;
+      margin: 1em 0;
+    }
+
+    #time-holder {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .btn {
+      background-color: #e67d1e;
+      border-bottom-color: #e67d1e;
+      border-bottom-left-radius: 4px;
+      border-bottom-right-radius: 4px;
+      border-bottom-style: solid;
+      border-bottom-width: 1px;
+      border-image-outset: 0;
+      border-image-repeat: stretch;
+      border-image-slice: 100%;
+      border-image-source: none;
+      border-image-width: 1;
+      border-left-color: #e67d1e;
+      border-left-style: solid;
+      border-left-width: 1px;
+      border-right-color: #e67d1e;
+      border-right-style: solid;
+      border-right-width: 1px;
+      border-top-color: #e67d1e;
+      border-top-left-radius: 4px;
+      border-top-right-radius: 4px;
+      border-top-style: solid;
+      border-top-width: 1px;
+      box-sizing: border-box;
+      color: #fff;
+      cursor: pointer;
+      display: inline-block;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 24px;
+      padding-bottom: 6px;
+      padding-left: 12px;
+      padding-right: 12px;
+      padding-top: 6px;
+      text-align: center;
+      text-decoration: #212529;
+      text-decoration-color: #212529;
+      text-decoration-line: none;
+      text-decoration-style: solid;
+      text-decoration-thickness: auto;
+      transition-delay: 0s, 0s, 0s, 0s;
+      transition-duration: .15s, .15s, .15s, .15s;
+      transition-property: color, background-color, border-color, box-shadow;
+      transition-timing-function: ease-in-out, ease-in-out, ease-in-out, ease-in-out;
+      margin: auto
+    }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/promise-polyfill@8/dist/polyfill.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/eligrey-classlist-js-polyfill@1.2.20171210/classList.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/findindex_polyfill_mdn"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/tail.datetime@0.4.13/js/tail.datetime.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+</head>
+
+<body>
+
+  <div class="container-chart">
+    <div id="time-holder">
+      <div id="time-holder-anchor"></div>
+      <form>
+        <div>
+          <label for="time">Start chart at:</label>
+          <input type="text" id="time" name="time">
+        </div>
+        <div>
+          <label for="symbol">Symbol</label>
+          <input type="text" id="symbol" name="symbol">
+        </div>
+        <div>
+          <label for="limit">Duration (min)</label>
+          <input type="text" id="limit" name="limit">
+        </div>
+        <div>
+          <a class="btn" id="submit">Submit</a>
+        </div>
+      </form>
+    </div>
+    <div id="chart"></div>
+  </div>
+
+  <script>
+    // CHART
+    const startDate = new Date({{ time }})
+    var options = {
+      series: [{
+        data: {{ data }}.map((datum) => ({
+          ...datum,
+          x: new Date(datum.x)
+        }))
+      }],
+      chart: {
+        type: 'candlestick',
+        height: 800
+      },
+      title: {
+        text: '{{symbol}} - ' + startDate.toISOString(),
+        align: 'left'
+      },
+      xaxis: {
+        type: 'datetime',
+        labels: {
+          formatter: value => new Date(value).toISOString().replace(':00.000Z', '').replace('T', ' ')
+        }
+      },
+      yaxis: {
+        tooltip: {
+          enabled: true
+        }
+      }
+    };
+
+    var chart = new ApexCharts(document.querySelector("#chart"), options);
+    chart.render();
+
+
+    // FORM
+    document.querySelector("#time").value = startDate.toISOString();
+    document.querySelector("#symbol").value = '{{symbol}}';
+    document.querySelector("#limit").value = '{{limit}}';
+    tail.DateTime("#time", {
+      weekStart: 1,
+      position: "#time-holder-anchor",
+      startOpen: true,
+      stayOpen: true,
+      dateEnd: new Date(),
+      timeStepHours: 1,
+      timeStepMinutes: 1,
+      timeStepSeconds: 1,
+    });
+    document.querySelector("#submit").addEventListener("click", function(event) {
+      const baseUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
+      const newTime = document.querySelector("#time").value;
+      const newSymbol = document.querySelector("#symbol").value;
+      const newLimit = document.querySelector("#limit").value;
+      const timeUnix = new Date(newTime).getTime()
+      const queryString = "symbol=" + newSymbol + "&time=" + timeUnix + "&limit=" + newLimit;
+      window.location = baseUrl + "?" + queryString;
+      event.preventDefault();
+    }, false);
+  </script>
+
+
+</body>
+
+</html>

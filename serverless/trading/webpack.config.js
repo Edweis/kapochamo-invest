@@ -21,6 +21,13 @@ module.exports = {
           loader: 'babel-loader',
         },
       },
+      {
+        test: /\.html$/i,
+        loader: 'html-loader',
+        options: {
+          minimize: true,
+        },
+      },
     ],
   },
   resolve: {

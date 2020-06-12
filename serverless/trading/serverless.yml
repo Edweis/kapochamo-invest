@@ -66,11 +66,17 @@ custom:
 
 
 functions:
+  ApiView:
+    handler: src/api/view/handler.default
+    events:
+      - http:
+          path: view
+          method: get
   PopulateSymbols:
     handler: src/functions/populateSymbols.default
     description: Populate symbols in dynamo database
     events:
-      - schedule: rate(14 days)
+      - schedule: rate(1 days)
   WatcherBinance:
     handler: src/functions/watcher/handler.default
     description: Watch Binance news and trigger trader if needed

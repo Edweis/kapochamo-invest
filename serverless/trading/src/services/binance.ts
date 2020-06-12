@@ -57,5 +57,11 @@ export const sendOrder = (
   quantity: number
 ) => {
   const params = getOrderParams(side, symbol, quantity);
-  return binancePrivate.post<OrderPostFullResponse>(`order?${params}`);
+  return binancePrivate
+    .post<OrderPostFullResponse>(`order?${params}`)
+    .catch(error => {
+      console.error(error);
+      console.error(error?.response?.data);
+      throw error;
+    });
 };
