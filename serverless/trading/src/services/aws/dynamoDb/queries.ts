@@ -112,17 +112,13 @@ type TransactionFromDb = {
   variation: number | null;
 };
 export const getTransactions = async (): Promise<TransactionFromDb[]> => {
-  const params = {
-    TableName: TRANSACTION_DB_NAME,
-    FilterExpression: 'transactTime > :startTime',
-    ExpressionAttributeValues: { ':startTime': { N: '0' } },
-  };
+  const params = { TableName: TRANSACTION_DB_NAME };
   const response = await dynamodb.scan(params).promise();
   if (response.Items == null) throw new Error('Error in scan');
   return response.Items.map(item => ({
     orderId: item.orderId.S || '',
     transactTime: Number(item.transactTime.N || 0),
     response: JSON.parse(item.response.S || '') as OrderPostFullResponse,
-    variation: Number(item.variation.N),
+    variation: Number(item.variation?.N),
   }));
 };

@@ -28,6 +28,10 @@ module.exports = {
           minimize: true,
         },
       },
+      {
+        test: /\.css$/i,
+        loader: ['css-loader'],
+      },
     ],
   },
   resolve: {

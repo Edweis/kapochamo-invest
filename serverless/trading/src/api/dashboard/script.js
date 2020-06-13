@@ -1,8 +1,8 @@
 console.debug('Starts');
 const EVENT_TYPES = {
-  buy: 'buy',
-  sell: 'sell',
-  news: 'news',
+  BUY: 'BUY',
+  SELL: 'SELL',
+  NEWS: 'NEWS',
 };
 
 const getLink = event => {
@@ -11,38 +11,15 @@ const getLink = event => {
   const symbol = event.baseAsset + event.quoteAsset;
   return `https://api.kapochamo.com/view?time=${timestamp}&symbol=${symbol}`;
 };
-const events = [
-  {
-    type: 'sell',
-    timestamp: 1591961531658 - 30000,
-    quoteAsset: 'USDT',
-    baseAsset: 'BTC',
-    variation: 4.6543,
-    content: 'XXX',
-  },
-  {
-    type: 'buy',
-    timestamp: 1591961531658,
-    quoteAsset: 'USDT',
-    baseAsset: 'BTC',
-    content: 'XXX',
-  },
-  {
-    type: 'news',
-    timestamp: 1591961531658 - 50000,
-    content: 'Introducing the Cartesi (CTSI) Token Sale on Binance Launchpad',
-    link:
-      'https://binance.zendesk.com/hc/en-us/articles/360041795572-Introducing-the-Cartesi-CTSI-Token-Sale-on-Binance-Launchpad',
-  },
-];
+
 const getEventName = event => {
   switch (event.type) {
-    case EVENT_TYPES.buy:
+    case EVENT_TYPES.BUY:
       return `Bought ${event.baseAsset}/${event.quoteAsset}`;
-    case EVENT_TYPES.sell:
+    case EVENT_TYPES.SELL:
       // const symbol = event.variation > 0 ? '+' : '';
       return `Sold ${event.baseAsset}/${event.quoteAsset}`;
-    case EVENT_TYPES.news:
+    case EVENT_TYPES.NEWS:
       return 'News Caught';
     default:
       console.error(event);
@@ -50,28 +27,30 @@ const getEventName = event => {
   }
 };
 const eventIconMap = {
-  buy: `
+  BUY: `
   <span style="font-size: 32px; color: darkgreen; margin:auto;">
     <i class="fas fa-arrow-alt-circle-left"></i>
   </span>
 `,
-  sell: `
+  SELL: `
   <span style="font-size: 32px; color: darkred; margin:auto;">
     <i class="fas fa-arrow-alt-circle-right"></i>
   </span>
 `,
-  news: `
+  NEWS: `
   <span style="font-size: 32px; color: darkblue; margin:auto;">
     <i class="fas fa-info"></i>
   </span>
 `,
 };
-events.forEach(event => {
-  const node = document.createElement('div');
-  node.classList.add('email-item');
-  node.classList.add('pure-g');
-  const date = new Date(event.timestamp).toISOString();
-  node.innerHTML = `
+// eslint-disable-next-line
+const renderEvents = events =>
+  events.forEach(event => {
+    const node = document.createElement('div');
+    node.classList.add('email-item');
+    node.classList.add('pure-g');
+    const date = new Date(event.timestamp).toISOString();
+    node.innerHTML = `
   <div class="pure-u-1-12" style="display:flex;">
   ${eventIconMap[event.type]}
   </div>
@@ -83,5 +62,5 @@ events.forEach(event => {
    - <a href="${getLink(event)}" target="_blank">link</a>
   </p>
   </div>`;
-  document.querySelector('#list').appendChild(node);
-});
+    document.querySelector('#list').appendChild(node);
+  });

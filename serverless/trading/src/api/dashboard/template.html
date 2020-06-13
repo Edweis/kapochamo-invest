@@ -8,7 +8,193 @@
   <title>Kapochamo Dashboard</title>
   <link rel="stylesheet" href="https://unpkg.com/purecss@2.0.3/build/pure-min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
-  <link rel="stylesheet" href="./styles.css">
+  <style>
+
+  body {
+    color: #333;
+  }
+
+  a {
+    text-decoration: none;
+    color: #1b98f8;
+  }
+
+
+  .primary-button,
+  .secondary-button {
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+    border-radius: 20px;
+  }
+
+  .primary-button {
+    color: #fff;
+    background: #1b98f8;
+    margin: 1em 0;
+  }
+
+  .secondary-button {
+    background: #fff;
+    border: 1px solid #ddd;
+    color: #666;
+    padding: 0.5em 2em;
+    font-size: 80%;
+  }
+
+  #title > h1 {
+    letter-spacing:0px;
+    margin: 16px auto;
+    text-align: center;
+  }
+
+
+  #layout, #nav, #list, #main {
+    margin: 0;
+    padding: 0;
+  }
+
+  /* Make the navigation 100% width on phones */
+  #nav {
+    width: 100%;
+    height: 40px;
+    position: relative;
+    background: rgb(37, 42, 58);
+    text-align: center;
+  }
+
+  /* Show the "Menu" button on phones */
+  #nav .nav-menu-button {
+    display: block;
+    top: 0.5em;
+    right: 0.5em;
+    position: absolute;
+  }
+
+  /* When "Menu" is clicked, the navbar should be 80% height */
+  #nav.active {
+    height: 80%;
+  }
+
+  .nav-inner {
+    display: none;
+  }
+  #nav.active .nav-inner {
+    display: block;
+    padding: 2em 0;
+  }
+
+  #nav .pure-menu {
+    background: transparent;
+    border: none;
+    text-align: left;
+  }
+
+  #nav .pure-menu-link:hover,
+  #nav .pure-menu-link:focus {
+    background: rgb(55, 60, 90);
+  }
+
+  #nav .pure-menu-link {
+    color: #fff;
+    margin-left: 0.5em;
+  }
+
+  #nav .pure-menu-heading {
+    border-bottom: none;
+    font-size: 110%;
+    color: rgb(75, 113, 151);
+  }
+
+  .email-count {
+    color: rgb(75, 113, 151);
+  }
+
+  .email-item {
+    padding: 0.9em 1em;
+    border-bottom: 1px solid #ddd;
+    border-left: 6px solid transparent;
+  }
+
+  .email-avatar {
+    border-radius: 3px;
+    margin-right: 0.5em;
+  }
+
+  .email-name,
+  .email-subject {
+    margin: 0;
+  }
+
+  .email-name {
+    text-transform: uppercase;
+    color: #999;
+  }
+
+  .email-desc {
+    font-size: 80%;
+    margin: 0.4em 0;
+  }
+
+  @media (min-width: 40em) {
+
+    div#layout {
+      padding-left: 500px;
+      position: relative;
+    }
+
+    #nav, #list {
+      position: fixed;
+      top: 0;
+      bottom: 0;
+      overflow: auto;
+    }
+
+    #nav {
+      margin-left: -500px;
+      width: 150px;
+      height: 100%;
+    }
+
+    .nav-inner {
+      display: block;
+      padding: 2em 0;
+    }
+
+    #nav .nav-menu-button {
+      display: none;
+    }
+
+    #list {
+      margin-left: -350px;
+      width: 100%;
+      border-bottom: 1px solid #ddd;
+    }
+
+    #main {
+      position: fixed;
+      top: 33%;
+      right: 0;
+      bottom: 0;
+      left: 150px;
+      overflow: auto;
+      width: auto;
+    }
+  }
+
+  @media (min-width: 60em) {
+    div#list {
+      margin-left: -350px;
+      height: 100%;
+      border-right: 1px solid #ddd;
+    }
+    #main {
+      position: static;
+      margin: 0;
+      padding: 0;
+    }
+  }
+</style>
 </head>
 
 <body>
@@ -29,10 +215,86 @@
         <button class="primary-button pure-button">Run something</button>
       </div>
     </div>
-
-    <div id="list" class="pure-u-1"></div>
+    <div id="list" class="pure-u-1">
+      <div id="title"><h1>Kapochamo Invest Dashboard</h1></div>
+    </div>
   </div>
 
 </body>
-<script src="./script.js"></script>
+<script>
+const EVENT_TYPES = {
+  BUY: 'BUY',
+  SELL: 'SELL',
+  NEWS: 'NEWS',
+};
+
+const getKapoLink = event => {
+  if (event.link != null) return event.link;
+  const { timestamp } = event;
+  const symbol = event.baseAsset + event.quoteAsset;
+  return `https://api.kapochamo.com/view?time=${timestamp}&symbol=${symbol}`;
+};
+
+const getBinanceLink = event => {
+  if (event.link != null) return event.link;
+  return `https://www.binance.com/en/trade/${event.baseAsset}_${event.quoteAsset}`
+}
+
+const getEventName = event => {
+  switch (event.type) {
+    case EVENT_TYPES.BUY:
+      return `Bought ${event.baseAsset}/${event.quoteAsset}`;
+    case EVENT_TYPES.SELL:
+      const sign = event.variation > 0 ? '+' : '';
+      const variation = event.variation.toFixed(3);
+      return `Sold ${event.baseAsset}/${event.quoteAsset} ${sign}${variation}`;
+    case EVENT_TYPES.NEWS:
+      return 'News Caught';
+    default:
+      console.error(event);
+      throw Error(`Type ${event.type} not found.`);
+  }
+};
+const eventIconMap = {
+  BUY: `
+  <span style="font-size: 32px; color: darkgreen; margin:auto;">
+    <i class="fas fa-arrow-alt-circle-left"></i>
+  </span>
+`,
+  SELL: `
+  <span style="font-size: 32px; color: darkred; margin:auto;">
+    <i class="fas fa-arrow-alt-circle-right"></i>
+  </span>
+`,
+  NEWS: `
+  <span style="font-size: 32px; color: darkblue; margin:auto;">
+    <i class="fas fa-info"></i>
+  </span>
+`,
+};
+const renderEvents = events =>
+  events.forEach(event => {
+    const node = document.createElement('div');
+    node.classList.add('email-item');
+    node.classList.add('pure-g');
+    const date = new Date(event.timestamp).toISOString();
+    node.innerHTML = `
+  <div class="pure-u-1-12" style="display:flex;">
+  ${eventIconMap[event.type]}
+  </div>
+  <div class="pure-u">
+  <h5 class="email-name">${date}</h5>
+  <h4 class="email-subject">${getEventName(event)}</h4>
+  <p class="email-desc">
+  ${event.content}
+   - <a href="${getKapoLink(event)}" target="_blank">Chart</a>
+   - <a href="${getBinanceLink(event)}" target="_blank">Live</a>
+  </p>
+  </div>`;
+    document.querySelector('#list').appendChild(node);
+  });
+
+  renderEvents({{events}})
+</script>
+
 </html>
