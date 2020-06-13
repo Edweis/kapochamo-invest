@@ -1,5 +1,5 @@
 import { sendToSeller } from '../../services/aws/sqs';
-import { updateLastNews } from '../../services/aws/dynamoDb';
+import { updateLastNews, insertTransaction } from '../../services/aws/dynamoDb';
 import { binanceInspector } from './inspector';
 import { watcherReportTemplate } from './report';
 import { extractCharly, isReady } from '../extractors/simplifiedExtractors';
@@ -27,6 +27,7 @@ const binanceWatcherLambda: Function = async (event: {}) => {
   await Promise.all(
     symbols.map(async symbol => {
       const response = await sendOrder('BUY', symbol, USDT_TO_BET);
+      await insertTransaction(response.data);
       await sendToSeller(response.data);
     })
   );

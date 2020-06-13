@@ -5,7 +5,11 @@ import {
   SYMBOL_DB_NAME,
   SYMBOL_DB_PK,
   NEWS_TRIGGER_DB_VALUE,
+  TRANSACTION_DB_NAME,
+  TRANSACTION_DB_PK,
+  TRANSACTION_DB_SK,
 } from '../../../constants';
+import { OrderPostFullResponse } from '../../types';
 import { TradeSymbol, formatItemToObject, formatObjectToItem } from './helpers';
 
 const dynamodb = new AWS.DynamoDB();
@@ -80,4 +84,45 @@ export const updateLastNews = async (url: string) => {
   };
   await dynamodb.putItem(params).promise();
   console.log('Inserted in DynamoDb', params);
+};
+
+export const insertTransaction = async (
+  transaction: OrderPostFullResponse,
+  variation?: number
+) => {
+  const orderId = transaction.orderId.toString();
+  const transactionTime = transaction.transactTime.toString();
+  const params = {
+    TableName: TRANSACTION_DB_NAME,
+    Item: {
+      [TRANSACTION_DB_PK]: { S: orderId },
+      [TRANSACTION_DB_SK]: { N: transactionTime },
+      reponse: { S: JSON.stringify(transaction) },
+    },
+  };
+  if (variation) params.Item.variation = { N: variation.toString() };
+  await dynamodb.putItem(params).promise();
+  console.log('Inserted in DynamoDb', params);
+};
+
+type TransactionFromDb = {
+  orderId: string;
+  transactTime: number;
+  response: OrderPostFullResponse;
+  variation: number | null;
+};
+export const getTransactions = async (): Promise<TransactionFromDb[]> => {
+  const params = {
+    TableName: TRANSACTION_DB_NAME,
+    FilterExpression: 'transactTime > :startTime',
+    ExpressionAttributeValues: { ':startTime': { N: '0' } },
+  };
+  const response = await dynamodb.scan(params).promise();
+  if (response.Items == null) throw new Error('Error in scan');
+  return response.Items.map(item => ({
+    orderId: item.orderId.S || '',
+    transactTime: Number(item.transactTime.N || 0),
+    response: JSON.parse(item.response.S || '') as OrderPostFullResponse,
+    variation: Number(item.variation.N),
+  }));
 };

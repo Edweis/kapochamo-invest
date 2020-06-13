@@ -15,6 +15,12 @@ provider:
     NEWS_TRIGGER_DB_PK: key
     SYMBOL_DB_NAME: symbol-dynamo
     SYMBOL_DB_PK: symbol
+    TRANSACTION_DB_NAME: transaction
+    TRANSACTION_DB_PK: orderId
+    TRANSACTION_DB_SK: transactTime
+    PUBLISHING_DB_NAME: publishing
+    PUBLISHING_DB_PK: url
+    PUBLISHING_DB_SK: timestamp
 
   iamRoleStatements:
     - Effect: 'Allow'
@@ -46,6 +52,8 @@ provider:
       Resource:
         - !GetAtt NewsTrigger.Arn
         - !GetAtt SymbolDb.Arn
+        - !GetAtt TransactionDb.Arn
+        - !GetAtt PublishingDb.Arn
     - Effect: "Allow"
       Action:
         - "s3:GetObject"
@@ -72,11 +80,17 @@ functions:
       - http:
           path: view
           method: get
+  ApiDashboard:
+    handler: src/api/dashboard/handler.default
+    events:
+      - http:
+          path: dashboard
+          method: get
   PopulateSymbols:
     handler: src/functions/populateSymbols.default
     description: Populate symbols in dynamo database
     events:
-      - schedule: rate(1 days)
+      - schedule: rate(1 day)
   WatcherBinance:
     handler: src/functions/watcher/handler.default
     description: Watch Binance news and trigger trader if needed
@@ -126,7 +140,7 @@ resources:
         QueueName: ${self:provider.environment.SELLER_QUEUE_NAME}-DLQ
         MessageRetentionPeriod: 1209600 # 14 days
 
-    # Database
+    # Databases
     NewsTrigger:
       Type: AWS::DynamoDB::Table
       Properties:
@@ -150,6 +164,40 @@ resources:
         KeySchema:
           - AttributeName: ${self:provider.environment.SYMBOL_DB_PK}
             KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 5
+          WriteCapacityUnits: 5
+    TransactionDb:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:provider.environment.TRANSACTION_DB_NAME}
+        AttributeDefinitions:
+          - AttributeName: ${self:provider.environment.TRANSACTION_DB_PK}
+            AttributeType: S
+          - AttributeName: ${self:provider.environment.TRANSACTION_DB_SK}
+            AttributeType: N
+        KeySchema:
+          - AttributeName: ${self:provider.environment.TRANSACTION_DB_PK}
+            KeyType: HASH
+          - AttributeName: ${self:provider.environment.TRANSACTION_DB_SK}
+            KeyType: RANGE
+        ProvisionedThroughput:
+          ReadCapacityUnits: 5
+          WriteCapacityUnits: 5
+    PublishingDb:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:provider.environment.PUBLISHING_DB_NAME}
+        AttributeDefinitions:
+          - AttributeName: ${self:provider.environment.PUBLISHING_DB_PK}
+            AttributeType: S
+          - AttributeName: ${self:provider.environment.PUBLISHING_DB_SK}
+            AttributeType: N
+        KeySchema:
+          - AttributeName: ${self:provider.environment.PUBLISHING_DB_PK}
+            KeyType: HASH
+          - AttributeName: ${self:provider.environment.PUBLISHING_DB_SK}
+            KeyType: RANGE
         ProvisionedThroughput:
           ReadCapacityUnits: 5
           WriteCapacityUnits: 5
