@@ -68,7 +68,9 @@ const handler = async () => {
         })
         .map(line => `<li class="email-desc">${line}</li>`)
         .join('');
-      const linksTag = `<ul>${links}</ul>`;
+
+      const linksTag =
+        links.length > 0 ? `<ul>${links}</ul>` : ' <br/><b>Not traded</b>';
       return {
         ...publication,
         type: 'NEWS',
