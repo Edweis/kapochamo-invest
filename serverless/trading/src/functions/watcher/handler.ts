@@ -1,5 +1,9 @@
 import { sendToSeller } from '../../services/aws/sqs';
-import { updateLastNews, insertTransaction } from '../../services/aws/dynamoDb';
+import {
+  updateLastNews,
+  insertTransaction,
+  insertPublication,
+} from '../../services/aws/dynamoDb';
 import { binanceInspector } from './inspector';
 import { watcherReportTemplate } from './report';
 import { extractCharly, isReady } from '../extractors/simplifiedExtractors';
@@ -18,6 +22,7 @@ const binanceWatcherLambda: Function = async (event: {}) => {
     console.debug(profiling.toString());
     return { message: 'Not new', profiling: profiling.toString(), event };
   }
+  const actionAt = new Date();
   profiling.log('Update News');
 
   // We have a new news 🎉
@@ -32,6 +37,7 @@ const binanceWatcherLambda: Function = async (event: {}) => {
     })
   );
   await updateLastNews(info.url);
+  await insertPublication(info.url, info.title, actionAt.getTime(), symbols);
   const report = await watcherReportTemplate(
     info.url,
     info.title,

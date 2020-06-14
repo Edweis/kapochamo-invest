@@ -9,6 +9,8 @@ import {
   TRANSACTION_DB_PK,
   TRANSACTION_DB_SK,
   PUBLISHING_DB_NAME,
+  PUBLISHING_DB_PK,
+  PUBLISHING_DB_SK,
 } from '../../../constants';
 import { OrderPostFullResponse } from '../../types';
 import { TradeSymbol, formatItemToObject, formatObjectToItem } from './helpers';
@@ -98,7 +100,7 @@ export const insertTransaction = async (
     Item: {
       [TRANSACTION_DB_PK]: { S: orderId },
       [TRANSACTION_DB_SK]: { N: transactionTime },
-      reponse: { S: JSON.stringify(transaction) },
+      response: { S: JSON.stringify(transaction) },
     },
   };
   if (variation) params.Item.variation = { N: variation.toString() };
@@ -140,4 +142,23 @@ export const getPublications = async (): Promise<Publication[]> => {
     title: item.title.S || '',
     symbolsTraded: JSON.parse(item.symbolsTraded.S || '') as string[],
   }));
+};
+
+export const insertPublication = async (
+  url: string,
+  title: string,
+  timestamp: number,
+  symbols: string[]
+) => {
+  const params = {
+    TableName: PUBLISHING_DB_NAME,
+    Item: {
+      [PUBLISHING_DB_PK]: { S: url },
+      [PUBLISHING_DB_SK]: { N: timestamp.toString() },
+      symbolsTraded: { S: JSON.stringify(symbols) },
+      title: { S: title },
+    },
+  };
+  await dynamodb.putItem(params).promise();
+  console.log('Inserted in DynamoDb', params);
 };
