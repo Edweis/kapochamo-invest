@@ -247,7 +247,7 @@ const getEventName = event => {
     case EVENT_TYPES.SELL:
       const sign = event.variation > 0 ? '+' : '';
       const variation = event.variation.toFixed(3);
-      return `Sold ${event.baseAsset}/${event.quoteAsset} ${sign}${variation}`;
+      return `Sold ${event.baseAsset}/${event.quoteAsset} ${sign} ${variation}%`;
     case EVENT_TYPES.NEWS:
       return 'News Caught';
     default:
@@ -258,12 +258,12 @@ const getEventName = event => {
 const eventIconMap = {
   BUY: `
   <span style="font-size: 32px; color: darkgreen; margin:auto;">
-    <i class="fas fa-arrow-alt-circle-left"></i>
+    <i class="fas fa-arrow-alt-circle-right"></i>
   </span>
 `,
   SELL: `
   <span style="font-size: 32px; color: darkred; margin:auto;">
-    <i class="fas fa-arrow-alt-circle-right"></i>
+    <i class="fas fa-arrow-alt-circle-left"></i>
   </span>
 `,
   NEWS: `
