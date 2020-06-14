@@ -108,6 +108,14 @@ export const insertTransaction = async (
   console.log('Inserted in DynamoDb', params);
 };
 
+const parseJson = <T>(data: string): T => {
+  try {
+    return JSON.parse(data) as T;
+  } catch (e) {
+    console.error('FAILED TO PARSE', data, e);
+    throw e;
+  }
+};
 type TransactionFromDb = {
   orderId: string;
   transactTime: number;
@@ -121,7 +129,7 @@ export const getTransactions = async (): Promise<TransactionFromDb[]> => {
   return response.Items.map(item => ({
     orderId: item.orderId.S || '',
     transactTime: Number(item.transactTime.N || 0),
-    response: JSON.parse(item.response.S || '') as OrderPostFullResponse,
+    response: parseJson<OrderPostFullResponse>(item.response.S || '{}'),
     variation: Number(item.variation?.N),
   }));
 };
@@ -140,7 +148,7 @@ export const getPublications = async (): Promise<Publication[]> => {
     url: item.url.S || '',
     timestamp: Number(item.timestamp.N || 0),
     title: item.title.S || '',
-    symbolsTraded: JSON.parse(item.symbolsTraded.S || '') as string[],
+    symbolsTraded: parseJson<string[]>(item.symbolsTraded.S || '[]'),
   }));
 };
 

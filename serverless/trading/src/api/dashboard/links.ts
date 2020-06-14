@@ -27,7 +27,7 @@ export const getLinkFromSymbol = (
   if (baseAsset && quoteAsset) {
     const kapoLink = getKapoLink(timestamp, baseAsset, quoteAsset);
     const binanceLink = getBinanceLink(baseAsset, quoteAsset);
-    return ` - ${linkify(kapoLink, 'Chart')} - ${linkify(binanceLink, 'Link')}`;
+    return ` - ${linkify(kapoLink, 'Chart')} - ${linkify(binanceLink, 'Live')}`;
   }
   return '';
 };
