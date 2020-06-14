@@ -19,6 +19,10 @@
     color: #1b98f8;
   }
 
+  ul {
+    margin: 0;
+  }
+
 
   .primary-button,
   .secondary-button {
@@ -243,20 +247,9 @@ const eventIconMap = {
 `,
 };
 
-const getKapoLink = event => {
-  if (event.link != null) return event.link;
-  const { timestamp } = event;
-  const symbol = event.baseAsset + event.quoteAsset;
-  return `https://api.kapochamo.com/view?time=${timestamp}&symbol=${symbol}`;
-};
-
-const getBinanceLink = event => {
-  if (event.link != null) return event.link;
-  return `https://www.binance.com/en/trade/${event.baseAsset}_${event.quoteAsset}`
-}
 
 const getEventName = event => {
-  switch () {
+  switch (event.type) {
     case EVENT_TYPES.BUY:
       return `Bought ${event.baseAsset}/${event.quoteAsset}`;
     case EVENT_TYPES.SELL:
@@ -286,8 +279,6 @@ const renderEvents = events =>
       <h4 class="email-subject">${getEventName(event)}</h4>
       <p class="email-desc">
       ${event.content}
-       - <a href="${getKapoLink(event)}" target="_blank">Chart</a>
-       - <a href="${getBinanceLink(event)}" target="_blank">Live</a>
       </p>
     </div>`;
     document.querySelector('#list').appendChild(node);
@@ -297,6 +288,7 @@ const renderEvents = events =>
   const events = {{events}};
   document.querySelector('#event-count').innerHTML = '('+events.length+')';
   renderEvents(events)
+  console.debug('events', events);
 </script>
 
 </html>

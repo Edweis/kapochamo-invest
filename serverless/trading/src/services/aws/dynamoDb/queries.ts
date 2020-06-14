@@ -8,6 +8,7 @@ import {
   TRANSACTION_DB_NAME,
   TRANSACTION_DB_PK,
   TRANSACTION_DB_SK,
+  PUBLISHING_DB_NAME,
 } from '../../../constants';
 import { OrderPostFullResponse } from '../../types';
 import { TradeSymbol, formatItemToObject, formatObjectToItem } from './helpers';
@@ -114,11 +115,29 @@ type TransactionFromDb = {
 export const getTransactions = async (): Promise<TransactionFromDb[]> => {
   const params = { TableName: TRANSACTION_DB_NAME };
   const response = await dynamodb.scan(params).promise();
-  if (response.Items == null) throw new Error('Error in scan');
+  if (response.Items == null) throw new Error('Error in scan transaction');
   return response.Items.map(item => ({
     orderId: item.orderId.S || '',
     transactTime: Number(item.transactTime.N || 0),
     response: JSON.parse(item.response.S || '') as OrderPostFullResponse,
     variation: Number(item.variation?.N),
+  }));
+};
+
+export type Publication = {
+  url: string;
+  timestamp: number;
+  symbolsTraded: string[];
+  title: string;
+};
+export const getPublications = async (): Promise<Publication[]> => {
+  const params = { TableName: PUBLISHING_DB_NAME };
+  const response = await dynamodb.scan(params).promise();
+  if (response.Items == null) throw new Error('Error in scan publishing');
+  return response.Items.map(item => ({
+    url: item.url.S || '',
+    timestamp: Number(item.timestamp.N || 0),
+    title: item.title.S || '',
+    symbolsTraded: JSON.parse(item.symbolsTraded.S || '') as string[],
   }));
 };
