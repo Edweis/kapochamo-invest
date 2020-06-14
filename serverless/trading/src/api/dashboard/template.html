@@ -91,6 +91,7 @@
   }
 
   #nav .pure-menu-link:hover,
+  #nav .pure-menu-link.selected,
   #nav .pure-menu-link:focus {
     background: rgb(55, 60, 90);
   }
@@ -208,7 +209,7 @@
         <div class="pure-menu">
           <ul class="pure-menu-list">
             <li class="pure-menu-heading">Menu</li>
-            <li class="pure-menu-item"><a href="#" class="pure-menu-link">Timeline <span class="email-count">(2)</span></a></li>
+            <li class="pure-menu-item"><a href="#" class="pure-menu-link selected">Timeline <span id="event-count" class="email-count"></span></a></li>
             <li class="pure-menu-item"><a href="#" class="pure-menu-link">Inspect Symbol</a></li>
           </ul>
         </div>
@@ -222,39 +223,8 @@
 
 </body>
 <script>
-const EVENT_TYPES = {
-  BUY: 'BUY',
-  SELL: 'SELL',
-  NEWS: 'NEWS',
-};
-
-const getKapoLink = event => {
-  if (event.link != null) return event.link;
-  const { timestamp } = event;
-  const symbol = event.baseAsset + event.quoteAsset;
-  return `https://api.kapochamo.com/view?time=${timestamp}&symbol=${symbol}`;
-};
-
-const getBinanceLink = event => {
-  if (event.link != null) return event.link;
-  return `https://www.binance.com/en/trade/${event.baseAsset}_${event.quoteAsset}`
-}
-
-const getEventName = event => {
-  switch (event.type) {
-    case EVENT_TYPES.BUY:
-      return `Bought ${event.baseAsset}/${event.quoteAsset}`;
-    case EVENT_TYPES.SELL:
-      const sign = event.variation > 0 ? '+' : '';
-      const variation = event.variation.toFixed(3);
-      return `Sold ${event.baseAsset}/${event.quoteAsset} ${sign} ${variation}%`;
-    case EVENT_TYPES.NEWS:
-      return 'News Caught';
-    default:
-      console.error(event);
-      throw Error(`Type ${event.type} not found.`);
-  }
-};
+// constants
+const EVENT_TYPES = { BUY: 'BUY', SELL: 'SELL', NEWS: 'NEWS' };
 const eventIconMap = {
   BUY: `
   <span style="font-size: 32px; color: darkgreen; margin:auto;">
@@ -272,6 +242,35 @@ const eventIconMap = {
   </span>
 `,
 };
+
+const getKapoLink = event => {
+  if (event.link != null) return event.link;
+  const { timestamp } = event;
+  const symbol = event.baseAsset + event.quoteAsset;
+  return `https://api.kapochamo.com/view?time=${timestamp}&symbol=${symbol}`;
+};
+
+const getBinanceLink = event => {
+  if (event.link != null) return event.link;
+  return `https://www.binance.com/en/trade/${event.baseAsset}_${event.quoteAsset}`
+}
+
+const getEventName = event => {
+  switch () {
+    case EVENT_TYPES.BUY:
+      return `Bought ${event.baseAsset}/${event.quoteAsset}`;
+    case EVENT_TYPES.SELL:
+      const sign = event.variation > 0 ? '+' : '';
+      const variation = event.variation.toFixed(3);
+      return `Sold ${event.baseAsset}/${event.quoteAsset} ${sign} ${variation}%`;
+    case EVENT_TYPES.NEWS:
+      return 'News Caught';
+    default:
+      console.error(event);
+      throw Error(`Type ${event.type} not found.`);
+  }
+};
+
 const renderEvents = events =>
   events.forEach(event => {
     const node = document.createElement('div');
@@ -279,22 +278,25 @@ const renderEvents = events =>
     node.classList.add('pure-g');
     const date = new Date(event.timestamp).toISOString();
     node.innerHTML = `
-  <div class="pure-u-1-12" style="display:flex;">
-  ${eventIconMap[event.type]}
-  </div>
-  <div class="pure-u">
-  <h5 class="email-name">${date}</h5>
-  <h4 class="email-subject">${getEventName(event)}</h4>
-  <p class="email-desc">
-  ${event.content}
-   - <a href="${getKapoLink(event)}" target="_blank">Chart</a>
-   - <a href="${getBinanceLink(event)}" target="_blank">Live</a>
-  </p>
-  </div>`;
+    <div class="pure-u-1-12" style="display:flex;">
+      ${eventIconMap[event.type]}
+    </div>
+    <div class="pure-u">
+      <h5 class="email-name">${date}</h5>
+      <h4 class="email-subject">${getEventName(event)}</h4>
+      <p class="email-desc">
+      ${event.content}
+       - <a href="${getKapoLink(event)}" target="_blank">Chart</a>
+       - <a href="${getBinanceLink(event)}" target="_blank">Live</a>
+      </p>
+    </div>`;
     document.querySelector('#list').appendChild(node);
   });
 
-  renderEvents({{events}})
+  // actions
+  const events = {{events}};
+  document.querySelector('#event-count').innerHTML = '('+events.length+')';
+  renderEvents(events)
 </script>
 
 </html>
