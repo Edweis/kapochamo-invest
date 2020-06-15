@@ -1,7 +1,8 @@
-import { SellerMessage } from '../../types';
 import { getSymbols } from '../../services/aws/dynamoDb';
+import { getVariation } from './helpers';
+import { OrderPostFullResponse } from '../../services/types';
 
-const computePrice = (response: SellerMessage) =>
+const computePrice = (response: OrderPostFullResponse) =>
   response.fills
     .map(fill => Number(fill.price) * Number(fill.qty))
     .reduce((acc, value) => acc + value, 0) / response.origQty;
@@ -12,10 +13,6 @@ const getTime = (date: Date) =>
     .split('T')[1]
     .replace('Z', '');
 const getDate = (date: Date) => date.toISOString().split('T')[0];
-const getVariation = (start: number, end: number) => {
-  const variation = ((100 * (start - end)) / start).toFixed(4);
-  return `${variation}%`;
-};
 
 const getTimeDiff = (start: Date, end: Date) => {
   const diff = end.getTime() - start.getTime();
@@ -25,8 +22,8 @@ const getTimeDiff = (start: Date, end: Date) => {
   return `    ${min}:${sec}.${ms}`;
 };
 export const buildReport = async (
-  buyResponse: SellerMessage,
-  sellReponse: SellerMessage
+  buyResponse: OrderPostFullResponse,
+  sellResponse: OrderPostFullResponse
 ) => {
   const assets = await getSymbols();
   const asset = assets.find(asset => asset.symbol === buyResponse.symbol);
@@ -34,21 +31,23 @@ export const buildReport = async (
 
   const buyQuoteQty = buyResponse.cummulativeQuoteQty;
   const buyBaseQty = buyResponse.executedQty;
-  const sellQuoteQty = sellReponse.cummulativeQuoteQty;
-  const sellBaseQty = sellReponse.executedQty;
+  const sellQuoteQty = sellResponse.cummulativeQuoteQty;
+  const sellBaseQty = sellResponse.executedQty;
 
   const buyTime = new Date(buyResponse.transactTime);
-  const sellTime = new Date(sellReponse.transactTime);
+  const sellTime = new Date(sellResponse.transactTime);
 
   const buyPrice = computePrice(buyResponse);
-  const sellPrice = computePrice(sellReponse);
+  const sellPrice = computePrice(sellResponse);
+
+  const variation = getVariation(buyResponse, sellResponse).toFixed(4);
 
   let message = `Trading report for ${asset.symbol} on ${getDate(buyTime)}\n`;
   message += `\n`;
   message += `Buy \t ${getTime(buyTime)}\t `;
   message += `${buyQuoteQty} ${asset.quoteAsset}\t -> \t${buyBaseQty} ${asset.baseAsset}\n`;
   message += `Waited for \t ${getTimeDiff(buyTime, sellTime)}`;
-  message += `\t variation ${getVariation(buyQuoteQty, sellQuoteQty)}\n`;
+  message += `\t variation ${variation}%\n`;
   message += `Sell\t ${getTime(sellTime)}\t `;
   message += `${sellQuoteQty} ${asset.quoteAsset}\t <- \t${sellBaseQty} ${asset.baseAsset}\n`;
   message += `\n`;

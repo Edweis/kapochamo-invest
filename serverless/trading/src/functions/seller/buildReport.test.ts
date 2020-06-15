@@ -1,7 +1,7 @@
-import { SellerMessage } from '../../types';
 import { buildReport } from './buildReport';
+import { OrderPostFullResponse } from '../../services/types';
 
-const buyResponse: SellerMessage = {
+const buyResponse: OrderPostFullResponse = {
   symbol: 'KAVAUSDT',
   orderId: 34706478,
   orderListId: -1,
@@ -25,7 +25,7 @@ const buyResponse: SellerMessage = {
     },
   ],
 };
-const sellReponse: SellerMessage = {
+const sellReponse: OrderPostFullResponse = {
   symbol: 'KAVAUSDT',
   orderId: 34712618,
   orderListId: -1,

@@ -2,14 +2,15 @@ import Follower from './follower';
 import { listenTick } from './websocket';
 import { sleep } from '../../helpers/common';
 
-const TIMEOUT = 14 * 60; // 14 minutes
+export enum RACE_ACTION {
+  POSTPONE,
+  SELL,
+}
 
-const waitToSell = async (strategy: Follower, symbol: string) =>
-  Promise.race([
-    sleep(TIMEOUT * 1000),
-    listenTick(symbol, async (tick, done) => {
-      if (strategy.shouldSell(tick)) done();
-    }),
-  ]) as Promise<void>;
+export const waitTimeout = (timeout: number) =>
+  sleep(timeout * 1000).then(() => RACE_ACTION.POSTPONE);
 
-export default waitToSell;
+export const waitToSell = async (strategy: Follower, symbol: string) =>
+  listenTick(symbol, async (tick, done) => {
+    if (strategy.shouldSell(tick)) done();
+  }).then(() => RACE_ACTION.SELL);

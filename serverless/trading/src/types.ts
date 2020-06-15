@@ -21,4 +21,7 @@ export type Tick = {
 
 export type LambdaTraderMessage = { [key: string]: any }; // { symbol: string; info: BinanceInfoRaw };
 
-export type SellerMessage = OrderPostFullResponse;
+export type SellerMessage = {
+  buyResponse: OrderPostFullResponse;
+  postponeTriesLeft: number;
+};

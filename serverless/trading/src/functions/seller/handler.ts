@@ -1,25 +1,37 @@
 import Follower from './follower';
-import waitToSell from './waitToSell';
+import { waitToSell, RACE_ACTION, waitTimeout } from './waitToSell';
 import { sendEmail } from '../../services/aws/sns';
 import { sendOrder } from '../../services/binance';
-import { SellerMessage } from '../../types';
 import { buildReport } from './buildReport';
 import { insertTransaction } from '../../services/aws/dynamoDb';
+import { getVariation, parseMessage } from './helpers';
+import { sendToSeller } from '../../services/aws/sqs';
+import { TIMEOUT, POSTPONE_TIME } from '../../constants';
 
 const seller: Function = async (event: AWSLambda.SQSEvent) => {
   try {
-    const buyResponse = JSON.parse(event.Records[0].body) as SellerMessage;
+    const { buyResponse, postponeTriesLeft } = parseMessage(event);
     const { symbol } = buyResponse;
     const buyBaseQuantity = buyResponse.origQty;
 
     const strategy = new Follower(0.02);
-    await waitToSell(strategy, symbol); // TODO CONTINUE TO SELL AFTER TIMEOUT
-    const sellRequest = await sendOrder('SELL', symbol, buyBaseQuantity);
-    await insertTransaction(sellRequest.data);
+    const raceWinner: RACE_ACTION = await Promise.race([
+      waitTimeout(TIMEOUT),
+      waitToSell(strategy, symbol),
+    ]);
+    if (raceWinner === RACE_ACTION.POSTPONE && postponeTriesLeft > 0) {
+      // postpone
+      await sendEmail(`Selling of ${symbol} is postponed.`);
+      const message = { buyResponse, postponeTriesLeft: postponeTriesLeft + 1 };
+      return sendToSeller(message, POSTPONE_TIME);
+    }
 
+    // Sell and log
+    const sellRequest = await sendOrder('SELL', symbol, buyBaseQuantity);
+    const variation = getVariation(buyResponse, sellRequest.data);
+    await insertTransaction(sellRequest.data, variation);
     const report = await buildReport(buyResponse, sellRequest.data);
-    await sendEmail(report);
-    return;
+    return sendEmail(report);
   } catch (error) {
     await sendEmail(JSON.stringify(error, null, '\t'));
     throw error;

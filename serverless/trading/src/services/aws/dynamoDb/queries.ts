@@ -103,7 +103,7 @@ export const insertTransaction = async (
       response: { S: JSON.stringify(transaction) },
     },
   };
-  if (variation) params.Item.variation = { N: variation.toString() };
+  if (variation != null) params.Item.variation = { N: variation.toString() };
   await dynamodb.putItem(params).promise();
   console.log('Inserted in DynamoDb', params);
 };

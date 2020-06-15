@@ -1,7 +1,8 @@
 set -e # exit whan any command fails
 
 echo '✨  Check TypeScript in the whole project';
-tsc --noEmit && echo "  ✔ TypeScript is good !"
+tsc --noEmit 
+echo "  ✔ TypeScript is good !"
 
 echo '✨  Pretty notebooks';
 for file in ./src/docs/public/scripts/*.ipynb; do
