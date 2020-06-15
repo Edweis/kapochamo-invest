@@ -4,7 +4,7 @@ export const isTest = process.env.JEST_WORKER_ID != null;
 export const isRunLocally = process.env.IS_LOCAL != null;
 dotenv.config();
 
-if (isTest) {
+if (isTest || process.env.IS_OFFLINE) {
   process.env.SELLER_QUEUE_NAME = 'SELLER_QUEUE_NAME';
   process.env.TOPIC_EMAIL_NAME = 'TOPIC_EMAIL_NAME';
   process.env.NEWS_TRIGGER_DB_NAME = 'NEWS_TRIGGER_DB_NAME';

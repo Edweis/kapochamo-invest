@@ -207,3 +207,4 @@ plugins:
   - serverless-dotenv-plugin
   - serverless-webpack
   - serverless-prune-plugin
+  - serverless-offline
