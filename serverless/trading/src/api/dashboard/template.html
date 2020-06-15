@@ -46,6 +46,11 @@
     font-size: 80%;
   }
 
+  .event-icon {
+    display: flex;
+    min-width: 32px;
+  }
+
   #title > h1 {
     letter-spacing:0px;
     margin: 16px auto;
@@ -271,10 +276,10 @@ const renderEvents = events =>
     node.classList.add('pure-g');
     const date = new Date(event.timestamp).toISOString();
     node.innerHTML = `
-    <div class="pure-u-1-12" style="display:flex;">
+    <div class="pure-u-1-12 event-icon">
       ${eventIconMap[event.type]}
     </div>
-    <div class="pure-u">
+    <div class="pure-u-11-12">
       <h5 class="email-name">${date}</h5>
       <h4 class="email-subject">${getEventName(event)}</h4>
       <p class="email-desc">
