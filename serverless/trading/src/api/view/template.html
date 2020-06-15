@@ -10,12 +10,21 @@
   <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tail.datetime@0.4.13/css/tail.datetime-default-orange.min.css" />
 
   <style>
+
+    html {
+      height: 100%;
+    }
+
+    html > body {
+      height: 100%;
+    }
     #chart {
       width: calc(100% - 200px);
       margin-left: 16px;
     }
 
     .container-chart {
+      height: 100%;
       display: flex;
     }
 
@@ -31,6 +40,21 @@
       display: flex;
       flex-direction: column;
       justify-content: center;
+    }
+    @media (max-width:30em){
+      .container-chart {
+        flex-direction: column;
+      }
+      #chart {
+       width:100%;
+       margin:0px
+      }
+      #time-holder {
+        width: 100%;
+      }
+      #time-holder form {
+        width: 100%;
+      }
     }
 
     .btn {
@@ -125,7 +149,7 @@
       }],
       chart: {
         type: 'candlestick',
-        height: 800
+        height: '100%'
       },
       title: {
         text: '{{symbol}} - ' + startDate.toISOString(),
