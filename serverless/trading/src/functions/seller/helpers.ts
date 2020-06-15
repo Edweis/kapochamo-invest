@@ -33,6 +33,7 @@ export const parseMessage = (event: AWSLambda.SQSEvent): SellerMessage => {
   const message = JSON.parse(event.Records[0].body);
   return {
     buyResponse: message.buyResponse,
-    postponeTriesLeft: message.postponeTriesLeft ?? POSTPONE_RETRIES,
+    tries: message.tries ?? POSTPONE_RETRIES,
+    highest: message.highest,
   } as SellerMessage;
 };

@@ -10,10 +10,9 @@ import { extractCharly, isReady } from '../extractors/simplifiedExtractors';
 import Profiling from './profiling';
 import { sendOrder } from '../../services/binance';
 import { sendEmail } from '../../services/aws/sns';
-import { POSTPONE_RETRIES } from '../../constants';
+import { POSTPONE_RETRIES, USDT_TO_BET } from '../../constants';
 
-const USDT_TO_BET = 150;
-const binanceWatcherLambda: Function = async (event: {}) => {
+const handler = async (event: {}) => {
   const profiling = new Profiling();
   await isReady;
   profiling.log('Setup');
@@ -35,7 +34,7 @@ const binanceWatcherLambda: Function = async (event: {}) => {
     await insertTransaction(response.data);
     const message = {
       buyResponse: response.data,
-      postponeTriesLeft: POSTPONE_RETRIES,
+      tries: POSTPONE_RETRIES,
     };
     await sendToSeller(message);
   });
@@ -53,4 +52,4 @@ const binanceWatcherLambda: Function = async (event: {}) => {
   return profiling.toString();
 };
 
-export default binanceWatcherLambda;
+export default handler;

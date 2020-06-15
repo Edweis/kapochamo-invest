@@ -7,19 +7,15 @@ const checkPercentage = (num: number) => {
 class Follower {
   private sellAfterLossOf: number;
 
-  private highest: number;
+  highest: number;
 
   constructor(sellAfterLossOf: number) {
     checkPercentage(sellAfterLossOf);
     this.sellAfterLossOf = sellAfterLossOf;
   }
 
-  init = (price: number) => {
-    this.highest = price;
-  };
-
   shouldSell = (tick: Tick) => {
-    this.highest = Math.max(this.highest, tick.close);
+    this.highest = Math.max(this.highest || 0, tick.close);
     return tick.close <= this.highest * (1 - this.sellAfterLossOf);
   };
 }

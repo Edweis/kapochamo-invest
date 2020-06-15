@@ -1,28 +1,27 @@
 import Follower from './follower';
-import { waitToSell, RACE_ACTION, waitTimeout } from './waitToSell';
+import { RACE_ACTION, waitForAction } from './waitToSell';
 import { sendEmail } from '../../services/aws/sns';
 import { sendOrder } from '../../services/binance';
 import { buildReport } from './buildReport';
 import { insertTransaction } from '../../services/aws/dynamoDb';
 import { getVariation, parseMessage } from './helpers';
 import { sendToSeller } from '../../services/aws/sqs';
-import { TIMEOUT, POSTPONE_TIME } from '../../constants';
+import { POSTPONE_TIME } from '../../constants';
 
 const seller: Function = async (event: AWSLambda.SQSEvent) => {
   try {
-    const { buyResponse, postponeTriesLeft } = parseMessage(event);
+    const { buyResponse, tries, highest } = parseMessage(event);
+    console.debug({ buyResponse, tries, highest });
     const { symbol } = buyResponse;
     const buyBaseQuantity = buyResponse.origQty;
 
     const strategy = new Follower(0.02);
-    const raceWinner: RACE_ACTION = await Promise.race([
-      waitTimeout(TIMEOUT),
-      waitToSell(strategy, symbol),
-    ]);
-    if (raceWinner === RACE_ACTION.POSTPONE && postponeTriesLeft > 0) {
+    if (highest) strategy.highest = highest;
+    const raceWinner = await waitForAction(strategy, symbol);
+    if (raceWinner === RACE_ACTION.POSTPONE && tries > 0) {
       // postpone
-      await sendEmail(`Selling of ${symbol} is postponed.`);
-      const message = { buyResponse, postponeTriesLeft: postponeTriesLeft + 1 };
+      const { highest } = strategy;
+      const message = { buyResponse, tries: tries - 1, highest };
       return sendToSeller(message, POSTPONE_TIME);
     }
 

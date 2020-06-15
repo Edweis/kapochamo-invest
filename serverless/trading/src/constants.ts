@@ -65,6 +65,7 @@ export const { PUBLISHING_DB_PK } = process.env;
 export const { PUBLISHING_DB_SK } = process.env;
 export const NEWS_TRIGGER_DB_VALUE = 'url';
 
-export const TIMEOUT = 14 * 60; // 14 minutes
-export const POSTPONE_TIME = 6 * 60; // 6 minutes
+export const TIMEOUT = 5 * 60; // 5 minutes
+export const POSTPONE_TIME = 5 * 60; // 5 minutes
 export const POSTPONE_RETRIES = 3;
+export const USDT_TO_BET = 150;

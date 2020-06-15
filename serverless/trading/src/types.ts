@@ -23,5 +23,6 @@ export type LambdaTraderMessage = { [key: string]: any }; // { symbol: string; i
 
 export type SellerMessage = {
   buyResponse: OrderPostFullResponse;
-  postponeTriesLeft: number;
+  tries: number;
+  highest?: number;
 };
