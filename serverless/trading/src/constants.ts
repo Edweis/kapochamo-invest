@@ -68,4 +68,4 @@ export const NEWS_TRIGGER_DB_VALUE = 'url';
 export const TIMEOUT = 5 * 60; // 5 minutes
 export const POSTPONE_TIME = 5 * 60; // 5 minutes
 export const POSTPONE_RETRIES = 3;
-export const USDT_TO_BET = 150;
+export const USDT_TO_BET = 30;

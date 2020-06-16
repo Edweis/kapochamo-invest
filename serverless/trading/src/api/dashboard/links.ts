@@ -13,7 +13,7 @@ const getBinanceLink = (baseAsset: string, quoteAsset: string) => {
   return `https://www.binance.com/en/trade/${baseAsset}_${quoteAsset}`;
 };
 
-const linkify = (url: string, text: string) =>
+export const linkify = (url: string, text: string) =>
   `<a href="${url}" target="_blank">${text}</a>`;
 
 export const getLinkFromSymbol = (

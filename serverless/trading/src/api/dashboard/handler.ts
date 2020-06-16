@@ -8,7 +8,8 @@ import {
   getPublications,
   Publication,
 } from '../../services/aws/dynamoDb';
-import { getLinkFromSymbol } from './links';
+import { getLinkFromSymbol, linkify } from './links';
+import { computePrice } from '../../helpers';
 
 type EventCommon = {
   type: 'BUY' | 'SELL' | 'NEWS';
@@ -19,6 +20,7 @@ type TransactionEvent = {
   quoteAsset?: string;
   baseAsset?: string;
   variation: number | null;
+  price: number;
 } & EventCommon;
 type PublicationEvent = Publication & EventCommon;
 type EventTemplate = Array<PublicationEvent | TransactionEvent>;
@@ -47,6 +49,7 @@ const handler = async () => {
 
       return {
         type: response.side,
+        price: computePrice(response),
         quoteAsset: symbol?.quoteAsset,
         baseAsset: symbol?.baseAsset,
         variation: transaction.variation,
@@ -71,10 +74,11 @@ const handler = async () => {
 
       const linksTag =
         links.length > 0 ? `<ul>${links}</ul>` : ' <br/><b>Not traded</b>';
+      const newsLink = linkify(publication.url, 'Link');
       return {
         ...publication,
         type: 'NEWS',
-        content: publication.title + linksTag,
+        content: `${publication.title} - ${newsLink}${linksTag}`,
       };
     }
   );

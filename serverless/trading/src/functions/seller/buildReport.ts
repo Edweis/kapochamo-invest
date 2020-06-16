@@ -1,11 +1,7 @@
 import { getSymbols } from '../../services/aws/dynamoDb';
 import { getVariation } from './helpers';
 import { OrderPostFullResponse } from '../../services/types';
-
-const computePrice = (response: OrderPostFullResponse) =>
-  response.fills
-    .map(fill => Number(fill.price) * Number(fill.qty))
-    .reduce((acc, value) => acc + value, 0) / response.origQty;
+import { computePrice } from '../../helpers';
 
 const getTime = (date: Date) =>
   date

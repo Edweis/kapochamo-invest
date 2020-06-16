@@ -23,7 +23,6 @@
     margin: 0;
   }
 
-
   .primary-button,
   .secondary-button {
     -webkit-box-shadow: none;
@@ -216,9 +215,7 @@
   <div id="layout" class="content pure-g">
     <div id="nav" class="pure-u">
       <a href="#" class="nav-menu-button">Menu</a>
-
       <div class="nav-inner">
-
         <div class="pure-menu">
           <ul class="pure-menu-list">
             <li class="pure-menu-heading">Menu</li>
@@ -239,33 +236,21 @@
 // constants
 const EVENT_TYPES = { BUY: 'BUY', SELL: 'SELL', NEWS: 'NEWS' };
 const eventIconMap = {
-  BUY: `
-  <span style="font-size: 32px; color: darkgreen; margin:auto;">
-    <i class="fas fa-arrow-alt-circle-right"></i>
-  </span>
-`,
-  SELL: `
-  <span style="font-size: 32px; color: darkred; margin:auto;">
-    <i class="fas fa-arrow-alt-circle-left"></i>
-  </span>
-`,
-  NEWS: `
-  <span style="font-size: 32px; color: darkblue; margin:auto;">
-    <i class="fas fa-info"></i>
-  </span>
+  BUY: ` <span style="font-size: 32px; color: darkgreen; margin:auto;"><i class="fas fa-arrow-alt-circle-right"></i></span>`,
+  SELL: `<span style="font-size: 32px; color: darkred; margin:auto;"><i class="fas fa-arrow-alt-circle-left"></i></span>`,
+  NEWS: `<span style="font-size: 32px; color: darkblue; margin:auto;"><i class="fas fa-info"></i></span>
 `,
 };
-
 
 const getEventName = event => {
   switch (event.type) {
     case EVENT_TYPES.BUY:
-      return `Bought ${event.baseAsset}/${event.quoteAsset}`;
+      return `Bought ${event.baseAsset}/${event.quoteAsset} at ${event.price}`;
     case EVENT_TYPES.SELL:
       const sign = event.variation > 0 ? '+' : '';
       if(event.variation ==null) console.error('Event has no variation', event);
       const variation = event.variation && event.variation.toFixed(3);
-      return `Sold ${event.baseAsset}/${event.quoteAsset} ${sign} ${variation}%`;
+      return `Sold ${event.baseAsset}/${event.quoteAsset} at ${event.price.toFixed(4)} : ${sign} ${variation}%`;
     case EVENT_TYPES.NEWS:
       return 'News Caught';
     default:
