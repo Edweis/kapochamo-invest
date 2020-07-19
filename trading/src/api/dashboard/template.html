@@ -249,7 +249,7 @@ const getEventName = event => {
     case EVENT_TYPES.SELL:
       const sign = event.variation > 0 ? '+' : '';
       if(event.variation ==null) console.error('Event has no variation', event);
-      const variation = event.variation && event.variation.toFixed(3);
+      const variation = event.variation && (event.variation+1).toFixed(3);
       return `Sold ${event.baseAsset}/${event.quoteAsset} at ${event.price.toFixed(4)} : ${sign} ${variation}%`;
     case EVENT_TYPES.NEWS:
       return 'News Caught';
