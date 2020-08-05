@@ -73,7 +73,7 @@ export const getLastUrl = async () => {
     AttributesToGet: [NEWS_TRIGGER_DB_VALUE],
   };
   const result = await dynamodb.getItem(params).promise();
-  console.log('Fetched from DynamoDb', params, result);
+  // console.log('Fetched from DynamoDb', params, result);
   return result.Item && result.Item.url.S;
 };
 
