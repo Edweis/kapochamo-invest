@@ -26,7 +26,7 @@ export const getSymbols = async (): Promise<TradeSymbol[]> => {
     throw Error(`Items is undefined in ${SYMBOL_DB_NAME}`);
   const formatedItems = result.Items.map(formatItemToObject);
   if (formatedItems.some(item => item == null))
-    throw Error(`Items contains null value ${SYMBOL_DB_NAME}`);
+    throw Error(`Items contain null value ${SYMBOL_DB_NAME}`);
   symbolCache = formatedItems as TradeSymbol[];
   return formatedItems as TradeSymbol[];
 };

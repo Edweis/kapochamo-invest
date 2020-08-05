@@ -1,5 +1,6 @@
 const nodeExternals = require('webpack-node-externals');
 const slsw = require('serverless-webpack');
+const LodashModuleReplacementPlugin = require('lodash-webpack-plugin');
 
 module.exports = {
   entry: slsw.lib.entries,
@@ -10,8 +11,15 @@ module.exports = {
     rules: [
       {
         test: /\.tsx?$/,
-        use: 'ts-loader',
-        exclude: /node_modules/,
+        use: [
+          {
+            loader: 'babel-loader',
+            query: {
+              plugins: ['lodash'],
+            },
+          },
+          { loader: 'ts-loader' },
+        ],
       },
       {
         test: /\.jsx?$/,
@@ -37,4 +45,5 @@ module.exports = {
   resolve: {
     extensions: ['.tsx', '.ts', '.js', '.jsx'],
   },
+  plugins: [new LodashModuleReplacementPlugin()],
 };

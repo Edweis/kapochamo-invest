@@ -1,4 +1,5 @@
 import { DynamoDB } from 'aws-sdk';
+import { flow, pickBy, mapValues } from 'lodash/fp';
 import _ from 'lodash';
 
 export type InsertData = { [key: string]: string | null };
@@ -17,7 +18,7 @@ export const formatItemToObject = (item: DynamoDB.AttributeMap | undefined) => {
 };
 
 export const formatObjectToItem = (data: InsertData): DynamoDB.AttributeMap =>
-  _(data)
-    .pickBy((value): value is string => !!value) // remove undefined values
-    .mapValues(value => ({ S: value }))
-    .value();
+  flow(
+    pickBy((value): value is string => !!value),
+    mapValues(value => ({ S: value }))
+  )(data);
