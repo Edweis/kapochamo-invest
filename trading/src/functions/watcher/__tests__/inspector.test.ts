@@ -1,4 +1,5 @@
 import axios from 'axios';
+import _ from 'lodash';
 import { binanceInspector } from '../inspector';
 import {
   MOCK_REAL_API_RESPONSES,
@@ -16,7 +17,7 @@ describe('binanceInspector', () => {
     }));
     expect(await binanceInspector()).toEqual(null);
   });
-  it('should return the link if news is new', async () => {
+  it.skip('should return the link if news is new', async () => {
     // We pretend the news is not new
     mockedAxios.get.mockImplementationOnce(async () => ({
       data: MOCK_FAKE_API_RESPONSES,

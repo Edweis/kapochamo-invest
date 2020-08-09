@@ -4,23 +4,27 @@ import { ScrapError } from '../../errors';
 import { getLastUrl } from '../../services/aws/dynamoDb';
 import Profiling from './profiling';
 
-export const binanceInspectUrl =
-  'https://www.binance.com/gateway-api/v1/public/market/all?page=1&rows=1';
-export const binanceTitlePath = 'data.notices[0].title';
-export const binanceUrlPath = 'data.notices[0].url';
+export const BINANCE_INSPECT_URL =
+  'https://www.binancezh.com/gateway-api/v1/public/cms/article/latest/query';
+const NEWS_URL_PREFIX = 'https://www.binance.com/en/support/articles/';
+export const TITLE_PATH = 'data.latestArticles[0].title';
+export const CODE_PATH = 'data.latestArticles[0].code';
 
 export const binanceInspector = async (profiling?: Profiling) => {
   const existingUrl = await getLastUrl();
-  const response = await axios.get(binanceInspectUrl);
+  const response = await axios.get(BINANCE_INSPECT_URL);
   if (profiling) profiling.log('Api call');
-  const title = _get(response.data, binanceTitlePath, null);
-  const url = _get(response.data, binanceUrlPath, null);
-  if (url == null)
+  const title = _get(response.data, TITLE_PATH, null);
+  if (title == null)
     throw new ScrapError('Got a null title :o', {
       response,
-      binanceInspectUrl,
-      binanceTitlePath,
+      BINANCE_INSPECT_URL,
+      TITLE_PATH,
     });
   if (profiling) profiling.log('Here is the url');
-  return existingUrl === url ? null : { url, title };
+  if (existingUrl) return null;
+  const url = NEWS_URL_PREFIX + _get(response.data, CODE_PATH, null);
+  if (false) return { url, title };
+  console.debug('Got an url', response.data, { url, title });
+  return null;
 };
