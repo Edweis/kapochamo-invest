@@ -12,6 +12,13 @@ const hotComparators: Array<(text: string) => boolean> = [
     !/started/i.test(text),
   text => /adds margin trading/i.test(text),
   text => /adds/i.test(text) && /trading pair/i.test(text),
+  text => /futures will launch/i.test(text),
+  text => /competition/i.test(text) && /[0-9,]{2,}/i.test(text),
+  text => /!/i.test(text),
+  text =>
+    /trading/i.test(text) && /airdrop/i.test(text) && !/concluded/i.test(text),
+  text => /support/i.test(text) && !/discontinue/i.test(text),
+  text => /introducing/i.test(text),
 ];
 
 type TradeableSymbols = { [asset: string]: string };
