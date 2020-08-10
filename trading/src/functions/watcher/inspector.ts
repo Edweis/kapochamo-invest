@@ -14,17 +14,15 @@ export const binanceInspector = async (profiling?: Profiling) => {
   const existingUrl = await getLastUrl();
   const response = await axios.get(BINANCE_INSPECT_URL);
   if (profiling) profiling.log('Api call');
-  const title = _get(response.data, TITLE_PATH, null);
-  if (title == null)
+  const url = NEWS_URL_PREFIX + _get(response.data, CODE_PATH, null);
+  if (url == null)
     throw new ScrapError('Got a null title :o', {
       response,
       BINANCE_INSPECT_URL,
       TITLE_PATH,
     });
   if (profiling) profiling.log('Here is the url');
-  if (existingUrl) return null;
-  const url = NEWS_URL_PREFIX + _get(response.data, CODE_PATH, null);
-  if (false) return { url, title };
-  console.debug('Got an url', response.data, { url, title });
-  return null;
+  if (existingUrl === url) return null;
+  const title = _get(response.data, TITLE_PATH, null);
+  return { url, title };
 };

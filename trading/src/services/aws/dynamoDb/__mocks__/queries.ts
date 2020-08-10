@@ -21,6 +21,6 @@ export const resetSymbols = async (symbols: TradeSymbol[]) => {
 };
 
 const LATEST_NEWS =
-  'https://binance.zendesk.com/hc/en-us/articles/360042918512';
+  'https://www.binance.com/en/support/articles/a82a5611550948d6984c284f395f1cba';
 export const updateNews = async () => {};
 export const getLastUrl = async () => LATEST_NEWS;
