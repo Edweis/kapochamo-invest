@@ -64,6 +64,8 @@ provider:
 
 
 custom:
+  apiGatewayCaching:
+    enabled: true
   webpack:
     webpackConfig: ./webpack.config.js
     includeModules: true
@@ -86,6 +88,9 @@ functions:
       - http:
           path: dashboard
           method: get
+          caching:
+            enabled: true
+            ttlInSeconds: 120
   PopulateSymbols:
     handler: src/functions/populateSymbols.default
     description: Populate symbols in dynamo database
@@ -208,3 +213,4 @@ plugins:
   - serverless-webpack
   - serverless-prune-plugin
   - serverless-offline
+  - serverless-api-gateway-caching
