@@ -64,6 +64,7 @@ provider:
 
 
 custom:
+  logRetentionInDays: 14
   apiGatewayCaching:
     enabled: true
   webpack:
@@ -212,5 +213,5 @@ plugins:
   - serverless-dotenv-plugin
   - serverless-webpack
   - serverless-prune-plugin
-  - serverless-offline
   - serverless-api-gateway-caching
+  - serverless-plugin-log-retention

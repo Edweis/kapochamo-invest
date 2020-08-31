@@ -25,7 +25,6 @@ export const binanceInspector = async (profiling?: Profiling) => {
       TITLE_PATH,
     });
   if (profiling) profiling.log('Here is the url');
-  console.debug('FETCHED', { url, data: response.data });
   if (existingUrl === url) return null;
   const title = _get(response.data, TITLE_PATH, null);
   return { url, title };
