@@ -11,6 +11,7 @@ import {
 import { getLinkFromSymbol, linkify } from './links';
 import { computePrice } from '../../helpers';
 
+const MAX_ITEM_DISPLAY = 100;
 type EventCommon = {
   type: 'BUY' | 'SELL' | 'NEWS';
   timestamp: number;
@@ -58,8 +59,9 @@ const handler = async () => {
       };
     }
   );
-  const publicationEvents: PublicationEvent[] = publications.map(
-    publication => {
+  const publicationEvents: PublicationEvent[] = publications
+    .splice(0, MAX_ITEM_DISPLAY)
+    .map(publication => {
       const links = publication.symbolsTraded
         .map(symbol => {
           const link = getLinkFromSymbol(
@@ -80,8 +82,7 @@ const handler = async () => {
         type: 'NEWS',
         content: `${publication.title} - ${newsLink}${linksTag}`,
       };
-    }
-  );
+    });
   const events = (transactionEvents as EventTemplate).concat(publicationEvents);
   const sortedEvents = _sortBy(events, 'timestamp').reverse();
   const page = nunjucks.renderString(template, {
