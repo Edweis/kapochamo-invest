@@ -68,7 +68,7 @@
     "webpack-node-externals": "^1.7.2"
   },
   "dependencies": {
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "bottleneck": "^2.19.5",
     "cheerio": "^1.0.0-rc.3",
     "chrome-aws-lambda": "^3.0.4",
